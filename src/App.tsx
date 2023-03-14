@@ -1,12 +1,12 @@
-import React from "react";
-import "./App.css";
+import { GlobalStyle } from "./styles/GlobalStyled";
 
 function App() {
-  return <div></div>;
-}
-
-function Profile(props: { name: string; age: string }): JSX.Element {
-  return <div>{props.name}프로필 입니다</div>;
+  return (
+    <>
+      <GlobalStyle />
+      <div>최상위 컴포넌트</div>
+    </>
+  );
 }
 
 export default App;
