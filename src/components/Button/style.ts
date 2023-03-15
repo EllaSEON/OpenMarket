@@ -1,7 +1,8 @@
 import styled, { css } from "styled-components";
 
 interface ButtonProps {
-  [key: string]: string | JSX.Element;
+  children: string | JSX.Element;
+  color: string;
 }
 const StyledButton = styled.button<ButtonProps>`
   /* 공통 스타일 */
@@ -21,10 +22,7 @@ const StyledButton = styled.button<ButtonProps>`
 
   /* 색상 */
   ${(props) => {
-    const selected =
-      typeof props.color !== "undefined"
-        ? props.theme.colors[props.color]
-        : props.theme.colors["green"];
+    const selected = props.theme.colors[props.color];
 
     return css`
       background: ${selected};

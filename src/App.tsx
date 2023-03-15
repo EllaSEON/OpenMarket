@@ -9,7 +9,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <GlobalStyle />
         <Button color="green">버튼</Button>
-        <Button color="lightGray">버튼</Button>
+        <Button color="darkGray">버튼</Button>
       </ThemeProvider>
     </>
   );
