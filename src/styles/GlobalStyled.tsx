@@ -3,12 +3,6 @@ import reset from "styled-reset";
 
 export const GlobalStyle = createGlobalStyle`
 ${reset}
-    :root {
-    --main-color:#21BF48;
-    --main-disabled-color:#C4C4C4;
-    --main-text-color:#ffffff;
-    --sub-text-color:#767676;
-  }
   html {
     font-size: 10px;
   }
