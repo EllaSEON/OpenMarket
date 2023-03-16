@@ -15,7 +15,9 @@ function App() {
         <Button color="darkGray" size="s">
           바로 구매
         </Button>
-        <Button size="ms">장바구니</Button>
+        <Button size="ms" disabled>
+          장바구니
+        </Button>
       </ThemeProvider>
     </>
   );

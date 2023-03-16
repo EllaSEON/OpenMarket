@@ -6,6 +6,16 @@ interface ButtonProps {
   children: string | JSX.Element;
   color?: string;
   size: string;
+  disabled?: boolean;
+}
+
+interface sizeTypes {
+  [key: string]: {
+    width: string;
+    height: string;
+    fontSize: string;
+    fontWeight: string;
+  };
 }
 
 const colorStyles = css<ButtonProps>`
@@ -26,46 +36,46 @@ const colorStyles = css<ButtonProps>`
       &:disabled {
         background: #c4c4c4;
         color: #ffffff;
+        pointer-events: none;
       }
     `;
   }}
 `;
 
+const sizes: sizeTypes = {
+  lg: {
+    width: "22rem",
+    height: "68px",
+    fontSize: "2.4rem",
+    fontWeight: "700",
+  },
+  md: {
+    width: "48rem",
+    height: "60px",
+    fontSize: "1.8rem",
+    fontWeight: "700",
+  },
+  ms: {
+    width: "16.6rem",
+    height: "54px",
+    fontSize: "1.6rem",
+    fontWeight: "500",
+  },
+  s: {
+    width: "8rem",
+    height: "40px",
+    fontSize: "1.6rem",
+    fontWeight: "500",
+  },
+};
+
 const sizeStyles = css<ButtonProps>`
-  ${(props) =>
-    props.size === "lg" &&
-    css`
-      width: 22rem;
-      height: 68px;
-      font-size: 2.4rem;
-      font-weight: 700;
-    `}
-
-  ${(props) =>
-    props.size === "md" &&
-    css`
-      width: 48rem;
-      height: 60px;
-      font-size: 1.8rem;
-      font-weight: 700;
-    `}
-    ${(props) =>
-    props.size === "ms" &&
-    css`
-      width: 16.6rem;
-      height: 54px;
-      font-size: 1.6rem;
-      font-weight: 500;
-    `}
-
-    ${(props) =>
-    props.size === "s" &&
-    css`
-      width: 8rem;
-      height: 40px;
-      font-size: 1.6rem;
-      font-weight: 500;
-    `}
+  ${({ size }) => css`
+    width: ${sizes[size].width};
+    height: ${sizes[size].height};
+    font-size: ${sizes[size].fontSize};
+    font-weight: ${sizes[size].fontWeight};
+  `}
 `;
 const StyledButton = styled.button`
   /* 공통 스타일 */
