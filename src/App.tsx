@@ -8,8 +8,14 @@ function App() {
     <>
       <ThemeProvider theme={theme}>
         <GlobalStyle />
-        <Button color="green">버튼</Button>
-        <Button color="darkGray">버튼</Button>
+        <Button size="lg">버튼</Button>
+        <Button color="darkGray" size="md">
+          버튼
+        </Button>
+        <Button color="darkGray" size="s">
+          바로 구매
+        </Button>
+        <Button size="ms">장바구니</Button>
       </ThemeProvider>
     </>
   );

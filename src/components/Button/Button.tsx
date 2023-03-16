@@ -2,12 +2,13 @@ import StyledButton from "./style";
 
 interface ButtonTypes {
   children: string | JSX.Element;
-  color: string;
+  color?: string;
+  size: string;
 }
 
-function Button({ children, color, ...rest }: ButtonTypes) {
+function Button({ children, color, size, ...rest }: ButtonTypes) {
   return (
-    <StyledButton color={color} {...rest}>
+    <StyledButton color={color} size={size} {...rest}>
       {children}
     </StyledButton>
   );
