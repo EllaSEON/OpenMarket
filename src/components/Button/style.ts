@@ -56,7 +56,7 @@ const sizes: sizeTypes = {
     fontWeight: "700",
   },
   ms: {
-    width: "16.6rem",
+    width: "12.2rem",
     height: "54px",
     fontSize: "1.6rem",
     fontWeight: "500",
