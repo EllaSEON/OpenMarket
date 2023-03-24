@@ -3,7 +3,7 @@ import StyledButton from "./style";
 interface ButtonTypes {
   children: string | JSX.Element;
   color?: string;
-  size: string;
+  size: "lg" | "md" | "ms" | "s";
   disabled?: boolean;
 }
 
