@@ -34,19 +34,18 @@ export const Input = styled.input`
   } */
 `;
 
-// InputPhone
+// Email input 스타일
 
-const InputPhoneNum = styled(Input)``;
-
-const SelectPhoneNum = styled.select`
-  width: 152px;
-  height: 54px;
-  border: 1px solid #c4c4c4;
-  border-radius: 5px;
-  padding: 17px 16px;
-  text-align: center;
-  font-size: 1.6rem;
-  line-height: 2rem;
+const EmailInputWrapper = styled.div`
+  display: flex;
+  margin: 1rem 0 0 0;
+  span {
+    align-self: center;
+    margin: 0 1.2rem 0 0;
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 2rem;
+  }
 `;
 
 export const S = {
@@ -54,6 +53,5 @@ export const S = {
   JoinForm,
   Label,
   Input,
-  InputPhoneNum,
-  SelectPhoneNum,
+  EmailInputWrapper,
 };

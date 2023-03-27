@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { JoinInput, InputPhone } from "../JoinInput/JoinInput";
-import { S } from "./style";
+import { JoinInput, InputPhone, InputEmail } from "../JoinInput/JoinInput";
 
 function JoinForm() {
   const [inputs, setInputs] = useState({
@@ -11,7 +10,11 @@ function JoinForm() {
   });
   const { id, password, passwordConfirm, userName } = inputs;
 
-  const handleData = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleData = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>
+  ) => {
     const { value, name } = e.target;
     setInputs({ ...inputs, [name]: value }); // name 키를 가진 값을 value 로 설정
   };
@@ -45,7 +48,7 @@ function JoinForm() {
         value={passwordConfirm}
         width={480}
       />
-      <S.Margin>
+      <div style={{ margin: "5rem 0 0 0" }}>
         <JoinInput
           name="userName"
           label="이름"
@@ -55,8 +58,9 @@ function JoinForm() {
           value={userName}
           width={480}
         />
-      </S.Margin>
+      </div>
       <InputPhone />
+      <InputEmail />
     </>
   );
 }

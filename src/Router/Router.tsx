@@ -1,13 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "../Pages/Login/Login";
-import Join from "../Pages/Join/Join";
+import LoginPage from "../Pages/LoginPage/LoginPage";
+import JoinPage from "../Pages/JoinPage/JoinPage";
 
 function Router() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="login" element={<Login />} />
-        <Route path="join" element={<Join />} />
+        <Route path="login" element={<LoginPage />} />
+        <Route path="join" element={<JoinPage />} />
       </Routes>
     </BrowserRouter>
   );

@@ -6,6 +6,7 @@ interface ObjectProps {
 }
 interface TotalProps {
   id: string;
+  value: string;
   options: ObjectProps[];
   defaultValue: string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;

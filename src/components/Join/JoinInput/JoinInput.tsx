@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { S } from "./style";
-import Button from "../../Button/Button";
+import Button from "../../common/Button/Button";
 import SelectPhoneBox from "../../SelectPhoneBox/SelectPhoneBox";
 
-interface JoinInputTypes {
+interface JoinInputProps {
   name: string;
   label?: string;
   forid: string;
@@ -14,7 +14,7 @@ interface JoinInputTypes {
   isButton?: boolean;
 }
 
-function JoinInput(props: JoinInputTypes) {
+function JoinInput(props: JoinInputProps) {
   const {
     name,
     label,
@@ -75,6 +75,7 @@ function InputPhone() {
       | React.ChangeEvent<HTMLInputElement>
   ) => {
     const { id, value } = e.target;
+
     if (id === "phone1") {
       setPhoneInputs({ ...phoneInputs, phone1: value });
     } else if (id === "phone2") {
@@ -95,11 +96,12 @@ function InputPhone() {
         <div style={{ display: "flex" }}>
           <SelectPhoneBox
             id="phone1"
+            value={phone1}
             options={OPTIONS}
             defaultValue="010"
             onChange={handleData}
           />
-          <S.InputPhoneNum
+          <S.Input
             type="number"
             value={phone2}
             onChange={handleData}
@@ -107,7 +109,7 @@ function InputPhone() {
             width="152"
             required
           />
-          <S.InputPhoneNum
+          <S.Input
             type="number"
             id="phone3"
             value={phone3}
@@ -121,4 +123,33 @@ function InputPhone() {
   );
 }
 
-export { JoinInput, InputPhone };
+function InputEmail() {
+  // const [emailInputs, setEmailInputs] = useState({
+  //   email1: "",
+  //   email2: "",
+  // });
+
+  // const { email1, email2 } = emailInputs;
+
+  // const handleData = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { id, value } = e.target;
+  //   if (id === "email1") {
+  //     setEmailInputs({ ...emailInputs, email1: value });
+  //   }
+  // };
+
+  return (
+    <>
+      <S.InputWrapper>
+        <S.Label htmlFor="email">이메일</S.Label>
+        <S.EmailInputWrapper>
+          <S.Input width="220" />
+          <span>@</span>
+          <S.Input width="220" />
+        </S.EmailInputWrapper>
+      </S.InputWrapper>
+    </>
+  );
+}
+
+export { JoinInput, InputPhone, InputEmail };
