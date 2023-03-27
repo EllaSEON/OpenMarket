@@ -1,16 +1,20 @@
 import { useState } from "react";
-import JoinInput from "../../components/JoinInput/JoinInput";
-import { Margin } from "./style";
+import { JoinInput, InputPhone, InputEmail } from "../JoinInput/JoinInput";
 
-function Join() {
+function JoinForm() {
   const [inputs, setInputs] = useState({
     id: "",
     password: "",
-    username: "",
+    passwordConfirm: "",
+    userName: "",
   });
-  const { id, password, username } = inputs;
+  const { id, password, passwordConfirm, userName } = inputs;
 
-  const handleData = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleData = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>
+  ) => {
     const { value, name } = e.target;
     setInputs({ ...inputs, [name]: value }); // name 키를 가진 값을 value 로 설정
   };
@@ -36,26 +40,29 @@ function Join() {
         width={480}
       />
       <JoinInput
-        name="password"
+        name="passwordConfirm"
         label="비밀번호 재확인"
-        forid="password"
+        forid="passwordConfirm"
         type="password"
         onChange={handleData}
-        value={password}
+        value={passwordConfirm}
         width={480}
       />
-      <Margin>
+      <div style={{ margin: "5rem 0 0 0" }}>
         <JoinInput
-          name="username"
+          name="userName"
           label="이름"
-          forid="password"
+          forid="userName"
           type="text"
           onChange={handleData}
-          value={username}
+          value={userName}
           width={480}
         />
-      </Margin>
+      </div>
+      <InputPhone />
+      <InputEmail />
     </>
   );
 }
-export default Join;
+
+export { JoinForm };
