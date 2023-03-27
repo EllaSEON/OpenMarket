@@ -1,11 +1,6 @@
 import styled from "styled-components";
 
-// const JoinPageWrapper = styled.div`
-//   width: 100%;
-//   text-align: center;
-// `;
-
-const JoinSection = styled.section`
+const JoinFormSection = styled.section`
   width: 55rem;
   margin: 0 auto;
   padding: 4rem 3rem;
@@ -14,6 +9,5 @@ const JoinSection = styled.section`
 `;
 
 export const S = {
-  JoinSection,
-  // JoinPageWrapper,
+  JoinFormSection,
 };
