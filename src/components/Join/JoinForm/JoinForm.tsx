@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import regExp from "../../../utils/regExp";
-import { JoinInput, InputEmail } from "../JoinInput/JoinInput";
-import { Label, Select, Input } from "../JoinInput/style";
+import { JoinInput } from "../JoinInput/JoinInput";
+import { InputWrapper, Label, Select, Input } from "../JoinInput/style";
 import CheckTerm from "../../CheckTerm/CheckTerm";
 import { S } from "./style";
 // import { RootState } from "../../../features/joinSlice";
@@ -103,7 +103,7 @@ function JoinForm() {
             <S.ErrorText>{errors.userName?.message?.toString()}</S.ErrorText>
           )}
         </div>
-        <S.InputPhoneWrapper>
+        <InputWrapper>
           <Label htmlFor="phoneNumber">휴대폰 번호</Label>
           <div style={{ display: "flex" }}>
             <Select {...register("phoneNumber", { required: true })}>
@@ -140,7 +140,7 @@ function JoinForm() {
               })}
             />
           </div>
-        </S.InputPhoneWrapper>
+        </InputWrapper>
         {(errors.centerPhoneNum && (
           <S.ErrorText>
             {errors.centerPhoneNum?.message?.toString()}
@@ -149,7 +149,40 @@ function JoinForm() {
           (errors.endPhoneNum && (
             <S.ErrorText>{errors.endPhoneNum?.message?.toString()}</S.ErrorText>
           ))}
-        <InputEmail />
+        <InputWrapper>
+          <Label htmlFor="email">이메일</Label>
+          <S.EmailInputWrapper>
+            <Input
+              type="text"
+              width="220"
+              {...register("startEmail", {
+                required: "필수 정보입니다.",
+                pattern: {
+                  value: regExp.START_EMAIL_REGEX,
+                  message: "잘못된 이메일 형식입니다.",
+                },
+              })}
+            />
+            <span>@</span>
+            <Input
+              type="text"
+              width="220"
+              {...register("endEmail", {
+                required: "필수 정보입니다.",
+                pattern: {
+                  value: regExp.END_EMAIL_REGEX,
+                  message: "잘못된 이메일 형식입니다.",
+                },
+              })}
+            />
+          </S.EmailInputWrapper>
+          {(errors.startEmail && (
+            <S.ErrorText>{errors.startEmail?.message?.toString()}</S.ErrorText>
+          )) ||
+            (errors.endEmail && (
+              <S.ErrorText>{errors.endEmail?.message?.toString()}</S.ErrorText>
+            ))}
+        </InputWrapper>
       </S.JoinSection>
       <CheckTerm children="호두샵의 이용약관 및 개인정보처리방침에 대해 동의합니다" />
       <S.JoinBtn type="submit" size="md" disabled={!isValidBtn}>
