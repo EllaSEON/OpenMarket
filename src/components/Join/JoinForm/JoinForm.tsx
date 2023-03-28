@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import regExp from "../../../utils/regExp";
-import { JoinInput, InputPhone, InputEmail } from "../JoinInput/JoinInput";
+import { JoinInput, InputEmail } from "../JoinInput/JoinInput";
+import { Label, Select, Input } from "../JoinInput/style";
 import CheckTerm from "../../CheckTerm/CheckTerm";
 import { S } from "./style";
 // import { RootState } from "../../../features/joinSlice";
@@ -10,14 +12,26 @@ function JoinForm() {
   // const joinInputs = useSelector((state: RootState) => state);
   // console.log(joinInputs.joinSlice);
 
+  const [isValidBtn, setIsValidBtn] = useState(true);
+
   const {
     register,
     handleSubmit,
     getValues,
-    formState: { isSubmitting, errors },
+    formState: { errors },
   } = useForm();
 
   const onSubmit = (data: any) => console.log(data);
+
+  // 휴대폰 앞자리 옵션
+  const options = [
+    { value: "010", label: "010" },
+    { value: "011", label: "011" },
+    { value: "016", label: "016" },
+    { value: "017", label: "017" },
+    { value: "018", label: "018" },
+    { value: "019", label: "019" },
+  ];
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -89,11 +103,56 @@ function JoinForm() {
             <S.ErrorText>{errors.userName?.message?.toString()}</S.ErrorText>
           )}
         </div>
-        <InputPhone />
+        <S.InputPhoneWrapper>
+          <Label htmlFor="phoneNumber">휴대폰 번호</Label>
+          <div style={{ display: "flex" }}>
+            <Select {...register("phoneNumber", { required: true })}>
+              {options.map(({ value, label }) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </Select>
+            <Input
+              type="number"
+              id="phone2"
+              width="152"
+              {...register("centerPhoneNum", {
+                required: "필수 정보입니다.",
+                validate: {
+                  number: (inputValue) =>
+                    regExp.PHONE_NO_REGEX.test(inputValue) ||
+                    "숫자만 입력해주세요.",
+                },
+              })}
+            />
+            <Input
+              type="number"
+              id="phone3"
+              width="152"
+              {...register("endPhoneNum", {
+                required: "필수 정보입니다.",
+                validate: {
+                  number: (inputValue) =>
+                    regExp.PHONE_NO_REGEX.test(inputValue) ||
+                    "숫자만 입력해주세요.",
+                },
+              })}
+            />
+          </div>
+        </S.InputPhoneWrapper>
+        {(errors.centerPhoneNum && (
+          <S.ErrorText>
+            {errors.centerPhoneNum?.message?.toString()}
+          </S.ErrorText>
+        )) ||
+          (errors.endPhoneNum && (
+            <S.ErrorText>{errors.endPhoneNum?.message?.toString()}</S.ErrorText>
+          ))}
         <InputEmail />
       </S.JoinSection>
       <CheckTerm children="호두샵의 이용약관 및 개인정보처리방침에 대해 동의합니다" />
-      <S.JoinBtn type="submit" size="md" disabled={isSubmitting}>
+      <S.JoinBtn type="submit" size="md" disabled={!isValidBtn}>
         가입하기
       </S.JoinBtn>
     </form>

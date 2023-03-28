@@ -1,6 +1,6 @@
 import React from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
-import { S } from "./style";
+import * as S from "./style";
 import Button from "../../common/Button/Button";
 
 interface JoinInputProps {
@@ -47,37 +47,37 @@ const JoinInput = React.forwardRef<HTMLInputElement, JoinInputProps>(
 
 // 휴대폰 번호 입력 폼
 
-const InputPhone = React.forwardRef<HTMLSelectElement>((props, ref) => {
-  return (
-    <>
-      <S.InputWrapper>
-        <S.Label htmlFor="phone">휴대폰 번호</S.Label>
-        <div style={{ display: "flex" }}>
-          <S.Select ref={ref} {...props}>
-            <option value="010">010</option>
-            <option value="011">011</option>
-            <option value="016">016</option>
-            <option value="017">017</option>
-            <option value="018">018</option>
-            <option value="019">019</option>
-          </S.Select>
-          <S.Input
-            type="number"
-            id="phone2"
-            width="152"
-            // required
-          />
-          <S.Input
-            type="number"
-            id="phone3"
-            width="152"
-            // required
-          />
-        </div>
-      </S.InputWrapper>
-    </>
-  );
-});
+// const InputPhone = React.forwardRef<HTMLSelectElement>((props, ref) => {
+//   return (
+//     <>
+//       <S.InputWrapper>
+//         <S.Label htmlFor="phone">휴대폰 번호</S.Label>
+//         <div style={{ display: "flex" }}>
+//           <S.Select ref={ref} {...props}>
+//             <option value="010">010</option>
+//             <option value="011">011</option>
+//             <option value="016">016</option>
+//             <option value="017">017</option>
+//             <option value="018">018</option>
+//             <option value="019">019</option>
+//           </S.Select>
+//           <S.Input
+//             type="number"
+//             id="phone2"
+//             width="152"
+//             // required
+//           />
+//           <S.Input
+//             type="number"
+//             id="phone3"
+//             width="152"
+//             // required
+//           />
+//         </div>
+//       </S.InputWrapper>
+//     </>
+//   );
+// });
 
 function InputEmail() {
   // const [emailInputs, setEmailInputs] = useState({
@@ -108,4 +108,4 @@ function InputEmail() {
   );
 }
 
-export { JoinInput, InputPhone, InputEmail };
+export { JoinInput, InputEmail };

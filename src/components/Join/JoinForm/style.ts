@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Button from "../../common/Button/Button";
+import { InputWrapper } from "../JoinInput/style";
 
 const JoinSection = styled.section`
   width: 55rem;
@@ -15,12 +16,17 @@ const ErrorText = styled.small`
   font-weight: 500;
   color: #eb5757;
 `;
+
+const InputPhoneWrapper = styled(InputWrapper)``;
+
 const JoinBtn = styled(Button)`
   margin: auto;
   display: block;
 `;
+
 export const S = {
   JoinSection,
   ErrorText,
+  InputPhoneWrapper,
   JoinBtn,
 };

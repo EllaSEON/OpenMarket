@@ -1,15 +1,15 @@
 import styled from "styled-components";
 
 // JoinInput
-const Container = styled.div`
+export const Container = styled.div`
   display: flex;
   align-items: end;
 `;
-const InputWrapper = styled.div`
+export const InputWrapper = styled.div`
   margin: 1rem 0 0 0;
 `;
 
-const Label = styled.label`
+export const Label = styled.label`
   display: block;
   margin-bottom: 10px;
   font-size: 1.6rem;
@@ -37,7 +37,7 @@ export const Input = styled.input`
 
 // Email input 스타일
 
-const EmailInputWrapper = styled.div`
+export const EmailInputWrapper = styled.div`
   display: flex;
   margin: 1rem 0 0 0;
   span {
@@ -49,7 +49,7 @@ const EmailInputWrapper = styled.div`
   }
 `;
 
-const Select = styled.select`
+export const Select = styled.select`
   width: 152px;
   height: 54px;
   margin-right: 1.2rem;
@@ -63,11 +63,3 @@ const Select = styled.select`
   }
 `;
 
-export const S = {
-  InputWrapper,
-  Container,
-  Label,
-  Input,
-  EmailInputWrapper,
-  Select,
-};
