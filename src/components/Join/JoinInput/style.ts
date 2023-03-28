@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 // JoinInput
-const JoinForm = styled.form`
+const Container = styled.div`
   display: flex;
   align-items: end;
 `;
@@ -14,7 +14,7 @@ const Label = styled.label`
   margin-bottom: 10px;
   font-size: 1.6rem;
   line-height: 2rem;
-  color: #767676;
+  color: ${({ theme }) => theme.colors.darkGray};
 `;
 
 export const Input = styled.input`
@@ -29,9 +29,10 @@ export const Input = styled.input`
   line-height: 2rem;
 
   /* input 크기 */
-  /* &:focus {
-    outline: 1px solid #21bf48;
-  } */
+  &:focus {
+    border: 1px solid ${({ theme }) => theme.colors.green};
+    outline: none;
+  }
 `;
 
 // Email input 스타일
@@ -48,10 +49,25 @@ const EmailInputWrapper = styled.div`
   }
 `;
 
+const Select = styled.select`
+  width: 152px;
+  height: 54px;
+  margin-right: 1.2rem;
+  border: 1px solid ${({ theme }) => theme.colors.lightGray};
+  border-radius: 5px;
+  text-align: center;
+  font-size: 1.6rem;
+  line-height: 2rem;
+  &:focus {
+    border-color: green;
+  }
+`;
+
 export const S = {
   InputWrapper,
-  JoinForm,
+  Container,
   Label,
   Input,
   EmailInputWrapper,
+  Select,
 };

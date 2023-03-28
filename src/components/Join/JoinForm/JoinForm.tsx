@@ -1,72 +1,102 @@
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
+import regExp from "../../../utils/regExp";
 import { JoinInput, InputPhone, InputEmail } from "../JoinInput/JoinInput";
 import CheckTerm from "../../CheckTerm/CheckTerm";
 import { S } from "./style";
+// import { RootState } from "../../../features/joinSlice";
 
 function JoinForm() {
-  const [inputs, setInputs] = useState({
-    id: "",
-    password: "",
-    passwordConfirm: "",
-    userName: "",
-  });
-  const { id, password, passwordConfirm, userName } = inputs;
+  // const joinInputs = useSelector((state: RootState) => state);
+  // console.log(joinInputs.joinSlice);
 
-  const handleData = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const { value, name } = e.target;
-    setInputs({ ...inputs, [name]: value }); // name 키를 가진 값을 value 로 설정
-  };
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    formState: { isSubmitting, errors },
+  } = useForm();
+
+  const onSubmit = (data: any) => console.log(data);
+
   return (
-    <>
-      <S.JoinFormSection>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <S.JoinSection>
         <JoinInput
-          name="id"
           label="아이디"
           forid="id"
           type="text"
-          onChange={handleData}
-          value={id}
           width={346}
           isButton={true}
+          {...register("id", {
+            required: "필수 정보입니다.",
+            pattern: {
+              value: regExp.ID_REGEX,
+              message:
+                "20자 이내의 영문,소문자, 대문자, 숫자만 사용 가능합니다.",
+            },
+          })}
         />
+        {errors.id && (
+          <S.ErrorText>{errors.id?.message?.toString()}</S.ErrorText>
+        )}
         <JoinInput
-          name="password"
           label="비밀번호"
           forid="password"
           type="password"
-          onChange={handleData}
-          value={password}
           width={480}
+          {...register("password", {
+            required: "필수 정보입니다.",
+            pattern: {
+              value: regExp.PW_REGEX,
+              message: "8자 이상, 영문 대 소문자,숫자,특수문자를 사용하세요",
+            },
+          })}
         />
+        {errors.password && (
+          <S.ErrorText>{errors.password?.message?.toString()}</S.ErrorText>
+        )}
         <JoinInput
-          name="passwordConfirm"
           label="비밀번호 재확인"
           forid="passwordConfirm"
           type="password"
-          onChange={handleData}
-          value={passwordConfirm}
           width={480}
+          {...register("passwordConfirm", {
+            required: "필수 정보입니다.",
+            validate: {
+              same: (passwordConfirm) =>
+                passwordConfirm === getValues("password") ||
+                "비밀번호가 일치하지 않습니다.",
+            },
+          })}
         />
+        {errors.passwordConfirm && (
+          <S.ErrorText>
+            {errors.passwordConfirm?.message?.toString()}
+          </S.ErrorText>
+        )}
         <div style={{ margin: "5rem 0 0 0" }}>
           <JoinInput
-            name="userName"
             label="이름"
             forid="userName"
             type="text"
-            onChange={handleData}
-            value={userName}
             width={480}
+            {...register("userName", {
+              required: "필수 정보입니다.",
+            })}
           />
+          {errors.userName && (
+            <S.ErrorText>{errors.userName?.message?.toString()}</S.ErrorText>
+          )}
         </div>
         <InputPhone />
         <InputEmail />
-      </S.JoinFormSection>
+      </S.JoinSection>
       <CheckTerm children="호두샵의 이용약관 및 개인정보처리방침에 대해 동의합니다" />
-    </>
+      <S.JoinBtn type="submit" size="md" disabled={isSubmitting}>
+        가입하기
+      </S.JoinBtn>
+    </form>
   );
 }
 

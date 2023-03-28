@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const Form = styled.form`
+const CheckContainer = styled.div`
   width: 55rem;
   margin: 0 auto;
   text-align: center;
@@ -23,7 +23,7 @@ const Label = styled.label`
 `;
 
 export const S = {
-  Form,
+  CheckContainer,
   InputWrapper,
   InputCheck,
   Label,

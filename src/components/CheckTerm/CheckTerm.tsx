@@ -1,4 +1,3 @@
-import Button from "../common/Button/Button";
 import { S } from "./style";
 
 interface CheckTermProps {
@@ -8,15 +7,12 @@ interface CheckTermProps {
 function CheckTerm({ children }: CheckTermProps) {
   return (
     <>
-      <S.Form>
+      <S.CheckContainer>
         <S.InputWrapper>
           <S.InputCheck type="checkbox" id="check" />
           <S.Label htmlFor="check">{children}</S.Label>
         </S.InputWrapper>
-        <Button size="md" disabled>
-          가입하기
-        </Button>
-      </S.Form>
+      </S.CheckContainer>
     </>
   );
 }
