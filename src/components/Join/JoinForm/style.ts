@@ -1,13 +1,27 @@
 import styled from "styled-components";
 import Button from "../../common/Button/Button";
-import { InputWrapper } from "../JoinInput/style";
 
 const JoinSection = styled.section`
   width: 55rem;
   margin: 0 auto;
   padding: 4rem 3rem;
   border: 1px solid ${({ theme }) => theme.colors.lightGray};
-  border-radius: 10px;
+  border-radius: 0 0 10px 10px;
+`;
+
+const BuyerrBtn = styled.h2`
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+  border: 1px solid #c4c4c4;
+  border-radius: 10px 10px 0 0;
+  text-align: center;
+  padding: 19px 0;
+  width: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  cursor: pointer;
 `;
 const ErrorText = styled.small`
   display: block;
@@ -50,6 +64,7 @@ export const EmailInputWrapper = styled.div`
 
 export const S = {
   JoinSection,
+  BuyerrBtn,
   ErrorText,
   JoinBtn,
   Select,
