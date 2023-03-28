@@ -19,7 +19,7 @@ function JoinForm() {
     getValues,
     watch,
     formState: { errors },
-  } = useForm();
+  } = useForm({ mode: "onChange" });
 
   console.log(watch());
 
@@ -195,6 +195,35 @@ function JoinForm() {
                 </S.ErrorText>
               ))}
           </InputWrapper>
+          <JoinInput
+            label="사업자 등록번호"
+            forid="businessNo"
+            type="text"
+            width={346}
+            isButton={true}
+            {...register("businessNo", {
+              required: "필수 정보입니다.",
+              pattern: {
+                value: regExp.BUSINESS_REGEX,
+                message: "10자 이상의 숫자를 입력해야 합니다.",
+              },
+            })}
+          />
+          {errors.businessNo && (
+            <S.ErrorText>{errors.businessNo?.message?.toString()}</S.ErrorText>
+          )}
+          <JoinInput
+            label="스토어 이름"
+            forid="storeName"
+            type="text"
+            width={480}
+            {...register("storeName", {
+              required: "필수 정보입니다.",
+            })}
+          />
+          {errors.storeName && (
+            <S.ErrorText>{errors.storeName?.message?.toString()}</S.ErrorText>
+          )}
         </S.JoinSection>
         <CheckTerm
           register={register("checkbox")}
