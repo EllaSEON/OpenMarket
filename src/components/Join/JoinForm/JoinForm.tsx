@@ -10,18 +10,14 @@ import ToggleBtn from "../../common/ToggleBtn/ToggleBtn";
 // import { RootState } from "../../../features/joinSlice";
 
 function JoinForm() {
-  // const joinInputs = useSelector((state: RootState) => state);
-  // console.log(joinInputs.joinSlice);
+  const [toggleType, setToggleType] = useState("buyer");
 
   const {
     register,
     handleSubmit,
     getValues,
-    watch,
     formState: { errors },
   } = useForm({ mode: "onChange" });
-
-  console.log(watch());
 
   const [isValidBtn, setIsValidBtn] = useState(true);
 
@@ -39,7 +35,7 @@ function JoinForm() {
 
   return (
     <>
-      <ToggleBtn />
+      <ToggleBtn toggleType={toggleType} setToggleType={setToggleType} />
       <form onSubmit={handleSubmit(onSubmit)}>
         <S.JoinSection>
           <JoinInput
@@ -195,32 +191,36 @@ function JoinForm() {
                 </S.ErrorText>
               ))}
           </InputWrapper>
-          <JoinInput
-            label="사업자 등록번호"
-            forid="businessNo"
-            type="text"
-            width={346}
-            isButton={true}
-            {...register("businessNo", {
-              required: "필수 정보입니다.",
-              pattern: {
-                value: regExp.BUSINESS_REGEX,
-                message: "10자 이상의 숫자를 입력해야 합니다.",
-              },
-            })}
-          />
+          {toggleType !== "buyer" ? (
+            <JoinInput
+              label="사업자 등록번호"
+              forid="businessNo"
+              type="text"
+              width={346}
+              isButton={true}
+              {...register("businessNo", {
+                required: "필수 정보입니다.",
+                pattern: {
+                  value: regExp.BUSINESS_REGEX,
+                  message: "10자 이상의 숫자를 입력해야 합니다.",
+                },
+              })}
+            />
+          ) : null}
           {errors.businessNo && (
             <S.ErrorText>{errors.businessNo?.message?.toString()}</S.ErrorText>
           )}
-          <JoinInput
-            label="스토어 이름"
-            forid="storeName"
-            type="text"
-            width={480}
-            {...register("storeName", {
-              required: "필수 정보입니다.",
-            })}
-          />
+          {toggleType !== "buyer" ? (
+            <JoinInput
+              label="스토어 이름"
+              forid="storeName"
+              type="text"
+              width={480}
+              {...register("storeName", {
+                required: "필수 정보입니다.",
+              })}
+            />
+          ) : null}
           {errors.storeName && (
             <S.ErrorText>{errors.storeName?.message?.toString()}</S.ErrorText>
           )}
