@@ -4,9 +4,10 @@ import { useAppSelector, useAppDispatch } from "../../../store/hooks";
 import regExp from "../../../utils/regExp";
 import { JoinInput } from "../JoinInput/JoinInput";
 import { InputWrapper, Label, Select, Input } from "../JoinInput/style";
-import CheckTerm from "../../CheckTerm/CheckTerm";
+import CheckTerm from "../../common/CheckTerm/CheckTerm";
 import { S } from "./style";
 import ToggleBtn from "../../common/ToggleBtn/ToggleBtn";
+import renderErrorMessage from "../../common/ErrorMsg/ErrorMsg";
 import {
   fetchIdValidate,
   fetchBusinessValidate,
@@ -106,9 +107,7 @@ function JoinForm() {
               },
             })}
           />
-          {errors.id && (
-            <S.ErrorText>{errors.id?.message?.toString()}</S.ErrorText>
-          )}
+          {renderErrorMessage(errors.id)}
           <JoinInput
             label="비밀번호"
             forid="password"
@@ -122,9 +121,7 @@ function JoinForm() {
               },
             })}
           />
-          {errors.password && (
-            <S.ErrorText>{errors.password?.message?.toString()}</S.ErrorText>
-          )}
+          {renderErrorMessage(errors.password)}
           <JoinInput
             label="비밀번호 재확인"
             forid="passwordConfirm"
@@ -139,11 +136,7 @@ function JoinForm() {
               },
             })}
           />
-          {errors.passwordConfirm && (
-            <S.ErrorText>
-              {errors.passwordConfirm?.message?.toString()}
-            </S.ErrorText>
-          )}
+          {renderErrorMessage(errors.passwordConfirm)}
           <div style={{ margin: "5rem 0 0 0" }}>
             <JoinInput
               label="이름"
@@ -154,9 +147,7 @@ function JoinForm() {
                 required: "필수 정보입니다.",
               })}
             />
-            {errors.userName && (
-              <S.ErrorText>{errors.userName?.message?.toString()}</S.ErrorText>
-            )}
+            {renderErrorMessage(errors.passwordConfirm)}
           </div>
           <InputWrapper>
             <Label htmlFor="phoneNumber">휴대폰 번호</Label>
@@ -196,16 +187,8 @@ function JoinForm() {
               />
             </div>
           </InputWrapper>
-          {(errors.centerPhoneNum && (
-            <S.ErrorText>
-              {errors.centerPhoneNum?.message?.toString()}
-            </S.ErrorText>
-          )) ||
-            (errors.endPhoneNum && (
-              <S.ErrorText>
-                {errors.endPhoneNum?.message?.toString()}
-              </S.ErrorText>
-            ))}
+          {renderErrorMessage(errors.centerPhoneNum) ||
+            renderErrorMessage(errors.endPhoneNum)}
           <InputWrapper>
             <Label htmlFor="email">이메일</Label>
             <S.EmailInputWrapper>
@@ -233,16 +216,8 @@ function JoinForm() {
                 })}
               />
             </S.EmailInputWrapper>
-            {(errors.startEmail && (
-              <S.ErrorText>
-                {errors.startEmail?.message?.toString()}
-              </S.ErrorText>
-            )) ||
-              (errors.endEmail && (
-                <S.ErrorText>
-                  {errors.endEmail?.message?.toString()}
-                </S.ErrorText>
-              ))}
+            {renderErrorMessage(errors.startEmail) ||
+              renderErrorMessage(errors.endEmail)}
           </InputWrapper>
           {toggleType === "seller" ? (
             <JoinInput
@@ -261,9 +236,7 @@ function JoinForm() {
               })}
             />
           ) : null}
-          {toggleType === "seller" && errors.businessNo && (
-            <S.ErrorText>{errors.businessNo?.message?.toString()}</S.ErrorText>
-          )}
+          {toggleType === "seller" && renderErrorMessage(errors.businessNo)}
           {toggleType === "seller" ? (
             <JoinInput
               label="스토어 이름"
@@ -275,9 +248,7 @@ function JoinForm() {
               })}
             />
           ) : null}
-          {toggleType === "seller" && errors.storeName && (
-            <S.ErrorText>{errors.storeName?.message?.toString()}</S.ErrorText>
-          )}
+          {toggleType === "seller" && renderErrorMessage(errors.storeName)}
         </S.JoinSection>
         <CheckTerm
           register={register("checkbox")}

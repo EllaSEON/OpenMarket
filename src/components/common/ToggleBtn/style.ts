@@ -12,6 +12,7 @@ export const ToggleText = styled.button<{ active: boolean }>`
   border: 1px solid ${({ theme }) => theme.colors.lightGray};
   border-bottom: none;
   border-radius: 10px 10px 0 0;
+  color: ${({ theme }) => theme.colors.green};
   font-size: 1.8rem;
   font-weight: 500;
   line-height: 2.2rem;
@@ -19,6 +20,7 @@ export const ToggleText = styled.button<{ active: boolean }>`
     if (!active) {
       return css`
         background: #f2f2f2;
+        color: ${({ theme }) => theme.colors.lightGray};
       `;
     }
   }};
