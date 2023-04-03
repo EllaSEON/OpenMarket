@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import regExp from "../../../utils/regExp";
 import { JoinInput } from "../JoinInput/JoinInput";
 import { InputWrapper, Label, Select, Input } from "../JoinInput/style";
 import CheckTerm from "../../CheckTerm/CheckTerm";
 import { S } from "./style";
 import ToggleBtn from "../../common/ToggleBtn/ToggleBtn";
-// import { RootState } from "../../../features/joinSlice";
+import { RootState } from "../../../features/joinSlice";
 
 function JoinForm() {
   const [toggleType, setToggleType] = useState("buyer");
@@ -16,8 +16,12 @@ function JoinForm() {
     register,
     handleSubmit,
     getValues,
+    setError,
     formState: { errors },
   } = useForm({ mode: "onChange" });
+
+  const dispatch = useDispatch();
+  const valid = useSelector((state: RootState) => state.join.valid);
 
   const [isValidBtn, setIsValidBtn] = useState(true);
 
