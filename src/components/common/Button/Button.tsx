@@ -6,6 +6,7 @@ interface ButtonTypes {
   color?: string;
   size: "lg" | "md" | "ms" | "s";
   disabled?: boolean;
+  onClick?: () => void;
 }
 
 function Button({
@@ -14,6 +15,7 @@ function Button({
   color,
   size,
   disabled,
+  onClick,
   ...rest
 }: ButtonTypes) {
   return (
@@ -22,6 +24,7 @@ function Button({
       color={color}
       size={size}
       disabled={disabled}
+      onClick={onClick}
       {...rest}
     >
       {children}

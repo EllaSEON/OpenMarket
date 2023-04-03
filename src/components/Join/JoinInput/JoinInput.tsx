@@ -12,12 +12,22 @@ interface JoinInputProps {
   width: 346 | 480 | 152 | 220;
   isButton?: boolean;
   register?: UseFormRegisterReturn;
+  onClick?: () => void;
 }
 
 const JoinInput = React.forwardRef<HTMLInputElement, JoinInputProps>(
   (props, ref) => {
-    const { label, forid, type, onChange, value, width, isButton, ...rest } =
-      props;
+    const {
+      label,
+      forid,
+      type,
+      onChange,
+      value,
+      width,
+      isButton,
+      onClick,
+      ...rest
+    } = props;
     return (
       <>
         <S.Container>
@@ -35,7 +45,7 @@ const JoinInput = React.forwardRef<HTMLInputElement, JoinInputProps>(
             />
           </S.InputWrapper>
           {isButton && (
-            <Button type="submit" size="ms">
+            <Button type="button" size="ms" onClick={onClick}>
               {forid === "id" ? "중복확인" : "인증"}
             </Button>
           )}

@@ -11,7 +11,7 @@ function CheckTerm({ children, register }: CheckTermProps) {
     <>
       <S.CheckContainer>
         <S.InputWrapper>
-          <S.InputCheck type="checkbox" id="check" {...register} required />
+          <S.InputCheck type="checkbox" id="check" required {...register} />
           <S.Label htmlFor="check">{children}</S.Label>
         </S.InputWrapper>
       </S.CheckContainer>
