@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-import store from "../store/store";
+import axios, { AxiosError } from "axios";
 import { BASE_URL } from "../constant/config";
 
 interface joinState {
@@ -16,12 +15,19 @@ const initialState: joinState = {
 // 아이디 유효성 검증
 export const fetchIdValidate = createAsyncThunk(
   "join/fetchIdValidate",
-  async (id: string) => {
-    const response = await axios.post<boolean>(
-      `${BASE_URL}/accounts/signup/valid/username/`,
-      { id }
-    );
-    return response.data;
+  async (id: string, thunkAPI) => {
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/accounts/signup/valid/username/`,
+        { username: id }
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      console.error("Error in fetchIdValidate:", axiosError.response?.data);
+      return thunkAPI.rejectWithValue(axiosError.response?.data);
+    }
   }
 );
 
@@ -44,7 +50,4 @@ const joinSlice = createSlice({
   },
 });
 
-export default joinSlice;
-
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export default joinSlice.reducer;
