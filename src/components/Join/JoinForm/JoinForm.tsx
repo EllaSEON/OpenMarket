@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useAppSelector, useAppDispatch } from "../../../store/hooks";
 import regExp from "../../../utils/regExp";
@@ -8,11 +8,6 @@ import CheckTerm from "../../CheckTerm/CheckTerm";
 import { S } from "./style";
 import ToggleBtn from "../../common/ToggleBtn/ToggleBtn";
 import { fetchIdValidate } from "../../../features/joinSlice";
-import { RootState } from "../../../store/store";
-
-interface ErrorPayload {
-  error: string;
-}
 
 function JoinForm() {
   const [toggleType, setToggleType] = useState("buyer");
@@ -26,25 +21,28 @@ function JoinForm() {
   } = useForm({ mode: "onChange" });
 
   const dispatch = useAppDispatch();
-  const valid = useAppSelector((state: RootState) => state.join.valid);
+  const idErrorMsg = useAppSelector((state) => state.join.error);
 
+  // id 중복 확인 검증
   const handleCheckId = async (id: string) => {
-    if (id) {
-      const resultAction = await dispatch(fetchIdValidate(id));
-      const errorPayload = resultAction.payload as ErrorPayload;
-      if (fetchIdValidate.rejected.match(resultAction)) {
-        setError("id", {
-          type: "manual",
-          message: errorPayload.error || "이미 사용 중인 아이디입니다.",
-        });
-      } else if (fetchIdValidate.fulfilled.match(resultAction)) {
-        setError("id", {
-          type: "manual",
-          message: errorPayload.error || "멋진 아이디네요 :)",
-        });
-      }
-    }
+    await dispatch(fetchIdValidate(id));
   };
+
+  useEffect(() => {
+    if (idErrorMsg === "username 필드를 추가해주세요 :)") {
+      setError("id", {
+        message: "username 필드를 추가해주세요 :)",
+      });
+    } else if (idErrorMsg === "멋진 아이디네요 :)") {
+      setError("id", {
+        message: "멋진 아이디네요 :)",
+      });
+    } else if (idErrorMsg === "이미 사용 중인 아이디입니다.") {
+      setError("id", {
+        message: "이미 사용 중인 아이디입니다.",
+      });
+    }
+  }, [idErrorMsg, setError]);
 
   const [isValidBtn, setIsValidBtn] = useState(true);
 
