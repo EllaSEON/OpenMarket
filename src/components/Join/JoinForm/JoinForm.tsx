@@ -7,7 +7,10 @@ import { InputWrapper, Label, Select, Input } from "../JoinInput/style";
 import CheckTerm from "../../CheckTerm/CheckTerm";
 import { S } from "./style";
 import ToggleBtn from "../../common/ToggleBtn/ToggleBtn";
-import { fetchIdValidate } from "../../../features/joinSlice";
+import {
+  fetchIdValidate,
+  fetchBusinessValidate,
+} from "../../../features/joinSlice";
 
 function JoinForm() {
   const [toggleType, setToggleType] = useState("buyer");
@@ -21,28 +24,52 @@ function JoinForm() {
   } = useForm({ mode: "onChange" });
 
   const dispatch = useAppDispatch();
-  const idErrorMsg = useAppSelector((state) => state.join.error);
+  const errorMsg = useAppSelector((state) => state.join.error);
+  const status = useAppSelector((state) => state.join.status);
 
   // id 중복 확인 검증
   const handleCheckId = async (id: string) => {
     await dispatch(fetchIdValidate(id));
   };
 
+  // 사업자등록 번호 인증
+  const handleCheckBusiness = async (businessNo: string) => {
+    await dispatch(fetchBusinessValidate(businessNo));
+  };
+
   useEffect(() => {
-    if (idErrorMsg === "username 필드를 추가해주세요 :)") {
+    if (errorMsg === "username 필드를 추가해주세요 :)") {
       setError("id", {
-        message: "username 필드를 추가해주세요 :)",
+        message: "id를 추가해주세요 :)",
       });
-    } else if (idErrorMsg === "멋진 아이디네요 :)") {
-      setError("id", {
-        message: "멋진 아이디네요 :)",
-      });
-    } else if (idErrorMsg === "이미 사용 중인 아이디입니다.") {
+    } else if (errorMsg === "이미 사용 중인 아이디입니다.") {
       setError("id", {
         message: "이미 사용 중인 아이디입니다.",
       });
+    } else if (
+      errorMsg === "company_registration_number 필드를 추가해주세요 :)"
+    ) {
+      setError("businessNo", {
+        message: "사업자번호를 추가해주세요 :)",
+      });
+    } else if (errorMsg === "이미 등록된 사업자등록번호입니다.") {
+      setError("businessNo", {
+        message: "이미 등록된 사업자등록번호입니다.",
+      });
     }
-  }, [idErrorMsg, setError]);
+  }, [errorMsg, setError]);
+
+  useEffect(() => {
+    if (status === "succeededID") {
+      setError("id", {
+        message: "멋진 아이디네요 :)",
+      });
+    } else if (status === "succeededBusiness") {
+      setError("businessNo", {
+        message: "사용 가능한 사업자등록번호입니다.",
+      });
+    }
+  }, [status, setError]);
 
   const [isValidBtn, setIsValidBtn] = useState(true);
 
@@ -217,13 +244,14 @@ function JoinForm() {
                 </S.ErrorText>
               ))}
           </InputWrapper>
-          {toggleType !== "buyer" ? (
+          {toggleType === "seller" ? (
             <JoinInput
               label="사업자 등록번호"
               forid="businessNo"
               type="text"
               width={346}
               isButton={true}
+              onClick={() => handleCheckBusiness(getValues("businessNo"))}
               {...register("businessNo", {
                 required: "필수 정보입니다.",
                 pattern: {
@@ -233,10 +261,10 @@ function JoinForm() {
               })}
             />
           ) : null}
-          {errors.businessNo && (
+          {toggleType === "seller" && errors.businessNo && (
             <S.ErrorText>{errors.businessNo?.message?.toString()}</S.ErrorText>
           )}
-          {toggleType !== "buyer" ? (
+          {toggleType === "seller" ? (
             <JoinInput
               label="스토어 이름"
               forid="storeName"
@@ -247,7 +275,7 @@ function JoinForm() {
               })}
             />
           ) : null}
-          {errors.storeName && (
+          {toggleType === "seller" && errors.storeName && (
             <S.ErrorText>{errors.storeName?.message?.toString()}</S.ErrorText>
           )}
         </S.JoinSection>
