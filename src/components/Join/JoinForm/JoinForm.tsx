@@ -41,9 +41,6 @@ function JoinForm() {
     const resultAction = await dispatch(fetchIdValidate(id));
     if (fetchIdValidate.fulfilled.match(resultAction)) {
       setIdChecked(true);
-      setError("id", {
-        message: "멋진 아이디네요 :)",
-      });
     }
   };
 
@@ -56,9 +53,6 @@ function JoinForm() {
     const resultAction = await dispatch(fetchBusinessValidate(businessNo));
     if (fetchBusinessValidate.fulfilled.match(resultAction)) {
       setBusinessChecked(true);
-      setError("businessNo", {
-        message: "사용 가능한 사업자등록번호입니다.",
-      });
     }
   };
 
@@ -133,7 +127,13 @@ function JoinForm() {
               },
             })}
           />
-          {renderErrorMessage(errors.id)}
+          {idChecked ? (
+            <S.ErrorText style={{ color: "green" }}>
+              멋진 아이디네요{" "}
+            </S.ErrorText>
+          ) : (
+            renderErrorMessage(errors.id)
+          )}
           <JoinInput
             label="비밀번호"
             forid="password"
@@ -267,7 +267,13 @@ function JoinForm() {
               })}
             />
           ) : null}
-          {toggleType === "seller" && renderErrorMessage(errors.businessNo)}
+          {toggleType === "seller" && businessChecked ? (
+            <S.ErrorText style={{ color: "green" }}>
+              사용 가능한 사업자등록번호입니다.{" "}
+            </S.ErrorText>
+          ) : (
+            renderErrorMessage(errors.id)
+          )}
           {toggleType === "seller" ? (
             <JoinInput
               label="스토어 이름"
