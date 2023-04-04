@@ -4,13 +4,15 @@ import { BASE_URL } from "../constant/config";
 
 interface joinState {
   valid: boolean;
-  status: "succeededID" | "succeededBusiness" | "loading" | "failed";
+  idStatus: "succeeded" | "loading" | "failed";
+  businessStatus: "succeeded" | "loading" | "failed";
   error: string;
 }
 
 const initialState: joinState = {
   valid: false,
-  status: "loading",
+  idStatus: "loading",
+  businessStatus: "loading",
   error: "",
 };
 
@@ -50,6 +52,8 @@ export const fetchBusinessValidate = createAsyncThunk(
   }
 );
 
+// 회원가입
+
 const joinSlice = createSlice({
   name: "join",
   initialState,
@@ -58,28 +62,28 @@ const joinSlice = createSlice({
     // 아이디 중복확인
     builder
       .addCase(fetchIdValidate.pending, (state) => {
-        state.status = "loading";
+        state.idStatus = "loading";
       })
       .addCase(fetchIdValidate.fulfilled, (state, action) => {
-        state.status = "succeededID";
+        state.idStatus = "succeeded";
         state.valid = action.payload;
       })
       .addCase(fetchIdValidate.rejected, (state, action) => {
-        state.status = "failed";
+        state.idStatus = "failed";
         state.error =
           (action.payload as string) || "Something is wrong in id :<";
       });
     // 사업자 등록 번호 검증
     builder
       .addCase(fetchBusinessValidate.pending, (state) => {
-        state.status = "loading";
+        state.businessStatus = "loading";
       })
       .addCase(fetchBusinessValidate.fulfilled, (state, action) => {
-        state.status = "succeededBusiness";
+        state.businessStatus = "succeeded";
         state.valid = action.payload;
       })
       .addCase(fetchBusinessValidate.rejected, (state, action) => {
-        state.status = "failed";
+        state.businessStatus = "failed";
         state.error =
           (action.payload as string) || "Something is wrong in Business No :<";
       });

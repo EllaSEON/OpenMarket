@@ -15,6 +15,9 @@ import {
 
 function JoinForm() {
   const [toggleType, setToggleType] = useState("buyer");
+  const [isJoinValid, setIsJoinValid] = useState(false);
+  const [idChecked, setIdChecked] = useState(false);
+  const [businessChecked, setBusinessChecked] = useState(false);
 
   const {
     register,
@@ -26,18 +29,40 @@ function JoinForm() {
 
   const dispatch = useAppDispatch();
   const errorMsg = useAppSelector((state) => state.join.error);
-  const status = useAppSelector((state) => state.join.status);
+  const idStatus = useAppSelector((state) => state.join.idStatus);
+  const businessStatus = useAppSelector((state) => state.join.businessStatus);
 
   // id 중복 확인 검증
-  const handleCheckId = async (id: string) => {
-    await dispatch(fetchIdValidate(id));
+  const handleCheckId = async (
+    id: string,
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
+    const resultAction = await dispatch(fetchIdValidate(id));
+    if (fetchIdValidate.fulfilled.match(resultAction)) {
+      setIdChecked(true);
+      setError("id", {
+        message: "멋진 아이디네요 :)",
+      });
+    }
   };
 
   // 사업자등록 번호 인증
-  const handleCheckBusiness = async (businessNo: string) => {
-    await dispatch(fetchBusinessValidate(businessNo));
+  const handleCheckBusiness = async (
+    businessNo: string,
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
+    const resultAction = await dispatch(fetchBusinessValidate(businessNo));
+    if (fetchBusinessValidate.fulfilled.match(resultAction)) {
+      setBusinessChecked(true);
+      setError("businessNo", {
+        message: "사용 가능한 사업자등록번호입니다.",
+      });
+    }
   };
 
+  // id 중복 확인 & 사업자 등록 번호 검증 에러메세지
   useEffect(() => {
     if (errorMsg === "username 필드를 추가해주세요 :)") {
       setError("id", {
@@ -60,21 +85,17 @@ function JoinForm() {
     }
   }, [errorMsg, setError]);
 
-  useEffect(() => {
-    if (status === "succeededID") {
-      setError("id", {
-        message: "멋진 아이디네요 :)",
-      });
-    } else if (status === "succeededBusiness") {
-      setError("businessNo", {
-        message: "사용 가능한 사업자등록번호입니다.",
-      });
+  const onSubmit = (data: Record<string, any>) => {
+    if (!idChecked) {
+      alert("아이디 인증을 완료해 주세요.");
+      return;
     }
-  }, [status, setError]);
-
-  const [isValidBtn, setIsValidBtn] = useState(true);
-
-  const onSubmit = (data: any) => console.log(data);
+    if (toggleType === "seller" && !businessChecked) {
+      alert("사업자 등록 번호 인증을 완료해주세요");
+      return;
+    }
+    console.log(data);
+  };
 
   // 휴대폰 앞자리 옵션
   const options = [
@@ -97,13 +118,18 @@ function JoinForm() {
             type="text"
             width={346}
             isButton={true}
-            onClick={() => handleCheckId(getValues("id"))}
+            onClick={(e) => handleCheckId(getValues("id"), e)}
             {...register("id", {
               required: "필수 정보입니다.",
               pattern: {
                 value: regExp.ID_REGEX,
                 message:
                   "20자 이내의 영문,소문자, 대문자, 숫자만 사용 가능합니다.",
+              },
+              onChange: () => {
+                if (idChecked) {
+                  setIdChecked(false);
+                }
               },
             })}
           />
@@ -147,7 +173,7 @@ function JoinForm() {
                 required: "필수 정보입니다.",
               })}
             />
-            {renderErrorMessage(errors.passwordConfirm)}
+            {renderErrorMessage(errors.userName)}
           </div>
           <InputWrapper>
             <Label htmlFor="phoneNumber">휴대폰 번호</Label>
@@ -226,12 +252,17 @@ function JoinForm() {
               type="text"
               width={346}
               isButton={true}
-              onClick={() => handleCheckBusiness(getValues("businessNo"))}
+              onClick={(e) => handleCheckBusiness(getValues("businessNo"), e)}
               {...register("businessNo", {
                 required: "필수 정보입니다.",
                 pattern: {
                   value: regExp.BUSINESS_REGEX,
                   message: "10자 이상의 숫자를 입력해야 합니다.",
+                },
+                onChange: () => {
+                  if (businessChecked) {
+                    setBusinessChecked(false);
+                  }
                 },
               })}
             />
@@ -254,7 +285,7 @@ function JoinForm() {
           register={register("checkbox")}
           children="호두샵의 이용약관 및 개인정보처리방침에 대해 동의합니다"
         />
-        <S.JoinBtn type="submit" size="md" disabled={!isValidBtn}>
+        <S.JoinBtn type="submit" size="md" disabled={isJoinValid}>
           가입하기
         </S.JoinBtn>
       </form>
