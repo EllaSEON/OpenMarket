@@ -24,6 +24,7 @@ function JoinForm() {
     handleSubmit,
     getValues,
     setError,
+    watch,
     formState: { errors },
   } = useForm({ mode: "onChange" });
 
@@ -77,6 +78,34 @@ function JoinForm() {
     }
   }, [errorMsg, setError]);
 
+  // 모든 input 값 채워질 시 가입하기 버튼 활성화
+  const watchedValues = watch();
+  useEffect(() => {
+    const requiredFields = [
+      "id",
+      "password",
+      "passwordConfirm",
+      "userName",
+      "phoneNumber",
+      "centerPhoneNum",
+      "endPhoneNum",
+      "startEmail",
+      "endEmail",
+      "checkbox",
+    ];
+
+    if (toggleType === "seller") {
+      requiredFields.push("businessNo", "storeName");
+    }
+
+    const allFieldsFilled = requiredFields.every(
+      (field) => watchedValues[field]
+    );
+
+    setIsJoinValid(allFieldsFilled);
+  }, [watchedValues, toggleType]);
+
+  // 아이디/ 사업자 번호 인증 안할 시 alert창
   const onSubmit = (data: Record<string, any>) => {
     if (!idChecked) {
       alert("아이디 인증을 완료해 주세요.");
@@ -266,7 +295,7 @@ function JoinForm() {
               {businessChecked ? (
                 <S.SuccessTxt>사용 가능한 사업자등록번호입니다. </S.SuccessTxt>
               ) : (
-                RenderErrorMsg(errors.id)
+                RenderErrorMsg(errors.businessNo)
               )}
               <JoinInput
                 label="스토어 이름"
@@ -285,7 +314,7 @@ function JoinForm() {
           register={register("checkbox")}
           children="호두샵의 이용약관 및 개인정보처리방침에 대해 동의합니다"
         />
-        <S.JoinBtn type="submit" size="md" disabled={isJoinValid}>
+        <S.JoinBtn type="submit" size="md" disabled={!isJoinValid}>
           가입하기
         </S.JoinBtn>
       </form>
