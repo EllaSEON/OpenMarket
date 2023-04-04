@@ -7,7 +7,7 @@ import { InputWrapper, Label, Select, Input } from "../JoinInput/style";
 import CheckTerm from "../../common/CheckTerm/CheckTerm";
 import { S } from "./style";
 import ToggleBtn from "../../common/ToggleBtn/ToggleBtn";
-import renderErrorMessage from "../../common/ErrorMsg/ErrorMsg";
+import RenderErrorMsg from "../../common/RenderErrorMsg/RenderErrorMsg";
 import {
   fetchIdValidate,
   fetchBusinessValidate,
@@ -29,8 +29,6 @@ function JoinForm() {
 
   const dispatch = useAppDispatch();
   const errorMsg = useAppSelector((state) => state.join.error);
-  const idStatus = useAppSelector((state) => state.join.idStatus);
-  const businessStatus = useAppSelector((state) => state.join.businessStatus);
 
   // id 중복 확인 검증
   const handleCheckId = async (
@@ -128,11 +126,9 @@ function JoinForm() {
             })}
           />
           {idChecked ? (
-            <S.ErrorText style={{ color: "green" }}>
-              멋진 아이디네요{" "}
-            </S.ErrorText>
+            <S.SuccessTxt>멋진 아이디네요 </S.SuccessTxt>
           ) : (
-            renderErrorMessage(errors.id)
+            RenderErrorMsg(errors.id)
           )}
           <JoinInput
             label="비밀번호"
@@ -143,11 +139,11 @@ function JoinForm() {
               required: "필수 정보입니다.",
               pattern: {
                 value: regExp.PW_REGEX,
-                message: "8자 이상, 영문 대 소문자,숫자,특수문자를 사용하세요",
+                message: "8자 이상,영문,숫자,특수문자를 사용하세요",
               },
             })}
           />
-          {renderErrorMessage(errors.password)}
+          {RenderErrorMsg(errors.password)}
           <JoinInput
             label="비밀번호 재확인"
             forid="passwordConfirm"
@@ -162,7 +158,7 @@ function JoinForm() {
               },
             })}
           />
-          {renderErrorMessage(errors.passwordConfirm)}
+          {RenderErrorMsg(errors.passwordConfirm)}
           <div style={{ margin: "5rem 0 0 0" }}>
             <JoinInput
               label="이름"
@@ -173,7 +169,7 @@ function JoinForm() {
                 required: "필수 정보입니다.",
               })}
             />
-            {renderErrorMessage(errors.userName)}
+            {RenderErrorMsg(errors.userName)}
           </div>
           <InputWrapper>
             <Label htmlFor="phoneNumber">휴대폰 번호</Label>
@@ -213,8 +209,8 @@ function JoinForm() {
               />
             </div>
           </InputWrapper>
-          {renderErrorMessage(errors.centerPhoneNum) ||
-            renderErrorMessage(errors.endPhoneNum)}
+          {RenderErrorMsg(errors.centerPhoneNum) ||
+            RenderErrorMsg(errors.endPhoneNum)}
           <InputWrapper>
             <Label htmlFor="email">이메일</Label>
             <S.EmailInputWrapper>
@@ -242,50 +238,48 @@ function JoinForm() {
                 })}
               />
             </S.EmailInputWrapper>
-            {renderErrorMessage(errors.startEmail) ||
-              renderErrorMessage(errors.endEmail)}
+            {RenderErrorMsg(errors.startEmail) ||
+              RenderErrorMsg(errors.endEmail)}
           </InputWrapper>
-          {toggleType === "seller" ? (
-            <JoinInput
-              label="사업자 등록번호"
-              forid="businessNo"
-              type="text"
-              width={346}
-              isButton={true}
-              onClick={(e) => handleCheckBusiness(getValues("businessNo"), e)}
-              {...register("businessNo", {
-                required: "필수 정보입니다.",
-                pattern: {
-                  value: regExp.BUSINESS_REGEX,
-                  message: "10자 이상의 숫자를 입력해야 합니다.",
-                },
-                onChange: () => {
-                  if (businessChecked) {
-                    setBusinessChecked(false);
-                  }
-                },
-              })}
-            />
-          ) : null}
-          {toggleType === "seller" && businessChecked ? (
-            <S.ErrorText style={{ color: "green" }}>
-              사용 가능한 사업자등록번호입니다.{" "}
-            </S.ErrorText>
-          ) : (
-            renderErrorMessage(errors.id)
+          {toggleType === "seller" && (
+            <>
+              <JoinInput
+                label="사업자 등록번호"
+                forid="businessNo"
+                type="text"
+                width={346}
+                isButton={true}
+                onClick={(e) => handleCheckBusiness(getValues("businessNo"), e)}
+                {...register("businessNo", {
+                  required: "필수 정보입니다.",
+                  pattern: {
+                    value: regExp.BUSINESS_REGEX,
+                    message: "10자 이상의 숫자를 입력해야 합니다.",
+                  },
+                  onChange: () => {
+                    if (businessChecked) {
+                      setBusinessChecked(false);
+                    }
+                  },
+                })}
+              />
+              {businessChecked ? (
+                <S.SuccessTxt>사용 가능한 사업자등록번호입니다. </S.SuccessTxt>
+              ) : (
+                RenderErrorMsg(errors.id)
+              )}
+              <JoinInput
+                label="스토어 이름"
+                forid="storeName"
+                type="text"
+                width={480}
+                {...register("storeName", {
+                  required: "필수 정보입니다.",
+                })}
+              />
+              {RenderErrorMsg(errors.storeName)}
+            </>
           )}
-          {toggleType === "seller" ? (
-            <JoinInput
-              label="스토어 이름"
-              forid="storeName"
-              type="text"
-              width={480}
-              {...register("storeName", {
-                required: "필수 정보입니다.",
-              })}
-            />
-          ) : null}
-          {toggleType === "seller" && renderErrorMessage(errors.storeName)}
         </S.JoinSection>
         <CheckTerm
           register={register("checkbox")}

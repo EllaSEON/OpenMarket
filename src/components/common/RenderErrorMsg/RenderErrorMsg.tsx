@@ -1,10 +1,10 @@
 import styled from "styled-components";
 
-function renderErrorMessage(error: any) {
+function RenderErrorMsg(error: any) {
   return error && <ErrorText>{error.message?.toString()}</ErrorText>;
 }
 
-export default renderErrorMessage;
+export default RenderErrorMsg;
 
 const ErrorText = styled.small`
   display: block;
