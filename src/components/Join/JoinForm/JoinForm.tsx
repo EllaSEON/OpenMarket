@@ -11,6 +11,8 @@ import RenderErrorMsg from "../../common/RenderErrorMsg/RenderErrorMsg";
 import {
   fetchIdValidate,
   fetchBusinessValidate,
+  fetchBuyerJoin,
+  BuyerPostData,
 } from "../../../features/joinSlice";
 
 function JoinForm() {
@@ -25,11 +27,12 @@ function JoinForm() {
     getValues,
     setError,
     watch,
+    trigger,
     formState: { errors },
   } = useForm({ mode: "onChange" });
 
   const dispatch = useAppDispatch();
-  const errorMsg = useAppSelector((state) => state.join.error);
+  const successMsg = useAppSelector((state) => state.join.successMsg);
 
   // id 중복 확인 검증
   const handleCheckId = async (
@@ -37,9 +40,26 @@ function JoinForm() {
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
+
+    // 아이디 유효성 검사
+    const isValid = await trigger("id");
+    if (!isValid) {
+      return;
+    }
+
+    // 아이디 중복 확인 검증 에러메세지 렌더링
     const resultAction = await dispatch(fetchIdValidate(id));
+    console.log(resultAction.payload);
     if (fetchIdValidate.fulfilled.match(resultAction)) {
       setIdChecked(true);
+    } else {
+      // 에러 메시지를 resultAction에서 가져와서 setError 호출
+      setError("id", {
+        message:
+          typeof resultAction.payload === "string"
+            ? resultAction.payload
+            : "이미 사용중인 아이디입니다.",
+      });
     }
   };
 
@@ -49,34 +69,25 @@ function JoinForm() {
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
+    // 사업자 번호 유효성 검사
+    const isValid = await trigger("businessNo");
+    if (!isValid) {
+      return;
+    }
+
+    // 사업자 번호 인증
     const resultAction = await dispatch(fetchBusinessValidate(businessNo));
     if (fetchBusinessValidate.fulfilled.match(resultAction)) {
       setBusinessChecked(true);
+    } else {
+      setError("businessNo", {
+        message:
+          typeof resultAction.payload === "string"
+            ? resultAction.payload
+            : "이미 등록된 사업자번호입니다.",
+      });
     }
   };
-
-  // id 중복 확인 & 사업자 등록 번호 검증 에러메세지
-  useEffect(() => {
-    if (errorMsg === "username 필드를 추가해주세요 :)") {
-      setError("id", {
-        message: "id를 추가해주세요 :)",
-      });
-    } else if (errorMsg === "이미 사용 중인 아이디입니다.") {
-      setError("id", {
-        message: "이미 사용 중인 아이디입니다.",
-      });
-    } else if (
-      errorMsg === "company_registration_number 필드를 추가해주세요 :)"
-    ) {
-      setError("businessNo", {
-        message: "사업자번호를 추가해주세요 :)",
-      });
-    } else if (errorMsg === "이미 등록된 사업자등록번호입니다.") {
-      setError("businessNo", {
-        message: "이미 등록된 사업자등록번호입니다.",
-      });
-    }
-  }, [errorMsg, setError]);
 
   // 모든 input 값 채워질 시 가입하기 버튼 활성화
   const watchedValues = watch();
@@ -106,7 +117,7 @@ function JoinForm() {
   }, [watchedValues, toggleType]);
 
   // 아이디/ 사업자 번호 인증 안할 시 alert창
-  const onSubmit = (data: Record<string, any>) => {
+  const onSubmit = async (data: Record<string, any>) => {
     if (!idChecked) {
       alert("아이디 인증을 완료해 주세요.");
       return;
@@ -115,7 +126,17 @@ function JoinForm() {
       alert("사업자 등록 번호 인증을 완료해주세요");
       return;
     }
-    console.log(data);
+    // console.log(data);
+    if (toggleType === "buyer") {
+      const buyerData: BuyerPostData = {
+        username: data.id,
+        password: data.password,
+        password2: data.passwordConfirm,
+        phone_number: `${data.phoneNumber}${data.centerPhoneNum}${data.endPhoneNum}`,
+        name: data.userName,
+      };
+      await dispatch(fetchBuyerJoin(buyerData));
+    }
   };
 
   // 휴대폰 앞자리 옵션
@@ -155,7 +176,7 @@ function JoinForm() {
             })}
           />
           {idChecked ? (
-            <S.SuccessTxt>멋진 아이디네요 </S.SuccessTxt>
+            <S.SuccessTxt>{successMsg.Success}</S.SuccessTxt>
           ) : (
             RenderErrorMsg(errors.id)
           )}
@@ -168,7 +189,7 @@ function JoinForm() {
               required: "필수 정보입니다.",
               pattern: {
                 value: regExp.PW_REGEX,
-                message: "8자 이상,영문,숫자,특수문자를 사용하세요",
+                message: "8자 이상 영문,숫자,특수문자를 사용하세요",
               },
             })}
           />
@@ -293,7 +314,7 @@ function JoinForm() {
                 })}
               />
               {businessChecked ? (
-                <S.SuccessTxt>사용 가능한 사업자등록번호입니다. </S.SuccessTxt>
+                <S.SuccessTxt>{successMsg.Success} </S.SuccessTxt>
               ) : (
                 RenderErrorMsg(errors.businessNo)
               )}
