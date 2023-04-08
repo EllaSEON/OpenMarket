@@ -23,12 +23,12 @@ const BuyerrBtn = styled.h2`
   box-sizing: border-box;
   cursor: pointer;
 `;
-const ErrorText = styled.small`
+const SuccessTxt = styled.small`
   display: block;
   margin-top: 1rem;
   font-size: 1.4rem;
   font-weight: 500;
-  color: #eb5757;
+  color: ${({ theme }) => theme.colors.green};
 `;
 
 const JoinBtn = styled(Button)`
@@ -65,7 +65,7 @@ export const EmailInputWrapper = styled.div`
 export const S = {
   JoinSection,
   BuyerrBtn,
-  ErrorText,
+  SuccessTxt,
   JoinBtn,
   Select,
   EmailInputWrapper,

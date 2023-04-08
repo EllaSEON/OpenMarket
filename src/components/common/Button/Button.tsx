@@ -6,7 +6,7 @@ interface ButtonTypes {
   color?: string;
   size: "lg" | "md" | "ms" | "s";
   disabled?: boolean;
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 function Button({

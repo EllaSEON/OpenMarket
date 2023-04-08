@@ -12,7 +12,7 @@ interface JoinInputProps {
   width: 346 | 480 | 152 | 220;
   isButton?: boolean;
   register?: UseFormRegisterReturn;
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 const JoinInput = React.forwardRef<HTMLInputElement, JoinInputProps>(
