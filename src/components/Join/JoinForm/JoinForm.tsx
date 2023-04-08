@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useAppSelector, useAppDispatch } from "../../../store/hooks";
 import regExp from "../../../utils/regExp";
@@ -13,13 +14,22 @@ import {
   fetchBusinessValidate,
   fetchBuyerJoin,
   BuyerPostData,
+  fetchSellerJoin,
+  SellerPostData,
 } from "../../../features/joinSlice";
+
+interface ErrorMessages {
+  phone_number?: string[];
+  store_name?: string[];
+}
 
 function JoinForm() {
   const [toggleType, setToggleType] = useState("buyer");
   const [isJoinValid, setIsJoinValid] = useState(false);
   const [idChecked, setIdChecked] = useState(false);
   const [businessChecked, setBusinessChecked] = useState(false);
+
+  const navigate = useNavigate();
 
   const {
     register,
@@ -32,7 +42,7 @@ function JoinForm() {
   } = useForm({ mode: "onChange" });
 
   const dispatch = useAppDispatch();
-  const successMsg = useAppSelector((state) => state.join.successMsg);
+  const errorMsg = useAppSelector((state) => state.join.error);
 
   // id 중복 확인 검증
   const handleCheckId = async (
@@ -77,6 +87,7 @@ function JoinForm() {
 
     // 사업자 번호 인증
     const resultAction = await dispatch(fetchBusinessValidate(businessNo));
+    console.log(resultAction.payload);
     if (fetchBusinessValidate.fulfilled.match(resultAction)) {
       setBusinessChecked(true);
     } else {
@@ -126,7 +137,7 @@ function JoinForm() {
       alert("사업자 등록 번호 인증을 완료해주세요");
       return;
     }
-    // console.log(data);
+    // 구매자
     if (toggleType === "buyer") {
       const buyerData: BuyerPostData = {
         username: data.id,
@@ -136,6 +147,39 @@ function JoinForm() {
         name: data.userName,
       };
       await dispatch(fetchBuyerJoin(buyerData));
+      setError("centerPhoneNum", {
+        message: "해당 사용자 전화번호는 이미 존재합니다.",
+      });
+    } else if (toggleType === "seller") {
+      const sellerData: SellerPostData = {
+        username: data.id,
+        password: data.password,
+        password2: data.passwordConfirm,
+        phone_number: `${data.phoneNumber}${data.centerPhoneNum}${data.endPhoneNum}`,
+        name: data.userName,
+        company_registration_number: data.businessNo,
+        store_name: data.storeName,
+      };
+      const resultAction = await dispatch(fetchSellerJoin(sellerData));
+      // 결과에서 에러 메시지를 가져오고 setError를 호출하여 에러 메시지를 렌더링합니다.
+      if (fetchSellerJoin.rejected.match(resultAction)) {
+        const errorMessages = resultAction.payload as ErrorMessages;
+        console.log("Result action:", resultAction);
+        console.log("Error messages:", errorMessages);
+
+        if (errorMessages && errorMessages.phone_number) {
+          setError("centerPhoneNum", {
+            message: errorMessages.phone_number[0],
+          });
+        }
+
+        if (errorMessages && errorMessages.store_name) {
+          setError("storeName", {
+            message: errorMessages.store_name[0],
+          });
+        }
+      }
+      navigate("/login");
     }
   };
 
@@ -176,7 +220,7 @@ function JoinForm() {
             })}
           />
           {idChecked ? (
-            <S.SuccessTxt>{successMsg.Success}</S.SuccessTxt>
+            <S.SuccessTxt>멋진 아이디네요</S.SuccessTxt>
           ) : (
             RenderErrorMsg(errors.id)
           )}
@@ -300,11 +344,12 @@ function JoinForm() {
                 width={346}
                 isButton={true}
                 onClick={(e) => handleCheckBusiness(getValues("businessNo"), e)}
+                maxLength={10}
                 {...register("businessNo", {
                   required: "필수 정보입니다.",
                   pattern: {
                     value: regExp.BUSINESS_REGEX,
-                    message: "10자 이상의 숫자를 입력해야 합니다.",
+                    message: "10자리의 숫자를 입력해야 합니다.",
                   },
                   onChange: () => {
                     if (businessChecked) {
@@ -314,7 +359,7 @@ function JoinForm() {
                 })}
               />
               {businessChecked ? (
-                <S.SuccessTxt>{successMsg.Success} </S.SuccessTxt>
+                <S.SuccessTxt>사용 가능한 사업자등록번호입니다. </S.SuccessTxt>
               ) : (
                 RenderErrorMsg(errors.businessNo)
               )}

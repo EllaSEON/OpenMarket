@@ -4,7 +4,7 @@ import { BASE_URL } from "../constant/config";
 
 interface joinState {
   valid: boolean;
-  error: string | { [key: string]: string } | null;
+  error: null | string;
   successMsg: {
     Success: string;
   };
@@ -24,6 +24,16 @@ export interface BuyerPostData {
   password2: string;
   phone_number: string;
   name: string;
+}
+
+export interface SellerPostData {
+  username: string;
+  password: string;
+  password2: string;
+  phone_number: string;
+  name: string;
+  company_registration_number: string;
+  store_name: string;
 }
 
 // 아이디 유효성 검증
@@ -62,7 +72,7 @@ export const fetchBusinessValidate = createAsyncThunk(
   }
 );
 
-// 회원가입
+// 구매자 회원가입
 export const fetchBuyerJoin = createAsyncThunk(
   "join/fetchBuyerJoin",
   async (
@@ -81,7 +91,41 @@ export const fetchBuyerJoin = createAsyncThunk(
       return response.data;
     } catch (error: any) {
       console.log(error.response.data);
-      return rejectWithValue(error.response.data.FAIL_Message);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// 판매자 회원가입
+export const fetchSellerJoin = createAsyncThunk(
+  "join/fetchSellerJoin",
+  async (
+    {
+      username,
+      password,
+      password2,
+      phone_number,
+      name,
+      company_registration_number,
+      store_name,
+    }: SellerPostData,
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/accounts/signup_seller/`, {
+        username,
+        password,
+        password2,
+        phone_number,
+        name,
+        company_registration_number,
+        store_name,
+      });
+      // console.log(response.data);
+      return response.data;
+    } catch (error: any) {
+      // console.log(error.response.data);
+      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -133,6 +177,19 @@ const joinSlice = createSlice({
       .addCase(fetchBuyerJoin.rejected, (state, action) => {
         state.error =
           (action.payload as string) || "Something is wrong in BuyerJoin :<";
+      });
+    // 판매자 회원가입
+    builder
+      .addCase(fetchSellerJoin.pending, (state) => {
+        state.error = null;
+      })
+      .addCase(fetchSellerJoin.fulfilled, (state, action) => {
+        state.error = null;
+        state.valid = action.payload.valid;
+      })
+      .addCase(fetchSellerJoin.rejected, (state, action) => {
+        state.error =
+          (action.payload as string) || "Something is wrong in SellerJoin :<";
       });
   },
 });
