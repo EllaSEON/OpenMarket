@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Button from "../../common/Button/Button";
 
-const JoinSection = styled.section`
+const JoinForm = styled.form`
   width: 55rem;
   margin: 0 auto;
   padding: 4rem 3rem;
@@ -20,7 +20,6 @@ export const Select = styled.select`
   margin-right: 1.2rem;
   border: 1px solid ${({ theme }) => theme.colors.lightGray};
   border-radius: 5px;
-  text-align: center;
   font-size: 1.6rem;
   line-height: 2rem;
   &:focus {
@@ -41,7 +40,7 @@ export const EmailInputWrapper = styled.div`
 `;
 
 export const S = {
-  JoinSection,
+  JoinForm,
   JoinBtn,
   Select,
   EmailInputWrapper,

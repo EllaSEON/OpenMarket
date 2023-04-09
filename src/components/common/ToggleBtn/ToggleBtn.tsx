@@ -14,6 +14,9 @@ function ToggleBtn({ toggleType, setToggleType }: ToggleBtnProps) {
       setToggleType("seller");
     }
   };
+
+  const path = window.location.pathname;
+
   return (
     <>
       <S.ToggleWrapper>
@@ -23,7 +26,7 @@ function ToggleBtn({ toggleType, setToggleType }: ToggleBtnProps) {
           active={toggleType === "buyer"}
           onClick={handleToggle}
         >
-          구매회원가입
+          {path === "/login" ? "구매회원 로그인" : "구매회원가입"}
         </S.ToggleText>
         <S.ToggleText
           name="seller"
@@ -31,7 +34,7 @@ function ToggleBtn({ toggleType, setToggleType }: ToggleBtnProps) {
           value={toggleType}
           onClick={handleToggle}
         >
-          판매회원가입
+          {path === "/login" ? "판매회원 로그인" : "판매회원가입"}
         </S.ToggleText>
       </S.ToggleWrapper>
     </>

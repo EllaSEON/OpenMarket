@@ -24,7 +24,7 @@ export const Input = styled.input`
   border: 1px solid #c4c4c4;
   border-radius: 5px;
   padding: 17px 16px;
-  text-align: center;
+  /* text-align: center; */
   font-size: 1.6rem;
   line-height: 2rem;
 
@@ -62,4 +62,3 @@ export const Select = styled.select`
     border-color: green;
   }
 `;
-

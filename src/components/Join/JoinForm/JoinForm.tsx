@@ -198,189 +198,203 @@ function JoinForm() {
   ];
 
   return (
-    <>
+    <section>
+      <h2 className="hidden">회원가입 페이지</h2>
       <ToggleBtn toggleType={toggleType} setToggleType={setToggleType} />
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <S.JoinSection>
+      <S.JoinForm onSubmit={handleSubmit(onSubmit)}>
+        <JoinInput
+          label="아이디"
+          forid="id"
+          type="text"
+          width={346}
+          isButton={true}
+          onClick={(e) => handleCheckId(getValues("id"), e)}
+          {...register("id", {
+            required: "필수 정보입니다.",
+            pattern: {
+              value: regExp.ID_REGEX,
+              message:
+                "20자 이내의 영문,소문자, 대문자, 숫자만 사용 가능합니다.",
+            },
+            onChange: () => {
+              if (idChecked) {
+                setIdChecked(false);
+              }
+            },
+          })}
+        />
+        {RenderErrorMsg(errors.id)}
+        <JoinInput
+          label="비밀번호"
+          forid="password"
+          type="password"
+          width={480}
+          {...register("password", {
+            required: "필수 정보입니다.",
+            pattern: {
+              value: regExp.PW_REGEX,
+              message: "8자 이상 영문,숫자,특수문자를 사용하세요",
+            },
+          })}
+        />
+        {RenderErrorMsg(errors.password)}
+        <JoinInput
+          label="비밀번호 재확인"
+          forid="passwordConfirm"
+          type="password"
+          width={480}
+          {...register("passwordConfirm", {
+            required: "필수 정보입니다.",
+            validate: {
+              same: (passwordConfirm) =>
+                passwordConfirm === getValues("password") ||
+                "비밀번호가 일치하지 않습니다.",
+            },
+          })}
+        />
+        {RenderErrorMsg(errors.passwordConfirm)}
+        <div style={{ margin: "5rem 0 0 0" }}>
           <JoinInput
-            label="아이디"
-            forid="id"
+            label="이름"
+            forid="userName"
             type="text"
-            width={346}
-            isButton={true}
-            onClick={(e) => handleCheckId(getValues("id"), e)}
-            {...register("id", {
-              required: "필수 정보입니다.",
-              pattern: {
-                value: regExp.ID_REGEX,
-                message:
-                  "20자 이내의 영문,소문자, 대문자, 숫자만 사용 가능합니다.",
-              },
-              onChange: () => {
-                if (idChecked) {
-                  setIdChecked(false);
-                }
-              },
-            })}
-          />
-          {RenderErrorMsg(errors.id)}
-          <JoinInput
-            label="비밀번호"
-            forid="password"
-            type="password"
             width={480}
-            {...register("password", {
+            {...register("userName", {
               required: "필수 정보입니다.",
-              pattern: {
-                value: regExp.PW_REGEX,
-                message: "8자 이상 영문,숫자,특수문자를 사용하세요",
-              },
             })}
           />
-          {RenderErrorMsg(errors.password)}
-          <JoinInput
-            label="비밀번호 재확인"
-            forid="passwordConfirm"
-            type="password"
-            width={480}
-            {...register("passwordConfirm", {
-              required: "필수 정보입니다.",
-              validate: {
-                same: (passwordConfirm) =>
-                  passwordConfirm === getValues("password") ||
-                  "비밀번호가 일치하지 않습니다.",
-              },
-            })}
-          />
-          {RenderErrorMsg(errors.passwordConfirm)}
-          <div style={{ margin: "5rem 0 0 0" }}>
+          {RenderErrorMsg(errors.userName)}
+        </div>
+        <InputWrapper>
+          <Label htmlFor="phoneNumber">휴대폰 번호</Label>
+          <div style={{ display: "flex" }}>
+            <Select
+              id="phoneNumber"
+              {...register("phoneNumber", { required: true })}
+            >
+              {options.map(({ value, label }) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </Select>
+            <label className="hidden" htmlFor="centerPhoneNum">
+              휴대폰번호 마지막 자리
+            </label>
+            <Input
+              type="text"
+              maxLength={4}
+              width="152"
+              id="centerPhoneNum"
+              {...register("centerPhoneNum", {
+                required: "필수 정보입니다.",
+                validate: {
+                  number: (inputValue) =>
+                    regExp.PHONE_NO_REGEX.test(inputValue) ||
+                    "숫자만 입력해주세요.",
+                },
+              })}
+            />
+            <label className="hidden" htmlFor="endPhoneNum">
+              휴대폰번호 마지막 자리
+            </label>
+            <Input
+              type="text"
+              width="152"
+              id="endPhoneNum"
+              maxLength={4}
+              {...register("endPhoneNum", {
+                required: "필수 정보입니다.",
+                validate: {
+                  number: (inputValue) =>
+                    regExp.PHONE_NO_REGEX.test(inputValue) ||
+                    "숫자만 입력해주세요.",
+                },
+              })}
+            />
+          </div>
+        </InputWrapper>
+        {RenderErrorMsg(errors.centerPhoneNum) ||
+          RenderErrorMsg(errors.endPhoneNum)}
+        <InputWrapper>
+          <Label htmlFor="email">이메일</Label>
+          <S.EmailInputWrapper>
+            <Input
+              type="text"
+              width="220"
+              id="email"
+              {...register("startEmail", {
+                required: "필수 정보입니다.",
+                pattern: {
+                  value: regExp.START_EMAIL_REGEX,
+                  message: "잘못된 이메일 형식입니다.",
+                },
+              })}
+            />
+            <span>@</span>
+            <label className="hidden" htmlFor="endEmail">
+              이메일주소
+            </label>
+            <Input
+              type="text"
+              width="220"
+              id="endEmail"
+              {...register("endEmail", {
+                required: "필수 정보입니다.",
+                pattern: {
+                  value: regExp.END_EMAIL_REGEX,
+                  message: "잘못된 이메일 형식입니다.",
+                },
+              })}
+            />
+          </S.EmailInputWrapper>
+          {RenderErrorMsg(errors.startEmail) || RenderErrorMsg(errors.endEmail)}
+        </InputWrapper>
+        {toggleType === "seller" && (
+          <>
             <JoinInput
-              label="이름"
-              forid="userName"
+              label="사업자 등록번호"
+              forid="businessNo"
+              type="text"
+              width={346}
+              isButton={true}
+              onClick={(e) => handleCheckBusiness(getValues("businessNo"), e)}
+              maxLength={10}
+              {...register("businessNo", {
+                required: "필수 정보입니다.",
+                pattern: {
+                  value: regExp.BUSINESS_REGEX,
+                  message: "10자리의 숫자를 입력해야 합니다.",
+                },
+                onChange: () => {
+                  if (businessChecked) {
+                    setBusinessChecked(false);
+                  }
+                },
+              })}
+            />
+            {RenderErrorMsg(errors.businessNo)}
+            <JoinInput
+              label="스토어 이름"
+              forid="storeName"
               type="text"
               width={480}
-              {...register("userName", {
+              {...register("storeName", {
                 required: "필수 정보입니다.",
               })}
             />
-            {RenderErrorMsg(errors.userName)}
-          </div>
-          <InputWrapper>
-            <Label htmlFor="phoneNumber">휴대폰 번호</Label>
-            <div style={{ display: "flex" }}>
-              <Select {...register("phoneNumber", { required: true })}>
-                {options.map(({ value, label }) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </Select>
-              <Input
-                type="text"
-                maxLength={4}
-                width="152"
-                {...register("centerPhoneNum", {
-                  required: "필수 정보입니다.",
-                  validate: {
-                    number: (inputValue) =>
-                      regExp.PHONE_NO_REGEX.test(inputValue) ||
-                      "숫자만 입력해주세요.",
-                  },
-                })}
-              />
-              <Input
-                type="text"
-                width="152"
-                maxLength={4}
-                {...register("endPhoneNum", {
-                  required: "필수 정보입니다.",
-                  validate: {
-                    number: (inputValue) =>
-                      regExp.PHONE_NO_REGEX.test(inputValue) ||
-                      "숫자만 입력해주세요.",
-                  },
-                })}
-              />
-            </div>
-          </InputWrapper>
-          {RenderErrorMsg(errors.centerPhoneNum) ||
-            RenderErrorMsg(errors.endPhoneNum)}
-          <InputWrapper>
-            <Label htmlFor="email">이메일</Label>
-            <S.EmailInputWrapper>
-              <Input
-                type="text"
-                width="220"
-                {...register("startEmail", {
-                  required: "필수 정보입니다.",
-                  pattern: {
-                    value: regExp.START_EMAIL_REGEX,
-                    message: "잘못된 이메일 형식입니다.",
-                  },
-                })}
-              />
-              <span>@</span>
-              <Input
-                type="text"
-                width="220"
-                {...register("endEmail", {
-                  required: "필수 정보입니다.",
-                  pattern: {
-                    value: regExp.END_EMAIL_REGEX,
-                    message: "잘못된 이메일 형식입니다.",
-                  },
-                })}
-              />
-            </S.EmailInputWrapper>
-            {RenderErrorMsg(errors.startEmail) ||
-              RenderErrorMsg(errors.endEmail)}
-          </InputWrapper>
-          {toggleType === "seller" && (
-            <>
-              <JoinInput
-                label="사업자 등록번호"
-                forid="businessNo"
-                type="text"
-                width={346}
-                isButton={true}
-                onClick={(e) => handleCheckBusiness(getValues("businessNo"), e)}
-                maxLength={10}
-                {...register("businessNo", {
-                  required: "필수 정보입니다.",
-                  pattern: {
-                    value: regExp.BUSINESS_REGEX,
-                    message: "10자리의 숫자를 입력해야 합니다.",
-                  },
-                  onChange: () => {
-                    if (businessChecked) {
-                      setBusinessChecked(false);
-                    }
-                  },
-                })}
-              />
-              {RenderErrorMsg(errors.businessNo)}
-              <JoinInput
-                label="스토어 이름"
-                forid="storeName"
-                type="text"
-                width={480}
-                {...register("storeName", {
-                  required: "필수 정보입니다.",
-                })}
-              />
-              {RenderErrorMsg(errors.storeName)}
-            </>
-          )}
-        </S.JoinSection>
-        <CheckTerm
-          register={register("checkbox")}
-          children="호두샵의 이용약관 및 개인정보처리방침에 대해 동의합니다"
-        />
-        <S.JoinBtn type="submit" size="md" disabled={!isJoinValid}>
-          가입하기
-        </S.JoinBtn>
-      </form>
-    </>
+            {RenderErrorMsg(errors.storeName)}
+          </>
+        )}
+      </S.JoinForm>
+      <CheckTerm
+        register={register("checkbox")}
+        children="호두샵의 이용약관 및 개인정보처리방침에 대해 동의합니다"
+      />
+      <S.JoinBtn type="submit" size="md" disabled={!isJoinValid}>
+        가입하기
+      </S.JoinBtn>
+    </section>
   );
 }
 
