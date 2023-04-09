@@ -1,7 +1,23 @@
+import { Link } from "react-router-dom";
+import LoginForm from "../../components/LoginForm/LoginForm";
+import HeaderLogo from "../../components/common/HeaderLogo/HeaderLogo";
+import * as S from "./style";
+
 function LoginPage() {
   return (
     <>
-      <div>로그인 페이지</div>
+      <HeaderLogo />
+      <LoginForm />
+      <footer>
+        <S.LoginFooterUl>
+          <S.LoginFooterLi>
+            <S.StyledLink to="/join">회원가입</S.StyledLink>
+          </S.LoginFooterLi>
+          <S.LoginFooterLi>
+            <S.StyledLink to="">비밀번호 찾기</S.StyledLink>
+          </S.LoginFooterLi>
+        </S.LoginFooterUl>
+      </footer>
     </>
   );
 }
