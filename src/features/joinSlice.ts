@@ -5,20 +5,14 @@ import { BASE_URL } from "../constant/config";
 interface joinState {
   valid: boolean;
   error: null | string;
-  successMsg: {
-    Success: string;
-  };
 }
 
 const initialState: joinState = {
   valid: false,
   error: null,
-  successMsg: {
-    Success: "",
-  },
 };
 
-export interface BuyerPostData {
+interface BasePostData {
   username: string;
   password: string;
   password2: string;
@@ -26,50 +20,39 @@ export interface BuyerPostData {
   name: string;
 }
 
-export interface SellerPostData {
-  username: string;
-  password: string;
-  password2: string;
-  phone_number: string;
-  name: string;
+export interface BuyerPostData extends BasePostData {}
+
+export interface SellerPostData extends BasePostData {
   company_registration_number: string;
   store_name: string;
 }
 
-// 아이디 유효성 검증
-export const fetchIdValidate = createAsyncThunk(
-  "join/fetchIdValidate",
-  async (id: string, { rejectWithValue }) => {
-    try {
-      const response = await axios.post(
-        `${BASE_URL}/accounts/signup/valid/username/`,
-        { username: id }
-      );
-      // console.log(response.data);
-      return response.data;
-    } catch (error: any) {
-      // console.log(error.response.data.FAIL_Message);
-      return rejectWithValue(error.response.data.FAIL_Message);
+// 아이디 & 사업자 번호 유효성 검증
+const createValidationThunk = (url: string, field: string) =>
+  createAsyncThunk(
+    `join/fetch${field}Validate`,
+    async (value: string, { rejectWithValue }) => {
+      try {
+        const response = await axios.post(`${BASE_URL}${url}`, {
+          [field]: value,
+        });
+        return response.data.Success;
+      } catch (error: any) {
+        return rejectWithValue(error.response.data.FAIL_Message);
+      }
     }
-  }
+  );
+
+// 아이디 유효성 검증
+export const fetchIdValidate = createValidationThunk(
+  "/accounts/signup/valid/username/",
+  "username"
 );
 
 // 사업자번호 유효성 검증
-export const fetchBusinessValidate = createAsyncThunk(
-  "join/fetchBusinessValidate",
-  async (businessNo: string, { rejectWithValue }) => {
-    try {
-      const response = await axios.post(
-        `${BASE_URL}/accounts/signup/valid/company_registration_number/`,
-        { company_registration_number: businessNo }
-      );
-      // console.log(response.data);
-      return response.data;
-    } catch (error: any) {
-      // console.log(error.response.data.FAIL_Message);
-      return rejectWithValue(error.response.data.FAIL_Message);
-    }
-  }
+export const fetchBusinessValidate = createValidationThunk(
+  "/accounts/signup/valid/company_registration_number/",
+  "company_registration_number"
 );
 
 // 구매자 회원가입
@@ -121,16 +104,14 @@ export const fetchSellerJoin = createAsyncThunk(
         company_registration_number,
         store_name,
       });
-      // console.log(response.data);
+      console.log(response.data);
       return response.data;
     } catch (error: any) {
-      // console.log(error.response.data);
+      console.log(error.response.data);
       return rejectWithValue(error.response.data);
     }
   }
 );
-
-// 회원가입
 
 const joinSlice = createSlice({
   name: "join",
@@ -144,7 +125,6 @@ const joinSlice = createSlice({
       })
       .addCase(fetchIdValidate.fulfilled, (state, action) => {
         state.valid = action.payload.valid;
-        state.successMsg = action.payload;
         state.error = null;
       })
       .addCase(fetchIdValidate.rejected, (state, action) => {
@@ -159,7 +139,6 @@ const joinSlice = createSlice({
       .addCase(fetchBusinessValidate.fulfilled, (state, action) => {
         state.error = null;
         state.valid = action.payload.valid;
-        state.successMsg = action.payload;
       })
       .addCase(fetchBusinessValidate.rejected, (state, action) => {
         state.error =

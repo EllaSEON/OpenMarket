@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useAppSelector, useAppDispatch } from "../../../store/hooks";
+import { useAppDispatch } from "../../../store/hooks";
 import regExp from "../../../utils/regExp";
 import { JoinInput } from "../JoinInput/JoinInput";
 import { InputWrapper, Label, Select, Input } from "../JoinInput/style";
@@ -42,7 +42,6 @@ function JoinForm() {
   } = useForm({ mode: "onChange" });
 
   const dispatch = useAppDispatch();
-  const errorMsg = useAppSelector((state) => state.join.error);
 
   // id 중복 확인 검증
   const handleCheckId = async (
@@ -59,16 +58,20 @@ function JoinForm() {
 
     // 아이디 중복 확인 검증 에러메세지 렌더링
     const resultAction = await dispatch(fetchIdValidate(id));
-    console.log(resultAction.payload);
     if (fetchIdValidate.fulfilled.match(resultAction)) {
       setIdChecked(true);
+      setError("id", {
+        type: "success",
+        message: resultAction.payload,
+      });
     } else {
       // 에러 메시지를 resultAction에서 가져와서 setError 호출
       setError("id", {
+        type: "fail",
         message:
           typeof resultAction.payload === "string"
             ? resultAction.payload
-            : "이미 사용중인 아이디입니다.",
+            : undefined,
       });
     }
   };
@@ -84,18 +87,21 @@ function JoinForm() {
     if (!isValid) {
       return;
     }
-
     // 사업자 번호 인증
     const resultAction = await dispatch(fetchBusinessValidate(businessNo));
-    console.log(resultAction.payload);
     if (fetchBusinessValidate.fulfilled.match(resultAction)) {
       setBusinessChecked(true);
+      setError("businessNo", {
+        type: "success",
+        message: resultAction.payload,
+      });
     } else {
       setError("businessNo", {
+        type: "fail",
         message:
           typeof resultAction.payload === "string"
             ? resultAction.payload
-            : "이미 등록된 사업자번호입니다.",
+            : undefined,
       });
     }
   };
@@ -127,8 +133,9 @@ function JoinForm() {
     setIsJoinValid(allFieldsFilled);
   }, [watchedValues, toggleType]);
 
-  // 아이디/ 사업자 번호 인증 안할 시 alert창
+  // 회원가입 form 제출
   const onSubmit = async (data: Record<string, any>) => {
+    // 아이디/ 사업자 번호 인증 안할 시 alert창
     if (!idChecked) {
       alert("아이디 인증을 완료해 주세요.");
       return;
@@ -137,49 +144,46 @@ function JoinForm() {
       alert("사업자 등록 번호 인증을 완료해주세요");
       return;
     }
-    // 구매자
+    const commonData = {
+      username: data.id,
+      password: data.password,
+      password2: data.passwordConfirm,
+      phone_number: `${data.phoneNumber}${data.centerPhoneNum}${data.endPhoneNum}`,
+      name: data.userName,
+    };
+
     if (toggleType === "buyer") {
-      const buyerData: BuyerPostData = {
-        username: data.id,
-        password: data.password,
-        password2: data.passwordConfirm,
-        phone_number: `${data.phoneNumber}${data.centerPhoneNum}${data.endPhoneNum}`,
-        name: data.userName,
-      };
-      await dispatch(fetchBuyerJoin(buyerData));
-      setError("centerPhoneNum", {
-        message: "해당 사용자 전화번호는 이미 존재합니다.",
-      });
+      const buyerData: BuyerPostData = { ...commonData };
+      handleResultAction(await dispatch(fetchBuyerJoin(buyerData)));
     } else if (toggleType === "seller") {
       const sellerData: SellerPostData = {
-        username: data.id,
-        password: data.password,
-        password2: data.passwordConfirm,
-        phone_number: `${data.phoneNumber}${data.centerPhoneNum}${data.endPhoneNum}`,
-        name: data.userName,
+        ...commonData,
         company_registration_number: data.businessNo,
         store_name: data.storeName,
       };
-      const resultAction = await dispatch(fetchSellerJoin(sellerData));
-      // 결과에서 에러 메시지를 가져오고 setError를 호출하여 에러 메시지를 렌더링합니다.
-      if (fetchSellerJoin.rejected.match(resultAction)) {
-        const errorMessages = resultAction.payload as ErrorMessages;
-        console.log("Result action:", resultAction);
-        console.log("Error messages:", errorMessages);
+      handleResultAction(await dispatch(fetchSellerJoin(sellerData)));
+    }
+  };
 
-        if (errorMessages && errorMessages.phone_number) {
-          setError("centerPhoneNum", {
-            message: errorMessages.phone_number[0],
-          });
-        }
-
-        if (errorMessages && errorMessages.store_name) {
-          setError("storeName", {
-            message: errorMessages.store_name[0],
-          });
-        }
-      }
+  const handleResultAction = (resultAction: any) => {
+    if (resultAction.meta.requestStatus === "fulfilled") {
       navigate("/login");
+    } else if (resultAction.meta.requestStatus === "rejected") {
+      const errorMessages = resultAction.payload as ErrorMessages;
+      if (errorMessages && errorMessages.phone_number) {
+        setError("centerPhoneNum", {
+          message: errorMessages.phone_number[0],
+        });
+      }
+      if (
+        toggleType === "seller" &&
+        errorMessages &&
+        errorMessages.store_name
+      ) {
+        setError("storeName", {
+          message: errorMessages.store_name[0],
+        });
+      }
     }
   };
 
@@ -219,11 +223,7 @@ function JoinForm() {
               },
             })}
           />
-          {idChecked ? (
-            <S.SuccessTxt>멋진 아이디네요</S.SuccessTxt>
-          ) : (
-            RenderErrorMsg(errors.id)
-          )}
+          {RenderErrorMsg(errors.id)}
           <JoinInput
             label="비밀번호"
             forid="password"
@@ -358,11 +358,7 @@ function JoinForm() {
                   },
                 })}
               />
-              {businessChecked ? (
-                <S.SuccessTxt>사용 가능한 사업자등록번호입니다. </S.SuccessTxt>
-              ) : (
-                RenderErrorMsg(errors.businessNo)
-              )}
+              {RenderErrorMsg(errors.businessNo)}
               <JoinInput
                 label="스토어 이름"
                 forid="storeName"
