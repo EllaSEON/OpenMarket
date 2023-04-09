@@ -9,28 +9,6 @@ const JoinSection = styled.section`
   border-radius: 0 0 10px 10px;
 `;
 
-const BuyerrBtn = styled.h2`
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 22px;
-  border: 1px solid #c4c4c4;
-  border-radius: 10px 10px 0 0;
-  text-align: center;
-  padding: 19px 0;
-  width: 50%;
-  display: inline-block;
-  box-sizing: border-box;
-  cursor: pointer;
-`;
-const SuccessTxt = styled.small`
-  display: block;
-  margin-top: 1rem;
-  font-size: 1.4rem;
-  font-weight: 500;
-  color: ${({ theme }) => theme.colors.green};
-`;
-
 const JoinBtn = styled(Button)`
   margin: auto;
   display: block;
@@ -64,8 +42,6 @@ export const EmailInputWrapper = styled.div`
 
 export const S = {
   JoinSection,
-  BuyerrBtn,
-  SuccessTxt,
   JoinBtn,
   Select,
   EmailInputWrapper,
