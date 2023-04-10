@@ -8,10 +8,10 @@ interface ToggleBtnProps {
 
 function ToggleBtn({ toggleType, setToggleType }: ToggleBtnProps) {
   const handleToggle = (e: MouseEvent<HTMLButtonElement>) => {
-    if ((e.target as HTMLButtonElement).name === "buyer") {
-      setToggleType("buyer");
+    if ((e.target as HTMLButtonElement).name === "BUYER") {
+      setToggleType("BUYER");
     } else {
-      setToggleType("seller");
+      setToggleType("SELLER");
     }
   };
 
@@ -21,16 +21,16 @@ function ToggleBtn({ toggleType, setToggleType }: ToggleBtnProps) {
     <>
       <S.ToggleWrapper>
         <S.ToggleText
-          name="buyer"
+          name="BUYER"
           value={toggleType}
-          active={toggleType === "buyer"}
+          active={toggleType === "BUYER"}
           onClick={handleToggle}
         >
           {path === "/login" ? "구매회원 로그인" : "구매회원가입"}
         </S.ToggleText>
         <S.ToggleText
-          name="seller"
-          active={toggleType === "seller"}
+          name="SELLER"
+          active={toggleType === "SELLER"}
           value={toggleType}
           onClick={handleToggle}
         >

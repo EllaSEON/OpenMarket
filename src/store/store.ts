@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import joinSliceReducer from "../features/joinSlice";
+import loginSliceReducer from "../features/loginSlice";
 
 export const store = configureStore({
   reducer: {
     join: joinSliceReducer,
+    login: loginSliceReducer,
   },
 });
 
