@@ -28,6 +28,11 @@ export const fetchLogin = createAsyncThunk(
       const data = { username, password, login_type };
       const response = await axios.post(`${BASE_URL}/accounts/login/`, data);
       console.log(response.data);
+
+      // if (response.data) {
+      //   sessionStorage.setItem("token", JSON.stringify(response.data));
+      // }
+      return response.data;
     } catch (error: any) {
       console.log(error.response.data);
       return rejectWithValue(error.response.data.FAIL_Message);
