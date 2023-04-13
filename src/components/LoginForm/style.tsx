@@ -27,6 +27,9 @@ export const LoginInput = styled.input`
   &::placeholder {
     color: ${({ theme }) => theme.colors.lightGray};
   }
+  &:focus {
+    border-bottom: 1px solid ${({ theme }) => theme.colors.green};
+  }
 `;
 
 export const ErrorText = styled.small`

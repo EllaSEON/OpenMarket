@@ -95,7 +95,7 @@ export const fetchSellerJoin = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.post(`${BASE_URL}/accounts/signup_seller/`, {
+      const data = {
         username,
         password,
         password2,
@@ -103,7 +103,11 @@ export const fetchSellerJoin = createAsyncThunk(
         name,
         company_registration_number,
         store_name,
-      });
+      };
+      const response = await axios.post(
+        `${BASE_URL}/accounts/signup_seller/`,
+        data
+      );
       console.log(response.data);
       return response.data;
     } catch (error: any) {

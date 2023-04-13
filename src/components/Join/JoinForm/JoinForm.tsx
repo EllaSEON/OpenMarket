@@ -24,7 +24,7 @@ interface ErrorMessages {
 }
 
 function JoinForm() {
-  const [toggleType, setToggleType] = useState("buyer");
+  const [toggleType, setToggleType] = useState("BUYER");
   const [isJoinValid, setIsJoinValid] = useState(false);
   const [idChecked, setIdChecked] = useState(false);
   const [businessChecked, setBusinessChecked] = useState(false);
