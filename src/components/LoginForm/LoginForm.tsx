@@ -70,7 +70,7 @@ function LoginForm() {
           name="username"
           value={inputs.username}
           ref={idInput}
-          // required
+          required
         />
         <S.LoginInput
           placeholder="비밀번호"
@@ -78,7 +78,7 @@ function LoginForm() {
           onChange={handleData}
           name="password"
           value={inputs.password}
-          // required
+          required
         />
         {loginError ? <S.ErrorText>{message}</S.ErrorText> : null}
         <S.LoginBtn type="submit" size="md">
