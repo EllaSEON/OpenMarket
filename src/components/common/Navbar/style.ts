@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { Input } from "../../Join/JoinInput/style";
 import SearchIcon from "../../../assets/images/icon-search.svg";
+import ShoppingBagIcon from "../../../assets/images/icon-shopping-bag.svg";
+import Button from "../Button/Button";
 
 export const HomeHeader = styled.header`
   box-shadow: 0px 4px 5px -4px #0000001a;
@@ -11,7 +13,7 @@ export const Navbar = styled.nav`
   justify-content: space-between;
   align-items: center;
   margin: 0 auto;
-  padding: 22px 10%;
+  padding: 22px 16%;
 `;
 
 export const HeaderSearchWrapper = styled.div`
@@ -70,6 +72,10 @@ export const CartBtn = styled.button`
   gap: 4px;
   text-align: center;
   &:hover {
+    img {
+      filter: ${({ theme }) =>
+        `invert(36%) sepia(95%) saturate(344%) hue-rotate(94deg) brightness(102%) contrast(88%)`};
+    }
     ${CartText} {
       color: ${({ theme }) => theme.colors.green};
     }
@@ -78,3 +84,19 @@ export const CartBtn = styled.button`
 
 export const UserBtn = styled(CartBtn)``;
 export const UserText = styled(CartText)``;
+
+export const ShoppingBagBtn = styled(Button)`
+  position: relative;
+  text-align: right;
+  padding-right: 2rem;
+  ::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    background-image: url(${ShoppingBagIcon});
+  }
+`;
