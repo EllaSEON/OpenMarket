@@ -1,5 +1,11 @@
+import Navbar from "../../components/common/Navbar/Navbar";
+
 function HomePage() {
-  return <div>홈페이지</div>;
+  return (
+    <>
+      <Navbar />
+    </>
+  );
 }
 
 export default HomePage;
