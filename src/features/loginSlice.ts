@@ -2,20 +2,25 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_URL } from "../constant/config";
 
+const item = localStorage.getItem("token");
+const TOKEN = item === null ? null : JSON.parse(item).token;
+
 interface LoginData {
   username: string;
   password: string;
   login_type: string;
 }
 
-interface InitalState {
+interface LoginState {
   status: "loading" | "succeeded" | "failed";
   error: string;
+  token?: string | null;
 }
 
-const initialState: InitalState = {
+const initialState: LoginState = {
   status: "loading",
   error: "",
+  token: TOKEN ? TOKEN : null,
 };
 
 export const fetchLogin = createAsyncThunk(
@@ -29,9 +34,10 @@ export const fetchLogin = createAsyncThunk(
       const response = await axios.post(`${BASE_URL}/accounts/login/`, data);
       console.log(response.data);
 
-      // if (response.data) {
-      //   sessionStorage.setItem("token", JSON.stringify(response.data));
-      // }
+      if (response.data) {
+        localStorage.setItem("token", JSON.stringify(response.data.token));
+        localStorage.setItem("user_type", response.data.user_type);
+      }
       return response.data;
     } catch (error: any) {
       console.log(error.response.data);

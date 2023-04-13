@@ -12,7 +12,6 @@ function LoginForm() {
   const [toggleType, setToggleType] = useState("BUYER");
   const [message, setMessage] = useState("");
   const loginError = useAppSelector((state: RootState) => state.login.error);
-  console.log(loginError);
   const status = useAppSelector((state: RootState) => state.login.status);
 
   const idInput = useRef<HTMLInputElement>(null);
