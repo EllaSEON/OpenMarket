@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_URL } from "../constant/config";
+import { setCookie, getCookie } from "../utils/Cookies";
 
-const item = localStorage.getItem("token");
-const TOKEN = item === null ? null : JSON.parse(item).token;
+const item = getCookie("token");
+const TOKEN = item === null ? null : JSON.parse(item || "{}").token;
 
 interface LoginData {
   username: string;
@@ -35,8 +36,8 @@ export const fetchLogin = createAsyncThunk(
       console.log(response.data);
 
       if (response.data) {
-        localStorage.setItem("token", JSON.stringify(response.data.token));
-        localStorage.setItem("user_type", response.data.user_type);
+        setCookie("token", response.data.token);
+        setCookie("userType", response.data.user_type);
       }
       return response.data;
     } catch (error: any) {
