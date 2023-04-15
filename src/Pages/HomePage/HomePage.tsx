@@ -1,4 +1,5 @@
 import Navbar from "../../components/common/Navbar/Navbar";
+import Footer from "../../components/Footer/Footer";
 import Carousel from "../../components/Home/Carousel/Carousel";
 import ProductCard from "../../components/Home/ProductCard/ProductCard";
 import * as S from "./style";
@@ -18,6 +19,7 @@ function HomePage() {
           <ProductCard />
         </S.ProductLists>
       </S.ProductSection>
+      <Footer />
     </>
   );
 }

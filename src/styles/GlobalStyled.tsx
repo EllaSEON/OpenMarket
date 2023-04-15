@@ -28,7 +28,6 @@ ${reset}
     
   }
   a {
-    color: #fff; 
     text-decoration: none; 
     outline: none
   }
