@@ -9,16 +9,18 @@ export const HomeHeader = styled.header`
 `;
 
 export const Navbar = styled.nav`
+  max-width: 1380px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin: 0 auto;
-  padding: 22px 16%;
+  padding: 22px;
 `;
 
 export const HeaderSearchWrapper = styled.div`
   display: flex;
   gap: 30px;
+  align-items: center;
 `;
 
 export const Logo = styled.img`
