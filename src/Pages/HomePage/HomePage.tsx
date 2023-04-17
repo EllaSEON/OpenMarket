@@ -1,5 +1,5 @@
 import Navbar from "../../components/common/Navbar/Navbar";
-import Footer from "../../components/Footer/Footer";
+import Footer from "../../components/common/Footer/Footer";
 import Carousel from "../../components/Home/Carousel/Carousel";
 import ProductCard from "../../components/Home/ProductCard/ProductCard";
 import * as S from "./style";
@@ -7,7 +7,6 @@ import * as S from "./style";
 function HomePage() {
   return (
     <>
-      <Navbar />
       <Carousel />
       <S.ProductSection>
         <h2 className="hidden">상품리스트</h2>
@@ -19,7 +18,6 @@ function HomePage() {
           <ProductCard />
         </S.ProductLists>
       </S.ProductSection>
-      <Footer />
     </>
   );
 }

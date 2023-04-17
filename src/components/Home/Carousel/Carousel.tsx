@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import * as S from "./style";
 import { carouselData } from "./carouselData";
@@ -48,9 +48,7 @@ function Carousel() {
                 opacity={carouselIndex === index + 1 ? "active" : "none"}
               >
                 <img
-                  src={
-                    process.env.PUBLIC_URL + `/Imgs/carousel${index + 1}.jpg`
-                  }
+                  src={process.env.PUBLIC_URL + `/Imgs/image${index + 1}.jpg`}
                   alt={item.alt}
                 />
               </S.ImgBox>
@@ -59,10 +57,10 @@ function Carousel() {
         })}
         {/* 캐러셀 화살표 이동 버튼 */}
         <S.ArrowBtn type="button" direct="left" onClick={movePrevImg}>
-          <LeftArrow stroke="black" />
+          <LeftArrow stroke="white" />
         </S.ArrowBtn>
         <S.ArrowBtn type="button" direct="right" onClick={moveNextImg}>
-          <RightArrow stroke="black" />
+          <RightArrow stroke="white" />
         </S.ArrowBtn>
 
         {/* 캐러셀 닷 버튼  */}

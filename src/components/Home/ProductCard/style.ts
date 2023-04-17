@@ -1,14 +1,13 @@
 import styled from "styled-components";
 
 export const ProductCardList = styled.li`
-  max-width: 38rem;
-  display: flex;
-  flex-direction: column;
   cursor: pointer;
 `;
 
 export const ProductImg = styled.img`
-  width: 38rem;
+  max-width: 38rem;
+  display: flex;
+  flex-direction: column;
   height: 38rem;
   border-radius: 10px;
 `;
