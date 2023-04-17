@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import LoginForm from "../../components/LoginForm/LoginForm";
 import HeaderLogo from "../../components/common/HeaderLogo/HeaderLogo";
 import * as S from "./style";

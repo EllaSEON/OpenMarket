@@ -3,8 +3,10 @@ import axios from "axios";
 import { BASE_URL } from "../constant/config";
 import { setCookie, getCookie } from "../utils/Cookies";
 
-const item = getCookie("token");
-const TOKEN = item === null ? null : JSON.parse(item || "{}").token;
+const tokenItem = getCookie("token");
+const typeItem = getCookie("userType");
+const TOKEN = tokenItem === null ? null : tokenItem;
+const USER_TYPE = typeItem === null ? null : typeItem;
 
 interface LoginData {
   username: string;
@@ -16,12 +18,14 @@ interface LoginState {
   status: "loading" | "succeeded" | "failed";
   error: string;
   token?: string | null;
+  userType: string;
 }
 
 const initialState: LoginState = {
   status: "loading",
   error: "",
   token: TOKEN ? TOKEN : null,
+  userType: USER_TYPE ? USER_TYPE : "BUYER",
 };
 
 export const fetchLogin = createAsyncThunk(
