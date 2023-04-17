@@ -17,7 +17,7 @@ function Navbar() {
           <S.Logo src={Logo} alt="호두마켓 로고" />
           <S.SearchBarWrapper>
             <S.SearchInp type="text" placeholder="상품을 검색해보세요!" />
-            <S.SearchBtn type="button" />
+            <S.SearchBtn type="button" aria-label="검색하기 버튼" />
           </S.SearchBarWrapper>
         </S.HeaderSearchWrapper>
         {userType === "BUYER" ? (
