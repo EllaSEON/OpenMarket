@@ -18,7 +18,7 @@ interface LoginState {
   status: "loading" | "succeeded" | "failed";
   error: string;
   token?: string | null;
-  userType: string;
+  userType?: string;
 }
 
 const initialState: LoginState = {
@@ -43,7 +43,10 @@ export const fetchLogin = createAsyncThunk(
         setCookie("token", response.data.token);
         setCookie("userType", response.data.user_type);
       }
-      return response.data;
+      return {
+        token: response.data.token,
+        userType: response.data.user_type,
+      };
     } catch (error: any) {
       console.log(error.response.data);
       return rejectWithValue(error.response.data.FAIL_Message);
@@ -60,9 +63,11 @@ const loginSlice = createSlice({
       .addCase(fetchLogin.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(fetchLogin.fulfilled, (state) => {
+      .addCase(fetchLogin.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.error = "";
+        state.token = action.payload.token;
+        state.userType = action.payload.userType;
       })
       .addCase(fetchLogin.rejected, (state, action) => {
         state.status = "failed";

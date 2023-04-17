@@ -32,7 +32,7 @@ export const fetchGetProducts = createAsyncThunk(
   "products/fetchGetProducts",
   async () => {
     try {
-      const products = await axios.get(`${BASE_URL}/products`);
+      const products = await axios.get(`${BASE_URL}/products/`);
       console.log(products.data.results);
       return products.data.results;
     } catch (error: any) {

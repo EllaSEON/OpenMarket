@@ -10,6 +10,7 @@ export const ProductImg = styled.img`
   display: flex;
   flex-direction: column;
   border-radius: 10px;
+  border: 1px solid ${({ theme }) => theme.colors.lightGray};
 `;
 
 export const StoreName = styled.p`

@@ -9,6 +9,7 @@ import UserIcon from "../../../assets/images/icon-user-black.svg";
 function Navbar() {
   const token = useAppSelector((state: RootState) => state.login.token);
   const userType = useAppSelector((state: RootState) => state.login.userType);
+  console.log(userType);
 
   return (
     <S.HomeHeader>
