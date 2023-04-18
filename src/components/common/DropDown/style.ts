@@ -1,8 +1,40 @@
 import styled from "styled-components";
 
-export const DropDownWrapper = styled.div`
+export const DropDownWrapper = styled.ul`
+  position: absolute;
+  top: 90px;
+  z-index: 10;
+  padding: 1rem;
+  width: 130px;
+  height: 108px;
+  background: ${({ theme }) => theme.colors.white};
   border-radius: 10px;
-  color: ${({ theme }) => theme.colors.lightGray};
   border: 1px solid ${({ theme }) => theme.colors.lightGray};
-  box-shadow: 0px 8px 10px 0px #87878714;
+  &:before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: -9px;
+    transform: translateX(-50%) rotate(45deg);
+    width: 15px;
+    height: 15px;
+    background: #fff;
+    border: 1px solid ${({ theme }) => theme.colors.lightGray};
+    border-right: none;
+    border-bottom: none;
+  }
+`;
+
+export const DropDownBtn = styled.button`
+  width: 100%;
+  height: 40px;
+  font-size: 1.6rem;
+  line-height: 2rem;
+  font-weight: 500;
+  color: ${({ theme }) => theme.colors.darkGray};
+  &:hover {
+    color: ${({ theme }) => theme.colors.green};
+    border: 1px solid ${({ theme }) => theme.colors.darkGray};
+    border-radius: 10px;
+  }
 `;

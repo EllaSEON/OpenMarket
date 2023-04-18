@@ -8,6 +8,7 @@ import UserIcon from "../../../assets/images/icon-user-black.svg";
 import Modal from "../Modal/Modal";
 import { useDispatch } from "react-redux";
 import { openModal } from "../../../features/modalSlice";
+import DropDown from "../DropDown/DropDown";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -69,6 +70,7 @@ function Navbar() {
             >
               <img src={UserIcon} alt="유저 아이콘 버튼" />
               <S.UserText>{token ? "마이페이지" : "로그인"}</S.UserText>
+              <DropDown />
             </S.UserBtn>
           </S.HeaderUserWrapper>
         ) : (
@@ -76,6 +78,7 @@ function Navbar() {
             <S.UserBtn>
               <img src={UserIcon} alt="유저 아이콘 버튼" />
               <S.UserText>마이페이지</S.UserText>
+              <DropDown />
             </S.UserBtn>
             <S.ShoppingBagBtn type="button" size="ms">
               판매자센터
