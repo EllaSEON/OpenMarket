@@ -1,15 +1,17 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../../store/hooks";
 import { RootState } from "../../../store/store";
 import * as S from "./style";
 import Logo from "../../../assets/images/Logo-hodu.svg";
 import CartIcon from "../../../assets/images/icon-shopping-cart.svg";
 import UserIcon from "../../../assets/images/icon-user-black.svg";
+import Modal from "../Modal/Modal";
 
 function Navbar() {
   const token = useAppSelector((state: RootState) => state.login.token);
   const userType = useAppSelector((state: RootState) => state.login.userType);
-  console.log(userType);
+
+  const navigate = useNavigate();
 
   return (
     <S.HomeHeader>
@@ -47,6 +49,11 @@ function Navbar() {
           </S.HeaderUserWrapper>
         )}
       </S.Navbar>
+      <Modal>
+        로그인이 필요한 서비스입니다.
+        <br />
+        로그인 하시겠습니까?
+      </Modal>
     </S.HomeHeader>
   );
 }
