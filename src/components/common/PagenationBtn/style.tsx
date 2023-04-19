@@ -24,12 +24,14 @@ export const PageNumber = styled.li<{ active?: boolean }>`
   }
 `;
 
-export const ArrowIconWrapper = styled.div`
+export const ArrowIconWrapper = styled.div<{ disabled: boolean }>`
   cursor: pointer;
   svg {
     stroke: ${({ theme }) => theme.colors.lightGray};
   }
-  &:hover svg {
+  /* &:hover svg {
     stroke: black;
-  }
+  } */
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+  cursor: ${({ disabled }) => (disabled ? "default" : "pointer")};
 `;

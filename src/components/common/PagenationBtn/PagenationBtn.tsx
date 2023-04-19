@@ -19,7 +19,12 @@ function PageNation({ totalPage, onPageChange }: PageNationProps) {
 
   return (
     <S.PaginationWrapper>
-      <S.ArrowIconWrapper onClick={() => handleClick(currentPage - 1)}>
+      <S.ArrowIconWrapper
+        onClick={
+          currentPage > 1 ? () => handleClick(currentPage - 1) : undefined
+        }
+        disabled={currentPage <= 1}
+      >
         <LeftArrow />
       </S.ArrowIconWrapper>
       {pages.map((page) => (
@@ -31,7 +36,14 @@ function PageNation({ totalPage, onPageChange }: PageNationProps) {
           {page}
         </S.PageNumber>
       ))}
-      <S.ArrowIconWrapper onClick={() => handleClick(currentPage + 1)}>
+      <S.ArrowIconWrapper
+        onClick={
+          currentPage < totalPage
+            ? () => handleClick(currentPage + 1)
+            : undefined
+        }
+        disabled={currentPage >= totalPage}
+      >
         <RightArrow />
       </S.ArrowIconWrapper>
     </S.PaginationWrapper>
