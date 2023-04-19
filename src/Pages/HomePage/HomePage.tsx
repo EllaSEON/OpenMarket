@@ -5,6 +5,7 @@ import ProductCard from "../../components/Home/ProductCard/ProductCard";
 import { RootState } from "../../store/store";
 import { fetchGetProducts } from "../../features/productSlice";
 import * as S from "./style";
+import PageNation from "../../components/common/PagenationBtn/PagenationBtn";
 
 function HomePage() {
   const dispatch = useAppDispatch();
@@ -26,6 +27,7 @@ function HomePage() {
             return <ProductCard key={product.product_id} product={product} />;
           })}
         </S.ProductLists>
+        <PageNation />
       </S.ProductSection>
     </>
   );
