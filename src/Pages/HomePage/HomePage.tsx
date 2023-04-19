@@ -11,7 +11,7 @@ function HomePage() {
   const products = useAppSelector(
     (state: RootState) => state.products.products
   );
-  console.log(products);
+  // console.log(products);
   useEffect(() => {
     dispatch(fetchGetProducts());
   }, []);

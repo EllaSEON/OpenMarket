@@ -1,21 +1,23 @@
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "../../../store/hooks";
+import { useAppSelector, useAppDispatch } from "../../../store/hooks";
+import { openModal } from "../../../features/modalSlice";
 import { RootState } from "../../../store/store";
-import * as S from "./style";
+import Modal from "../Modal/Modal";
+import DropDown from "../DropDown/DropDown";
 import Logo from "../../../assets/images/Logo-hodu.svg";
 import CartIcon from "../../../assets/images/icon-shopping-cart.svg";
 import UserIcon from "../../../assets/images/icon-user-black.svg";
-import Modal from "../Modal/Modal";
-import { useDispatch } from "react-redux";
-import { openModal } from "../../../features/modalSlice";
-import DropDown from "../DropDown/DropDown";
+import * as S from "./style";
 
 function Navbar() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const token = useAppSelector((state: RootState) => state.login.token);
   const userType = useAppSelector((state: RootState) => state.login.userType);
   const modal = useAppSelector((state: RootState) => state.modal.isOpen);
+
+  const [dropDown, setDropDown] = useState(false);
 
   const needLoginModal = (
     <Modal>
@@ -24,6 +26,14 @@ function Navbar() {
       로그인 하시겠습니까?
     </Modal>
   );
+
+  const handleUserClick = () => {
+    if (token) {
+      setDropDown(!dropDown);
+    } else {
+      navigate("/login");
+    }
+  };
 
   return (
     <S.HomeHeader>
@@ -57,28 +67,18 @@ function Navbar() {
               <S.CartText>장바구니</S.CartText>
             </S.CartBtn>
 
-            <S.UserBtn
-              onClick={
-                token
-                  ? () => {
-                      navigate("/");
-                    }
-                  : () => {
-                      navigate("/login");
-                    }
-              }
-            >
+            <S.UserBtn onClick={handleUserClick}>
               <img src={UserIcon} alt="유저 아이콘 버튼" />
               <S.UserText>{token ? "마이페이지" : "로그인"}</S.UserText>
-              <DropDown />
+              {token && dropDown && <DropDown />}
             </S.UserBtn>
           </S.HeaderUserWrapper>
         ) : (
           <S.HeaderUserWrapper>
-            <S.UserBtn>
+            <S.UserBtn onClick={handleUserClick}>
               <img src={UserIcon} alt="유저 아이콘 버튼" />
               <S.UserText>마이페이지</S.UserText>
-              <DropDown />
+              {token && dropDown && <DropDown />}
             </S.UserBtn>
             <S.ShoppingBagBtn type="button" size="ms">
               판매자센터
