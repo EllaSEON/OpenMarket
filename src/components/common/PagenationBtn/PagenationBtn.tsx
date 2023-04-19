@@ -1,20 +1,37 @@
+import { useState } from "react";
 import * as S from "./style";
 import { ReactComponent as LeftArrow } from "../../../assets/images/icon-swiper-left.svg";
 import { ReactComponent as RightArrow } from "../../../assets/images/icon-swiper-right.svg";
 
-function PageNation() {
+interface PageNationProps {
+  totalPage: number;
+  onPageChange: (page: number) => void;
+}
+
+function PageNation({ totalPage, onPageChange }: PageNationProps) {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const handleClick = (page: number) => {
+    setCurrentPage(page);
+    onPageChange(page);
+  };
+  const pages = [...Array(totalPage).keys()].map((i) => i + 1);
+
   return (
     <S.PaginationWrapper>
-      <S.ArrowIconWrapper>
+      <S.ArrowIconWrapper onClick={() => handleClick(currentPage - 1)}>
         <LeftArrow />
       </S.ArrowIconWrapper>
-      <S.PageNumber>1</S.PageNumber>
-      <S.PageNumber>2</S.PageNumber>
-      <S.PageNumber>3</S.PageNumber>
-      <S.PageNumber>4</S.PageNumber>
-      <S.PageNumber>5</S.PageNumber>
-      <S.PageNumber>6</S.PageNumber>
-      <S.ArrowIconWrapper>
+      {pages.map((page) => (
+        <S.PageNumber
+          key={page}
+          onClick={() => handleClick(page)}
+          active={currentPage === page}
+        >
+          {page}
+        </S.PageNumber>
+      ))}
+      <S.ArrowIconWrapper onClick={() => handleClick(currentPage + 1)}>
         <RightArrow />
       </S.ArrowIconWrapper>
     </S.PaginationWrapper>

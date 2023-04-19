@@ -7,12 +7,12 @@ export const PaginationWrapper = styled.ul`
   margin: 8rem auto;
 `;
 
-export const PageNumber = styled.li<{ active?: string }>`
+export const PageNumber = styled.li<{ active?: boolean }>`
   padding: 1.2rem;
   margin: 0.5rem;
   background-color: ${({ active }) => (active ? "#333" : "#fff")};
   color: ${({ active }) => (active ? "#fff" : "#333")};
-  border-radius: 4px;
+  border-radius: 50%;
   font-size: 20px;
   font-weight: 500;
   text-align: center;

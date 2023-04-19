@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import Carousel from "../../components/Home/Carousel/Carousel";
 import ProductCard from "../../components/Home/ProductCard/ProductCard";
@@ -12,10 +12,20 @@ function HomePage() {
   const products = useAppSelector(
     (state: RootState) => state.products.products
   );
-  // console.log(products);
+  const totalPage = useAppSelector(
+    (state: RootState) => state.products.totalPage
+  );
+  console.log(totalPage);
+
+  const [currentPage, setCurrentPage] = useState(1);
+
   useEffect(() => {
-    dispatch(fetchGetProducts());
-  }, []);
+    dispatch(fetchGetProducts(currentPage));
+  }, [currentPage]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   return (
     <>
@@ -27,7 +37,7 @@ function HomePage() {
             return <ProductCard key={product.product_id} product={product} />;
           })}
         </S.ProductLists>
-        <PageNation />
+        <PageNation totalPage={totalPage} onPageChange={handlePageChange} />
       </S.ProductSection>
     </>
   );

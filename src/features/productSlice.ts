@@ -20,21 +20,25 @@ interface ProductState {
   status: "loading" | "succeeded" | "failed";
   error: string;
   products: Product[];
+  totalPage: number;
 }
 
 const initialState: ProductState = {
   status: "loading",
   error: "",
   products: [],
+  totalPage: 1,
 };
 
 export const fetchGetProducts = createAsyncThunk(
   "products/fetchGetProducts",
-  async () => {
+  async (currentPage: number) => {
     try {
-      const products = await axios.get(`${BASE_URL}/products/`);
+      const products = await axios.get(
+        `${BASE_URL}/products?page=${currentPage}`
+      );
       // console.log(products.data.results);
-      return products.data.results;
+      return products.data;
     } catch (error: any) {
       console.log(error);
     }
@@ -53,7 +57,8 @@ const productSlice = createSlice({
       .addCase(fetchGetProducts.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.error = "";
-        state.products = action.payload;
+        state.products = action.payload.results;
+        state.totalPage = Math.floor(action.payload.count / 15 + 1);
       })
       .addCase(fetchGetProducts.rejected, (state, action) => {
         state.status = "failed";
