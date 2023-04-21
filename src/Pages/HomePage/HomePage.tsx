@@ -12,20 +12,12 @@ function HomePage() {
   const products = useAppSelector(
     (state: RootState) => state.products.products
   );
-  const totalPage = useAppSelector(
-    (state: RootState) => state.products.totalPage
-  );
-  console.log(totalPage);
 
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     dispatch(fetchGetProducts(currentPage));
   }, [currentPage]);
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
 
   return (
     <>
@@ -37,7 +29,7 @@ function HomePage() {
             return <ProductCard key={product.product_id} product={product} />;
           })}
         </S.ProductLists>
-        <PageNation totalPage={totalPage} onPageChange={handlePageChange} />
+        <PageNation currentPage={currentPage} setCurrentPage={setCurrentPage} />
       </S.ProductSection>
     </>
   );
