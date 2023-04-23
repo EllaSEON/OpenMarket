@@ -45,6 +45,20 @@ export const fetchGetProducts = createAsyncThunk(
   }
 );
 
+export const fetchSearch = createAsyncThunk(
+  "products/fetchSearch",
+  async (keyword: string) => {
+    try {
+      const searchResults = await axios.get(
+        `${BASE_URL}/products/?search=${keyword}`
+      );
+      return searchResults.data;
+    } catch (error: any) {
+      console.log(error);
+    }
+  }
+);
+
 const productSlice = createSlice({
   name: "products",
   initialState,
@@ -64,6 +78,9 @@ const productSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message || "Something is wrong";
         state.products = [];
+      })
+      .addCase(fetchSearch.fulfilled, (state, action) => {
+        state.products = action.payload.results;
       });
   },
 });

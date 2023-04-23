@@ -1,7 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../../../store/hooks";
 import { openModal } from "../../../features/modalSlice";
+import { fetchSearch } from "../../../features/productSlice";
 import { RootState } from "../../../store/store";
 import Modal from "../Modal/Modal";
 import DropDown from "../DropDown/DropDown";
@@ -17,15 +18,8 @@ function Navbar() {
   const userType = useAppSelector((state: RootState) => state.login.userType);
   const modal = useAppSelector((state: RootState) => state.modal.isOpen);
 
+  const [keyword, setKeyword] = useState("");
   const [dropDown, setDropDown] = useState(false);
-
-  const needLoginModal = (
-    <Modal>
-      로그인이 필요한 서비스입니다.
-      <br />
-      로그인 하시겠습니까?
-    </Modal>
-  );
 
   const handleUserClick = () => {
     if (token) {
@@ -34,6 +28,31 @@ function Navbar() {
       navigate("/login");
     }
   };
+
+  // 검색
+  const handleSearch = async () => {
+    if (keyword) {
+      await dispatch(fetchSearch(keyword));
+      navigate("/search");
+      setKeyword("");
+    }
+  };
+
+  // 엔터키를 쳤을 때 검색 할 수 있게함
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch();
+      setKeyword("");
+    }
+  };
+
+  const needLoginModal = (
+    <Modal>
+      로그인이 필요한 서비스입니다.
+      <br />
+      로그인 하시겠습니까?
+    </Modal>
+  );
 
   return (
     <S.HomeHeader>
@@ -46,8 +65,18 @@ function Navbar() {
             onClick={() => navigate("/")}
           />
           <S.SearchBarWrapper>
-            <S.SearchInp type="text" placeholder="상품을 검색해보세요!" />
-            <S.SearchBtn type="button" aria-label="검색하기 버튼" />
+            <S.SearchInp
+              type="text"
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="상품을 검색해보세요!"
+            />
+            <S.SearchBtn
+              type="button"
+              aria-label="검색하기 버튼"
+              onClick={handleSearch}
+            />
           </S.SearchBarWrapper>
         </S.HeaderSearchWrapper>
         {userType === "BUYER" ? (

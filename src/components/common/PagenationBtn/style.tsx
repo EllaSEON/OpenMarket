@@ -27,7 +27,7 @@ export const PageNumber = styled.li<{ active?: boolean }>`
 export const ArrowIconWrapper = styled.div<{ disabled: boolean }>`
   cursor: pointer;
   svg {
-    stroke: ${({ theme }) => theme.colors.lightGray};
+    stroke: ${({ theme }) => theme.colors.darkGray};
   }
   /* &:hover svg {
     stroke: black;

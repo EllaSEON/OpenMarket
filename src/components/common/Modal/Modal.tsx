@@ -39,6 +39,7 @@ function Modal({ children }: ModalProps) {
           size="s"
           onClick={() => {
             navigate("/login");
+            dispatch(closeModal());
           }}
         >
           예
