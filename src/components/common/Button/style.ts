@@ -26,12 +26,22 @@ const colorStyles = css<ButtonProps>`
         ? theme.colors[color]
         : theme.colors["green"]; // undefined일 경우 기본 색상 설정
 
+    const fontColor = selected === "#ffffff" ? "#767676" : "#ffffff";
+    const borderColor = selected === "#ffffff" ? "#c4c4c4" : "#ffffff";
+
     return css`
       background: ${selected};
+      color: ${fontColor};
+      border: 1px solid ${borderColor};
+
+      &:hover {
+        border: 2px solid #767676;
+      }
+
       &:active {
         background: #ffffff;
         color: #767676;
-        border: 1px solid #c4c4c4;
+        border: 1px solid #767676;
       }
       &:disabled {
         background: #c4c4c4;

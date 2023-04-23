@@ -5,6 +5,7 @@ const colors: { [key: string]: string } = {
   lightGray: "#C4C4C4",
   darkGray: "#767676",
   red: "#EB5757",
+  white: "#ffffff",
 };
 
 export type ColorsTypes = typeof colors;

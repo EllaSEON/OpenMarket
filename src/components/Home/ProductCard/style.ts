@@ -5,11 +5,12 @@ export const ProductCardList = styled.li`
 `;
 
 export const ProductImg = styled.img`
-  max-width: 38rem;
+  width: 100%;
+  height: 38rem;
   display: flex;
   flex-direction: column;
-  height: 38rem;
   border-radius: 10px;
+  border: 1px solid ${({ theme }) => theme.colors.lightGray};
 `;
 
 export const StoreName = styled.p`

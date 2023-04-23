@@ -48,7 +48,7 @@ function Carousel() {
                 opacity={carouselIndex === index + 1 ? "active" : "none"}
               >
                 <img
-                  src={process.env.PUBLIC_URL + `/Imgs/image${index + 1}.jpg`}
+                  src={process.env.PUBLIC_URL + `/Imgs/image${index + 1}.webp`}
                   alt={item.alt}
                 />
               </S.ImgBox>

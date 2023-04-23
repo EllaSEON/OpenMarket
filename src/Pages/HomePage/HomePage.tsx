@@ -1,22 +1,35 @@
-import Navbar from "../../components/common/Navbar/Navbar";
-import Footer from "../../components/common/Footer/Footer";
+import { useState, useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import Carousel from "../../components/Home/Carousel/Carousel";
 import ProductCard from "../../components/Home/ProductCard/ProductCard";
+import { RootState } from "../../store/store";
+import { fetchGetProducts } from "../../features/productSlice";
 import * as S from "./style";
+import PageNation from "../../components/common/PagenationBtn/PagenationBtn";
 
 function HomePage() {
+  const dispatch = useAppDispatch();
+  const products = useAppSelector(
+    (state: RootState) => state.products.products
+  );
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    dispatch(fetchGetProducts(currentPage));
+  }, [currentPage]);
+
   return (
     <>
       <Carousel />
       <S.ProductSection>
         <h2 className="hidden">상품리스트</h2>
         <S.ProductLists>
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
+          {products?.map((product) => {
+            return <ProductCard key={product.product_id} product={product} />;
+          })}
         </S.ProductLists>
+        <PageNation currentPage={currentPage} setCurrentPage={setCurrentPage} />
       </S.ProductSection>
     </>
   );
