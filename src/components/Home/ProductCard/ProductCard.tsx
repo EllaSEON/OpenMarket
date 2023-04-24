@@ -1,9 +1,16 @@
+import { useNavigate } from "react-router-dom";
 import { Product } from "../../../features/productSlice";
 import * as S from "./style";
 
 function ProductCard({ product }: { product: Product }) {
+  const navigate = useNavigate();
+
   return (
-    <S.ProductCardList>
+    <S.ProductCardList
+      onClick={() => {
+        navigate(`/products/${product.product_id}`);
+      }}
+    >
       <S.ProductImg src={product.image} alt={product.product_name} />
       <S.StoreName>{product.store_name}</S.StoreName>
       <S.ProductName>{product.product_name}</S.ProductName>
