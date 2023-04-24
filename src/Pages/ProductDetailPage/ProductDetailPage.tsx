@@ -1,5 +1,6 @@
 import * as S from "./style";
 import ProductDetailImg from "../../assets/images/img.png";
+import ProductDetail from "../../components/ProductDetail/ProductDetail";
 
 function ProductDetailPage() {
   return (
@@ -44,6 +45,7 @@ function ProductDetailPage() {
           </S.BtnWrapper>
         </S.ProductCartWrapper>
       </S.ProductWrapper>
+      <ProductDetail />
     </>
   );
 }
