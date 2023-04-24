@@ -5,7 +5,7 @@ export const ProductCardList = styled.li`
 `;
 
 export const ProductImg = styled.img`
-  width: 100%;
+  width: 38rem;
   height: 38rem;
   display: flex;
   flex-direction: column;

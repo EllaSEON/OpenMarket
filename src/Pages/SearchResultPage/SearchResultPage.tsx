@@ -1,10 +1,10 @@
 import { useAppSelector } from "../../store/hooks";
 import { RootState } from "../../store/store";
-import * as S from "../../Pages/HomePage/style";
+import * as S from "../HomePage/style";
 import ProductCard from "../../components/Home/ProductCard/ProductCard";
 import { NoHaveProduct } from "./style";
 
-function SearchResult() {
+function SearchResultPage() {
   const searchProduct = useAppSelector(
     (state: RootState) => state.products.products
   );
@@ -31,4 +31,4 @@ function SearchResult() {
   );
 }
 
-export default SearchResult;
+export default SearchResultPage;
