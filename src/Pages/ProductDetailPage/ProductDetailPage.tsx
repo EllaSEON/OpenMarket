@@ -1,21 +1,44 @@
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { fetchGetProductDetail } from "../../features/productSlice";
 import * as S from "./style";
-import ProductDetailImg from "../../assets/images/img.png";
 import ProductDetail from "../../components/ProductDetail/ProductDetail";
 
 function ProductDetailPage() {
+  const { productId } = useParams();
+  const dispatch = useAppDispatch();
+  const productDetail = useAppSelector((state) => state.products.productDetail);
+
+  useEffect(() => {
+    if (productId !== undefined) {
+      const productIdNumber = parseInt(productId);
+      dispatch(fetchGetProductDetail(productIdNumber));
+    }
+  }, [dispatch, productId]);
+
   return (
     <>
       <S.ProductWrapper>
         <S.ProductImgBox>
-          <img src={ProductDetailImg} alt="상품 사진" />
+          <img src={productDetail.image} alt="상품 사진" />
         </S.ProductImgBox>
         <S.ProductCartWrapper>
-          <S.SellerText>백엔드글로벌</S.SellerText>
-          <S.ProductText>딥러닝 개발자 무릎 담요</S.ProductText>
+          <S.SellerText>{productDetail.store_name}</S.SellerText>
+          <S.ProductText>{productDetail.product_name}</S.ProductText>
           <S.PriceText>
-            17,500<span>원</span>
+            {productDetail.price?.toLocaleString()}
+            <span>원</span>
           </S.PriceText>
-          <S.DeliveryText>택배배송 / 무료배송</S.DeliveryText>
+          <S.DeliveryText>
+            {productDetail.shipping_method === "PARCEL"
+              ? "직접배송"
+              : "택배배송"}{" "}
+            /{" "}
+            {productDetail.shipping_fee === 0
+              ? "무료배송"
+              : `배송비 ${productDetail.shipping_fee?.toLocaleString()} 원`}
+          </S.DeliveryText>
           <S.hr />
           <S.AmountBox>
             <S.AmountBtn type="button">-</S.AmountBtn>

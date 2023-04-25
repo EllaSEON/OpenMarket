@@ -8,16 +8,17 @@ export const ProductWrapper = styled.div`
 `;
 
 export const ProductImgBox = styled.div`
-  max-width: 100%;
+  width: 50%;
   img {
     width: 100%;
     max-width: 600px;
-    height: auto;
+    height: 100%;
+    max-height: 600px;
   }
 `;
 export const ProductCartWrapper = styled.div`
   max-width: 63rem;
-  width: 100%;
+  width: 50%;
 `;
 
 export const SellerText = styled.p`

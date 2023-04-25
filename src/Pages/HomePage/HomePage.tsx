@@ -16,6 +16,7 @@ function HomePage() {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     dispatch(fetchGetProducts(currentPage));
   }, [currentPage]);
 
