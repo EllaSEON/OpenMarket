@@ -1,14 +1,17 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { fetchGetProductDetail } from "../../features/productSlice";
 import * as S from "./style";
 import ProductDetail from "../../components/ProductDetail/ProductDetail";
+import AmountBtn from "../../components/common/AmountBtn/AmountBtn";
 
 function ProductDetailPage() {
   const { productId } = useParams();
   const dispatch = useAppDispatch();
   const productDetail = useAppSelector((state) => state.products.productDetail);
+
+  const [count, setCount] = useState(1);
 
   useEffect(() => {
     if (productId !== undefined) {
@@ -40,21 +43,25 @@ function ProductDetailPage() {
               : `배송비 ${productDetail.shipping_fee?.toLocaleString()} 원`}
           </S.DeliveryText>
           <S.hr />
-          <S.AmountBox>
-            <S.AmountBtn type="button">-</S.AmountBtn>
-            <S.AmountText>1</S.AmountText>
-            <S.AmountBtn type="button">+</S.AmountBtn>
-          </S.AmountBox>
+          <AmountBtn
+            count={count}
+            setCount={setCount}
+            stock={productDetail.stock}
+          />
           <S.hr />
           <S.TotalPriceWrapper>
             <S.TotalText>총 상품 금액</S.TotalText>
             <div>
               <S.TotalAmountText>
                 총 수량
-                <span> 1</span>개
+                <span> {count}</span>개
               </S.TotalAmountText>
               <S.TotalPriceText>
-                17,500 <span>원</span>
+                {(
+                  productDetail.price * count +
+                  productDetail.shipping_fee
+                ).toLocaleString()}{" "}
+                <span>원</span>
               </S.TotalPriceText>
             </div>
           </S.TotalPriceWrapper>
