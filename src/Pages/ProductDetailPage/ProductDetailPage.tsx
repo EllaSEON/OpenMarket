@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { fetchGetProductDetail } from "../../features/productSlice";
+import {
+  clearProductDetail,
+  fetchGetProductDetail,
+} from "../../features/productSlice";
 import * as S from "./style";
 import ProductDetail from "../../components/ProductDetail/ProductDetail";
 import AmountBtn from "../../components/common/AmountBtn/AmountBtn";
@@ -16,6 +19,7 @@ function ProductDetailPage() {
   useEffect(() => {
     if (productId !== undefined) {
       const productIdNumber = parseInt(productId);
+      dispatch(clearProductDetail());
       dispatch(fetchGetProductDetail(productIdNumber));
     }
   }, [dispatch, productId]);
@@ -46,7 +50,7 @@ function ProductDetailPage() {
           <AmountBtn
             count={count}
             setCount={setCount}
-            stock={productDetail.stock}
+            stock={productDetail.stock || 0}
           />
           <S.hr />
           <S.TotalPriceWrapper>
@@ -58,8 +62,8 @@ function ProductDetailPage() {
               </S.TotalAmountText>
               <S.TotalPriceText>
                 {(
-                  productDetail.price * count +
-                  productDetail.shipping_fee
+                  (productDetail.price || 0) * count +
+                  (productDetail.shipping_fee || 0)
                 ).toLocaleString()}{" "}
                 <span>원</span>
               </S.TotalPriceText>

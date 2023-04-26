@@ -16,7 +16,17 @@ export interface Product {
   stock: number;
 }
 
-interface ProductDetail extends Product {}
+export interface ProductDetail {
+  image?: string;
+  price?: number;
+  product_id?: number;
+  product_info?: string;
+  product_name?: string;
+  shipping_fee?: number;
+  shipping_method?: string;
+  store_name?: string;
+  stock?: number;
+}
 
 interface ProductState {
   status: "loading" | "succeeded" | "failed";
@@ -81,7 +91,11 @@ export const fetchGetProductDetail = createAsyncThunk(
 const productSlice = createSlice({
   name: "products",
   initialState,
-  reducers: {},
+  reducers: {
+    clearProductDetail: (state) => {
+      state.productDetail = {};
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchGetProducts.pending, (state) => {
@@ -109,4 +123,5 @@ const productSlice = createSlice({
   },
 });
 
+export const { clearProductDetail } = productSlice.actions;
 export default productSlice.reducer;
