@@ -1,18 +1,29 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import {
   clearProductDetail,
   fetchGetProductDetail,
 } from "../../features/productSlice";
-import * as S from "./style";
+import { RootState } from "../../store/store";
+import Modal from "../../components/common/Modal/Modal";
 import ProductDetail from "../../components/ProductDetail/ProductDetail";
 import AmountBtn from "../../components/common/AmountBtn/AmountBtn";
+import * as S from "./style";
+import { openModal } from "../../features/modalSlice";
+import { fetchPostCart } from "../../features/postCartSlice";
 
 function ProductDetailPage() {
   const { productId } = useParams();
   const dispatch = useAppDispatch();
-  const productDetail = useAppSelector((state) => state.products.productDetail);
+  const navigate = useNavigate();
+  const token = useAppSelector((state: RootState) => state.login.token);
+  const modal = useAppSelector((state: RootState) => state.modal.isOpen);
+  const productDetail = useAppSelector(
+    (state: RootState) => state.products.productDetail
+  );
+  const userType = useAppSelector((state: RootState) => state.login.userType);
 
   const [count, setCount] = useState(1);
 
@@ -24,9 +35,34 @@ function ProductDetailPage() {
     }
   }, [dispatch, productId]);
 
+  const handlePostCart = async () => {
+    if (token) {
+      await dispatch(
+        fetchPostCart({
+          TOKEN: token,
+          product_id: productDetail?.product_id || 1,
+          quantity: count,
+          check: true,
+        })
+      );
+      // navigate("/cart");
+    } else {
+      dispatch(openModal());
+    }
+  };
+
+  const needLoginModal = (
+    <Modal>
+      로그인이 필요한 서비스입니다.
+      <br />
+      로그인 하시겠습니까?
+    </Modal>
+  );
+
   return (
     <>
       <S.ProductWrapper>
+        {!token && modal ? needLoginModal : null}
         <S.ProductImgBox>
           <img src={productDetail.image} alt="상품 사진" />
         </S.ProductImgBox>
@@ -70,10 +106,19 @@ function ProductDetailPage() {
             </div>
           </S.TotalPriceWrapper>
           <S.BtnWrapper>
-            <S.PurchaseBtn type="button" size="md">
+            <S.PurchaseBtn
+              type="button"
+              size="md"
+              disabled={userType === "SELLER"}
+            >
               바로 구매
             </S.PurchaseBtn>
-            <S.CartBtn type="button" size="ms">
+            <S.CartBtn
+              type="button"
+              size="ms"
+              onClick={handlePostCart}
+              disabled={userType === "SELLER"}
+            >
               장바구니
             </S.CartBtn>
           </S.BtnWrapper>
