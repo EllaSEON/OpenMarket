@@ -3,7 +3,7 @@ import * as S from "./style";
 interface AmountBtnProps {
   count: number;
   setCount: React.Dispatch<React.SetStateAction<number>>;
-  stock: number | undefined;
+  stock?: number;
 }
 
 function AmountBtn({ count, setCount, stock }: AmountBtnProps) {
