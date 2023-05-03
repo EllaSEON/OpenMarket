@@ -16,10 +16,23 @@ export interface Product {
   stock: number;
 }
 
+export interface ProductDetail {
+  image?: string;
+  price?: number;
+  product_id?: number;
+  product_info?: string;
+  product_name?: string;
+  shipping_fee?: number;
+  shipping_method?: string;
+  store_name?: string;
+  stock?: number;
+}
+
 interface ProductState {
   status: "loading" | "succeeded" | "failed";
   error: string;
   products: Product[];
+  productDetail: ProductDetail;
   totalPage: number;
 }
 
@@ -27,6 +40,7 @@ const initialState: ProductState = {
   status: "loading",
   error: "",
   products: [],
+  productDetail: {} as ProductDetail,
   totalPage: 1,
 };
 
@@ -59,10 +73,29 @@ export const fetchSearch = createAsyncThunk(
   }
 );
 
+export const fetchGetProductDetail = createAsyncThunk(
+  "products/fetchGetProductDetail",
+  async (productId: number) => {
+    try {
+      const detailResults = await axios.get(
+        `${BASE_URL}/products/${productId}`
+      );
+      // console.log(detailResults.data);
+      return detailResults.data;
+    } catch (error: any) {
+      console.log(error);
+    }
+  }
+);
+
 const productSlice = createSlice({
   name: "products",
   initialState,
-  reducers: {},
+  reducers: {
+    clearProductDetail: (state) => {
+      state.productDetail = {};
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchGetProducts.pending, (state) => {
@@ -79,10 +112,16 @@ const productSlice = createSlice({
         state.error = action.error.message || "Something is wrong";
         state.products = [];
       })
+      // 상품 검색
       .addCase(fetchSearch.fulfilled, (state, action) => {
         state.products = action.payload.results;
+      })
+      // 상품 디테일
+      .addCase(fetchGetProductDetail.fulfilled, (state, action) => {
+        state.productDetail = action.payload;
       });
   },
 });
 
+export const { clearProductDetail } = productSlice.actions;
 export default productSlice.reducer;
