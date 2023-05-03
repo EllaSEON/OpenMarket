@@ -6,18 +6,23 @@ import { closeModal } from "../../../features/modalSlice";
 
 interface ModalProps {
   children: React.ReactNode;
+  onClickYes: () => void;
 }
 
-function Modal({ children }: ModalProps) {
+function Modal({ children, onClickYes }: ModalProps) {
   const backgroundRef = useRef() as React.MutableRefObject<HTMLInputElement>;
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   // 배경화면 클릭시 모달창 닫기
   const handleClickOutside = (e: React.MouseEvent<HTMLElement>) => {
     if (backgroundRef.current === e.target) {
       dispatch(closeModal());
     }
+  };
+
+  const handleYesBtn = () => {
+    onClickYes();
+    dispatch(closeModal());
   };
 
   return (
@@ -34,14 +39,7 @@ function Modal({ children }: ModalProps) {
         >
           아니오
         </S.ModalBtn>
-        <S.ModalBtn
-          type="button"
-          size="s"
-          onClick={() => {
-            navigate("/login");
-            dispatch(closeModal());
-          }}
-        >
+        <S.ModalBtn type="button" size="s" onClick={handleYesBtn}>
           예
         </S.ModalBtn>
       </S.ModalContainer>

@@ -45,14 +45,14 @@ function ProductDetailPage() {
           check: true,
         })
       );
-      // navigate("/cart");
+      navigate("/cart");
     } else {
       dispatch(openModal());
     }
   };
 
   const needLoginModal = (
-    <Modal>
+    <Modal onClickYes={() => navigate("/login")}>
       로그인이 필요한 서비스입니다.
       <br />
       로그인 하시겠습니까?
