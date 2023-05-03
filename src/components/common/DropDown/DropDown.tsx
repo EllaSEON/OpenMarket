@@ -9,6 +9,7 @@ function DropDown() {
 
   const handleLogout = async () => {
     await dispatch(fetchLogout());
+    navigate("/");
   };
 
   return (

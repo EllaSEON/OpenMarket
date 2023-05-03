@@ -7,20 +7,25 @@ import CartPage from "../Pages/CartPage/CartPage";
 import MyPage from "../Pages/MyPage/MyPage";
 import SearchResultPage from "../Pages/SearchResultPage/SearchResultPage";
 import ProductDetailPage from "../Pages/ProductDetailPage/ProductDetailPage";
+import { useAppSelector } from "../store/hooks";
+import { RootState } from "../store/store";
+import NotFound from "../Pages/NotFound/NotFound";
 
 function Router() {
+  const token = useAppSelector((state: RootState) => state.login.token);
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/cart" element={token ? <CartPage /> : <NotFound />} />
+          <Route path="/mypage" element={token ? <MyPage /> : <NotFound />} />
           <Route path="/search" element={<SearchResultPage />} />
           <Route path="/products/:productId" element={<ProductDetailPage />} />
         </Route>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/join" element={<JoinPage />} />
+        <Route path="/*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
