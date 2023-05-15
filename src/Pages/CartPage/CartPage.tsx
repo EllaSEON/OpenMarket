@@ -1,12 +1,26 @@
-import { useState } from "react";
-import Button from "../../components/common/Button/Button";
-import Img from "../../assets/images/img.png";
+import { useState, useEffect } from "react";
 import MinusIcon from "../../assets/images/icon-minus-line.svg";
 import PlustIcon from "../../assets/images/icon-plus-line.svg";
+import CartItem from "../../components/CartItem/CartItem";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import * as S from "./style";
+import { fetchGetCartList } from "../../features/cartListSlice";
+import { RootState } from "../../store/store";
 
 function CartPage() {
-  const [count, setCount] = useState(1);
+  const dispatch = useAppDispatch();
+  const TOKEN = useAppSelector((state: RootState) => state.login.token) || "";
+  const cartStatus = useAppSelector(
+    (state: RootState) => state.cartList.status
+  );
+  const cartLists = useAppSelector(
+    (state: RootState) => state.cartList.cartItems
+  );
+
+  useEffect(() => {
+    dispatch(fetchGetCartList(TOKEN));
+  }, []);
+
   return (
     <S.CartPageLayout>
       <S.CartText>장바구니</S.CartText>
@@ -16,25 +30,7 @@ function CartPage() {
         <li>수량</li>
         <li>상품금액</li>
       </S.MenuUl>
-      <S.ProductList>
-        <input type="checkbox" />
-        <S.ProductInfoBox>
-          <img src={Img} alt="상품이미지" />
-          <div>
-            <S.lightColoredTxt>백엔드글로벌</S.lightColoredTxt>
-            <S.ProductNameTxt>딥러닝 개발자 무릎 담요</S.ProductNameTxt>
-            <S.ProductPriceTxt>17,500원</S.ProductPriceTxt>
-            <S.lightColoredTxt>택배배송/무료배송</S.lightColoredTxt>
-          </div>
-        </S.ProductInfoBox>
-        <S.AmountBox count={count} setCount={setCount} />
-        <S.TotalPriceWrapper>
-          <S.TotalPriceTxt>17,500원</S.TotalPriceTxt>
-          <Button type="button" size="s">
-            삭제
-          </Button>
-        </S.TotalPriceWrapper>
-      </S.ProductList>
+      <CartItem />
       <S.PriceTextWrapper>
         <S.PriceBox>
           <S.PriceCategoryTxt>총 상품금액</S.PriceCategoryTxt>

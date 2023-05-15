@@ -39,7 +39,7 @@ export const fetchLogin = createAsyncThunk(
     try {
       const data = { username, password, login_type };
       const response = await axios.post(`${BASE_URL}/accounts/login/`, data);
-      console.log(response.data);
+      // console.log(response.data);
 
       if (response.data) {
         setCookie("token", response.data.token);

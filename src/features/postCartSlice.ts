@@ -15,18 +15,18 @@ interface CartSliceProps {
   error: string;
 }
 
-const initialState: CartSliceProps = {
-  item: {},
-  status: "idle",
-  error: "",
-};
-
 interface PostCartType {
   TOKEN: string;
   product_id: number;
   quantity: number;
   check: boolean;
 }
+
+const initialState: CartSliceProps = {
+  item: {},
+  status: "idle",
+  error: "",
+};
 
 export const fetchPostCart = createAsyncThunk(
   "cart/fetchPostCart",
