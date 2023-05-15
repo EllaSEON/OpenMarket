@@ -3,6 +3,7 @@ import AmountBtn from "../common/AmountBtn/AmountBtn";
 
 export const ProductList = styled.div`
   display: grid;
+  margin-bottom: 1rem;
   grid-template-columns: 1fr 4fr 1fr 1fr;
   align-items: center;
   gap: 30px;

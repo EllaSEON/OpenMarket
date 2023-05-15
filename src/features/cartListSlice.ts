@@ -22,24 +22,22 @@ export interface CartItem {
   product_id: number;
   quantity: number;
   isChecked: boolean;
-  item: Item;
+  // item : Item;
 }
 
 interface CartListState {
   status: string;
-  detailStatus: string;
   cartItems: CartItem[];
   error: string;
 }
 
 const initialState: CartListState = {
   status: "idle",
-  detailStatus: "idle",
   cartItems: [],
   error: "",
 };
 
-// 카트 상품 가져오기
+// 장바구니 상품 정보 가져오기
 export const fetchGetCartList = createAsyncThunk(
   "cartList/fetchGetCartList",
   async (TOKEN: string) => {
@@ -50,7 +48,7 @@ export const fetchGetCartList = createAsyncThunk(
         },
       };
       let result = await axios.get(`${BASE_URL}/cart/`, config);
-      console.log(result.data);
+      // console.log(result.data);
       return result.data;
     } catch (error: any) {
       console.log(error);
@@ -65,10 +63,11 @@ const cartSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchGetCartList.pending, (state) => {
-        state.status = "Loading";
+        state.status = "loading";
         state.error = "";
       })
       .addCase(fetchGetCartList.fulfilled, (state, action) => {
+        state.status = "succeeded";
         state.cartItems = action.payload.results;
       })
       .addCase(fetchGetCartList.rejected, (state, action) => {

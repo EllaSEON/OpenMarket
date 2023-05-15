@@ -80,7 +80,7 @@ export const fetchGetProductDetail = createAsyncThunk(
       const detailResults = await axios.get(
         `${BASE_URL}/products/${productId}`
       );
-      // console.log(detailResults.data);
+      console.log(detailResults.data);
       return detailResults.data;
     } catch (error: any) {
       console.log(error);

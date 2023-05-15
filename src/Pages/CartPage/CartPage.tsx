@@ -6,20 +6,37 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import * as S from "./style";
 import { fetchGetCartList } from "../../features/cartListSlice";
 import { RootState } from "../../store/store";
+import Spinner from "../../components/common/Spinner/Spinner";
+import { fetchGetProductDetail } from "../../features/productSlice";
 
 function CartPage() {
   const dispatch = useAppDispatch();
   const TOKEN = useAppSelector((state: RootState) => state.login.token) || "";
+  const cartItems = useAppSelector(
+    (state: RootState) => state.cartList.cartItems
+  );
+  console.log(cartItems);
   const cartStatus = useAppSelector(
     (state: RootState) => state.cartList.status
   );
-  const cartLists = useAppSelector(
-    (state: RootState) => state.cartList.cartItems
-  );
 
+  // 장바구니 정보 가져오기
   useEffect(() => {
-    dispatch(fetchGetCartList(TOKEN));
-  }, []);
+    if (TOKEN) {
+      dispatch(fetchGetCartList(TOKEN));
+    }
+  }, [TOKEN, dispatch]);
+
+  // 상품 상세 정보 가져오기
+  useEffect(() => {
+    cartItems.forEach((cartItem) => {
+      dispatch(fetchGetProductDetail(cartItem.product_id));
+    });
+  }, [cartItems, dispatch]);
+
+  if (cartStatus === "loading") {
+    return <Spinner />;
+  }
 
   return (
     <S.CartPageLayout>
@@ -30,7 +47,9 @@ function CartPage() {
         <li>수량</li>
         <li>상품금액</li>
       </S.MenuUl>
-      <CartItem />
+      {cartItems.map((cartItem) => (
+        <CartItem key={cartItem.cart_item_id} />
+      ))}
       <S.PriceTextWrapper>
         <S.PriceBox>
           <S.PriceCategoryTxt>총 상품금액</S.PriceCategoryTxt>
