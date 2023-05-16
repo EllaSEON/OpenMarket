@@ -17,7 +17,7 @@ function CartPage() {
   const cartItems = useAppSelector(
     (state: RootState) => state.cartList.cartItems
   );
-  console.log(cartItems);
+  // console.log(cartItems);
   const cartStatus = useAppSelector(
     (state: RootState) => state.cartList.status
   );
@@ -46,6 +46,10 @@ function CartPage() {
     }
   }, [cartItems, dispatch]);
 
+  if (cartStatus === "loading") {
+    return <Spinner />;
+  }
+
   return (
     <S.CartPageLayout>
       <S.CartText>장바구니</S.CartText>
@@ -56,32 +60,43 @@ function CartPage() {
         <li>상품금액</li>
       </S.MenuUl>
       {cartItems.map((cartItem) => (
-        <CartItem key={cartItem.cart_item_id} cartItem={cartItem.item} />
+        <CartItem
+          key={cartItem.cart_item_id}
+          quantity={cartItem.quantity}
+          cartItem={cartItem}
+        />
       ))}
-      <S.PriceTextWrapper>
-        <S.PriceBox>
-          <S.PriceCategoryTxt>총 상품금액</S.PriceCategoryTxt>
-          <strong>46,500</strong>
-          <span> 원</span>
-        </S.PriceBox>
-        <img src={MinusIcon} alt="마이너스 아이콘" />
-        <S.PriceBox>
-          <S.PriceCategoryTxt>상품 할인</S.PriceCategoryTxt>
-          <strong>0</strong>
-          <span> 원</span>
-        </S.PriceBox>
-        <img src={PlustIcon} alt="플러스 아이콘" />
-        <S.PriceBox>
-          <S.PriceCategoryTxt>배송비</S.PriceCategoryTxt>
-          <strong>0</strong>
-          <span> 원</span>
-        </S.PriceBox>
-        <S.PriceBox>
-          <S.PriceCategoryTxt>결제 예정 금액</S.PriceCategoryTxt>
-          <S.PaymentPriceTxt>0</S.PaymentPriceTxt>
-          <span> 원</span>
-        </S.PriceBox>
-      </S.PriceTextWrapper>
+      {cartItems.length === 0 ? (
+        <S.NoItemBox>
+          <p>장바구니에 담긴 상품이 없습니다.</p>
+          <small>원하는 상품을 장바구니에 담아보세요!</small>
+        </S.NoItemBox>
+      ) : (
+        <S.PriceTextWrapper>
+          <S.PriceBox>
+            <S.PriceCategoryTxt>총 상품금액</S.PriceCategoryTxt>
+            <strong>46,500</strong>
+            <span> 원</span>
+          </S.PriceBox>
+          <img src={MinusIcon} alt="마이너스 아이콘" />
+          <S.PriceBox>
+            <S.PriceCategoryTxt>상품 할인</S.PriceCategoryTxt>
+            <strong>0</strong>
+            <span> 원</span>
+          </S.PriceBox>
+          <img src={PlustIcon} alt="플러스 아이콘" />
+          <S.PriceBox>
+            <S.PriceCategoryTxt>배송비</S.PriceCategoryTxt>
+            <strong>0</strong>
+            <span> 원</span>
+          </S.PriceBox>
+          <S.PriceBox>
+            <S.PriceCategoryTxt>결제 예정 금액</S.PriceCategoryTxt>
+            <S.PaymentPriceTxt>0</S.PaymentPriceTxt>
+            <span> 원</span>
+          </S.PriceBox>
+        </S.PriceTextWrapper>
+      )}
     </S.CartPageLayout>
   );
 }

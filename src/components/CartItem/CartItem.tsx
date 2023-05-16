@@ -1,30 +1,57 @@
+import React from "react";
 import { useState } from "react";
-import * as S from "./style";
+import AmountBtn from "../common/AmountBtn/AmountBtn";
 import Button from "../../components/common/Button/Button";
-import Img from "../../assets/images/img.png";
-import { Item } from "../../features/cartListSlice";
+import { CartItems } from "../../features/cartListSlice";
+import * as S from "./style";
 
 interface CartItemProps {
-  cartItem: Item | null;
+  cartItem: CartItems;
+  quantity: number;
 }
 
-function CartItem({ cartItem }: CartItemProps) {
-  const [count, setCount] = useState(1);
+function CartItem({ cartItem, quantity }: CartItemProps) {
+  const [count, setCount] = useState(quantity);
   return (
     <S.ProductList>
       <input type="checkbox" />
       <S.ProductInfoBox>
-        <img src={Img} alt="상품이미지" />
+        <img src={cartItem.item?.image} alt="상품이미지" />
         <div>
-          <S.ShopText>백엔드글로벌</S.ShopText>
-          <S.ProductNameTxt>딥러닝 개발자 무릎 담요</S.ProductNameTxt>
-          <S.ProductPriceTxt>17500원</S.ProductPriceTxt>
-          <S.ShipText>택배배송/무료배송</S.ShipText>
+          <S.ShopText>{cartItem.item?.store_name}</S.ShopText>
+          <S.ProductNameTxt>{cartItem.item?.product_name}</S.ProductNameTxt>
+          <S.ProductPriceTxt>
+            {cartItem.item?.price.toLocaleString()}원
+          </S.ProductPriceTxt>
+          <S.ShipText>
+            {cartItem.item?.shipping_method === "PARCEL"
+              ? "직접배송"
+              : "택배배송"}{" "}
+            /
+            {cartItem.item?.shipping_fee
+              ? `${cartItem.item?.shipping_fee.toLocaleString()}원`
+              : "무료배송"}
+          </S.ShipText>
         </div>
       </S.ProductInfoBox>
-      <S.AmountBox count={count} setCount={setCount} />
+      <AmountBtn
+        count={count}
+        setCount={setCount}
+        stock={cartItem.item?.stock}
+        productId={cartItem.item?.product_id}
+        cartId={cartItem.cart_item_id}
+      />
       <S.TotalPriceWrapper>
-        <S.TotalPriceTxt>17500원</S.TotalPriceTxt>
+        <S.TotalPriceTxt>
+          {cartItem.item?.price !== undefined &&
+          cartItem.item?.shipping_fee !== undefined
+            ? (
+                cartItem.item?.price * quantity +
+                cartItem.item?.shipping_fee
+              ).toLocaleString()
+            : "가격 정보 없음"}{" "}
+          원
+        </S.TotalPriceTxt>
         <Button type="button" size="s">
           삭제
         </Button>
@@ -32,5 +59,4 @@ function CartItem({ cartItem }: CartItemProps) {
     </S.ProductList>
   );
 }
-
-export default CartItem;
+export default React.memo(CartItem);
