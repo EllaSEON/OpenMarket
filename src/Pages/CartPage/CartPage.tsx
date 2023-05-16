@@ -4,10 +4,12 @@ import PlustIcon from "../../assets/images/icon-plus-line.svg";
 import CartItem from "../../components/CartItem/CartItem";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import * as S from "./style";
-import { fetchGetCartList } from "../../features/cartListSlice";
+import {
+  fetchGetCartList,
+  fetchGetProductDetail,
+} from "../../features/cartListSlice";
 import { RootState } from "../../store/store";
 import Spinner from "../../components/common/Spinner/Spinner";
-import { fetchGetProductDetail } from "../../features/productSlice";
 
 function CartPage() {
   const dispatch = useAppDispatch();
@@ -29,14 +31,20 @@ function CartPage() {
 
   // 상품 상세 정보 가져오기
   useEffect(() => {
-    cartItems.forEach((cartItem) => {
-      dispatch(fetchGetProductDetail(cartItem.product_id));
-    });
-  }, [cartItems, dispatch]);
+    const getProductDetails = async () => {
+      for (const cartItem of cartItems) {
+        // 이미 상품 상세 정보를 가져온 경우는 제외
+        if (cartItem.item) {
+          continue;
+        }
+        dispatch(fetchGetProductDetail(cartItem.product_id));
+      }
+    };
 
-  if (cartStatus === "loading") {
-    return <Spinner />;
-  }
+    if (cartItems.length > 0) {
+      getProductDetails();
+    }
+  }, [cartItems, dispatch]);
 
   return (
     <S.CartPageLayout>
@@ -48,7 +56,7 @@ function CartPage() {
         <li>상품금액</li>
       </S.MenuUl>
       {cartItems.map((cartItem) => (
-        <CartItem key={cartItem.cart_item_id} />
+        <CartItem key={cartItem.cart_item_id} cartItem={cartItem.item} />
       ))}
       <S.PriceTextWrapper>
         <S.PriceBox>

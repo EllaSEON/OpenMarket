@@ -2,8 +2,13 @@ import { useState } from "react";
 import * as S from "./style";
 import Button from "../../components/common/Button/Button";
 import Img from "../../assets/images/img.png";
+import { Item } from "../../features/cartListSlice";
 
-function CartItem() {
+interface CartItemProps {
+  cartItem: Item | null;
+}
+
+function CartItem({ cartItem }: CartItemProps) {
   const [count, setCount] = useState(1);
   return (
     <S.ProductList>

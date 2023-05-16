@@ -15,19 +15,19 @@ export interface Item {
   stock: number;
 }
 
-export interface CartItem {
+export interface CartItems {
   my_cart: number;
   is_active: boolean;
   cart_item_id: number;
   product_id: number;
   quantity: number;
   isChecked: boolean;
-  // item : Item;
+  item: Item | null;
 }
 
 interface CartListState {
   status: string;
-  cartItems: CartItem[];
+  cartItems: CartItems[];
   error: string;
 }
 
@@ -56,6 +56,21 @@ export const fetchGetCartList = createAsyncThunk(
   }
 );
 
+export const fetchGetProductDetail = createAsyncThunk(
+  "products/fetchGetProductDetail",
+  async (productId: number) => {
+    try {
+      const detailResults = await axios.get(
+        `${BASE_URL}/products/${productId}`
+      );
+      // console.log(detailResults.data);
+      return detailResults.data;
+    } catch (error: any) {
+      console.log(error);
+    }
+  }
+);
+
 const cartSlice = createSlice({
   name: "cartList",
   initialState,
@@ -68,11 +83,24 @@ const cartSlice = createSlice({
       })
       .addCase(fetchGetCartList.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.cartItems = action.payload.results;
+        state.cartItems = action.payload.results.map((cartItem: CartItems) => ({
+          ...cartItem,
+          item: null, // 초기에는 item을 null로 설정합니다.
+        }));
       })
       .addCase(fetchGetCartList.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message || "Something was wrong";
+      })
+      .addCase(fetchGetProductDetail.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const productId = action.payload.product_id; // product_id 속성 사용
+        const cartItem = state.cartItems.find(
+          (item) => item.product_id === productId
+        ); //기존 cartItem 의 product_id 와 fetchGetProductDetail 의 product_id 와 비교해서 같은거일때 cartItem 의 item 값에 추가
+        if (cartItem) {
+          cartItem.item = action.payload;
+        }
       });
   },
 });
