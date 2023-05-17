@@ -20,41 +20,38 @@ function AmountBtn({
 }: AmountBtnProps) {
   const dispatch = useAppDispatch();
   const token = useAppSelector((state: RootState) => state.login.token) || "";
-  const cartItems = useAppSelector(
-    (state: RootState) => state.cartList.cartItems
-  );
 
   const handleDecrease = () => {
-    if (count > 1 && productId !== undefined && cartId !== undefined) {
+    if (count > 1) {
       setCount(count - 1);
-      dispatch(
-        fetchModifyCartQuantity({
-          TOKEN: token,
-          product_id: productId,
-          cart_item_id: cartId,
-          quantity: count - 1,
-          is_active: true,
-        })
-      );
+      if (productId !== undefined && cartId !== undefined) {
+        dispatch(
+          fetchModifyCartQuantity({
+            TOKEN: token,
+            product_id: productId,
+            cart_item_id: cartId,
+            quantity: count - 1,
+            is_active: true,
+          })
+        );
+      }
     }
   };
+
   const handleIncrease = () => {
-    if (
-      stock !== undefined &&
-      productId !== undefined &&
-      cartId !== undefined &&
-      count < stock
-    ) {
+    if (stock !== undefined && count < stock) {
       setCount(count + 1);
-      dispatch(
-        fetchModifyCartQuantity({
-          TOKEN: token,
-          product_id: productId,
-          cart_item_id: cartId,
-          quantity: count + 1,
-          is_active: true,
-        })
-      );
+      if (productId !== undefined && cartId !== undefined) {
+        dispatch(
+          fetchModifyCartQuantity({
+            TOKEN: token,
+            product_id: productId,
+            cart_item_id: cartId,
+            quantity: count + 1,
+            is_active: true,
+          })
+        );
+      }
     }
   };
 

@@ -102,8 +102,31 @@ export const fetchModifyCartQuantity = createAsyncThunk(
         data,
         config
       );
-      console.log(quantityResults.data);
+      // console.log(quantityResults.data);
       return quantityResults.data;
+    } catch (error: any) {
+      console.log(error);
+    }
+  }
+);
+
+// 장바구니 아이템 삭제하기
+export const fetchDeleteProduct = createAsyncThunk(
+  "cartList/fetchDeleteProduct",
+  async ({ TOKEN, cart_item_id }: { TOKEN: string; cart_item_id: number }) => {
+    try {
+      const config = {
+        headers: {
+          Authorization: `JWT ${TOKEN}`,
+        },
+      };
+      const deleteResults = await axios.delete(
+        `${BASE_URL}/cart/${cart_item_id}`,
+        config
+      );
+      console.log(deleteResults);
+      // return deleteResults;
+      return deleteResults.status;
     } catch (error: any) {
       console.log(error);
     }
@@ -148,6 +171,15 @@ const cartSlice = createSlice({
         );
         if (cartItem) {
           cartItem.quantity = quantity;
+        }
+      })
+      .addCase(fetchDeleteProduct.fulfilled, (state, action) => {
+        const { cart_item_id } = action.meta.arg;
+        const index = state.cartItems.findIndex(
+          (item) => item.cart_item_id === cart_item_id
+        );
+        if (index > -1) {
+          state.cartItems.splice(index, 1);
         }
       });
   },

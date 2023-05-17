@@ -39,7 +39,7 @@ export const fetchPostCart = createAsyncThunk(
       };
       const data = { product_id, quantity, check };
       const result = await axios.post(`${BASE_URL}/cart/`, data, config);
-      console.log(result.data);
+      // console.log(result.data);
       return result.data;
     } catch (error: any) {
       console.log(error);

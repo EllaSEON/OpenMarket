@@ -29,7 +29,7 @@ function Navbar() {
     }
   };
 
-  // 검색
+  // 상품 검색
   const handleSearch = async () => {
     if (keyword) {
       await dispatch(fetchSearch(keyword));

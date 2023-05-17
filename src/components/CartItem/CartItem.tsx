@@ -2,8 +2,10 @@ import React from "react";
 import { useState } from "react";
 import AmountBtn from "../common/AmountBtn/AmountBtn";
 import Button from "../../components/common/Button/Button";
-import { CartItems } from "../../features/cartListSlice";
+import { CartItems, fetchDeleteProduct } from "../../features/cartListSlice";
 import * as S from "./style";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { RootState } from "../../store/store";
 
 interface CartItemProps {
   cartItem: CartItems;
@@ -11,7 +13,15 @@ interface CartItemProps {
 }
 
 function CartItem({ cartItem, quantity }: CartItemProps) {
+  const dispatch = useAppDispatch();
+  const TOKEN = useAppSelector((state: RootState) => state.login.token) || "";
   const [count, setCount] = useState(quantity);
+
+  const handleDelete = () => {
+    dispatch(
+      fetchDeleteProduct({ TOKEN, cart_item_id: cartItem.cart_item_id })
+    );
+  };
   return (
     <S.ProductList>
       <input type="checkbox" />
@@ -46,13 +56,13 @@ function CartItem({ cartItem, quantity }: CartItemProps) {
           {cartItem.item?.price !== undefined &&
           cartItem.item?.shipping_fee !== undefined
             ? (
-                cartItem.item?.price * quantity +
+                cartItem.item?.price * count +
                 cartItem.item?.shipping_fee
               ).toLocaleString()
             : "가격 정보 없음"}{" "}
           원
         </S.TotalPriceTxt>
-        <Button type="button" size="s">
+        <Button type="button" size="s" onClick={handleDelete}>
           삭제
         </Button>
       </S.TotalPriceWrapper>
