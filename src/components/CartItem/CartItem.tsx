@@ -2,10 +2,12 @@ import React from "react";
 import { useState } from "react";
 import AmountBtn from "../common/AmountBtn/AmountBtn";
 import Button from "../../components/common/Button/Button";
+import Modal from "../common/Modal/Modal";
 import { CartItems, fetchDeleteProduct } from "../../features/cartListSlice";
-import * as S from "./style";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { RootState } from "../../store/store";
+import * as S from "./style";
+import { openModal } from "../../features/modalSlice";
 
 interface CartItemProps {
   cartItem: CartItems;
@@ -15,15 +17,23 @@ interface CartItemProps {
 function CartItem({ cartItem, quantity }: CartItemProps) {
   const dispatch = useAppDispatch();
   const TOKEN = useAppSelector((state: RootState) => state.login.token) || "";
+  const modal = useAppSelector((state: RootState) => state.modal.isOpen);
   const [count, setCount] = useState(quantity);
 
-  const handleDelete = () => {
+  const handleOpenDeleteModal = () => {
+    dispatch(openModal());
+  };
+
+  const handleConfirmDelete = () => {
     dispatch(
       fetchDeleteProduct({ TOKEN, cart_item_id: cartItem.cart_item_id })
     );
   };
   return (
     <S.ProductList>
+      {modal && (
+        <Modal onClickYes={handleConfirmDelete}>삭제하시겠습니까?</Modal>
+      )}
       <input type="checkbox" />
       <S.ProductInfoBox>
         <img src={cartItem.item?.image} alt="상품이미지" />
@@ -62,7 +72,7 @@ function CartItem({ cartItem, quantity }: CartItemProps) {
             : "가격 정보 없음"}{" "}
           원
         </S.TotalPriceTxt>
-        <Button type="button" size="s" onClick={handleDelete}>
+        <Button type="button" size="s" onClick={handleOpenDeleteModal}>
           삭제
         </Button>
       </S.TotalPriceWrapper>

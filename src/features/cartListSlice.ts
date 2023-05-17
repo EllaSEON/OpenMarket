@@ -174,7 +174,7 @@ const cartSlice = createSlice({
         }
       })
       .addCase(fetchDeleteProduct.fulfilled, (state, action) => {
-        const { cart_item_id } = action.meta.arg;
+        const { cart_item_id } = action.meta.arg; //fetchDeleteProduct 의 매개변수에 접근 가능함
         const index = state.cartItems.findIndex(
           (item) => item.cart_item_id === cart_item_id
         );
