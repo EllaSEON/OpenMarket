@@ -1,13 +1,13 @@
 import React from "react";
 import { useState } from "react";
-import AmountBtn from "../common/AmountBtn/AmountBtn";
-import Button from "../../components/common/Button/Button";
-import Modal from "../common/Modal/Modal";
-import { CartItems, fetchDeleteProduct } from "../../features/cartListSlice";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { RootState } from "../../store/store";
+import AmountBtn from "../../common/AmountBtn/AmountBtn";
+import Button from "../../common/Button/Button";
+import Modal from "../../common/Modal/Modal";
+import { CartItems, fetchDeleteProduct } from "../../../features/cartListSlice";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { RootState } from "../../../store/store";
 import * as S from "./style";
-import { openModal } from "../../features/modalSlice";
+import { openModal } from "../../../features/modalSlice";
 
 interface CartItemProps {
   cartItem: CartItems;

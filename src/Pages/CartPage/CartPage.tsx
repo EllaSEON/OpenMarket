@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
-import MinusIcon from "../../assets/images/icon-minus-line.svg";
-import PlustIcon from "../../assets/images/icon-plus-line.svg";
-import CartItem from "../../components/CartItem/CartItem";
+import CartItem from "../../components/cart/CartItem/CartItem";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import * as S from "./style";
 import {
@@ -10,6 +8,7 @@ import {
 } from "../../features/cartListSlice";
 import { RootState } from "../../store/store";
 import Spinner from "../../components/common/Spinner/Spinner";
+import TotalPrice from "../../components/cart/TotalPrice/TotalPrice";
 
 function CartPage() {
   const dispatch = useAppDispatch();
@@ -72,30 +71,7 @@ function CartPage() {
           <small>원하는 상품을 장바구니에 담아보세요!</small>
         </S.NoItemBox>
       ) : (
-        <S.PriceTextWrapper>
-          <S.PriceBox>
-            <S.PriceCategoryTxt>총 상품금액</S.PriceCategoryTxt>
-            <strong>46,500</strong>
-            <span> 원</span>
-          </S.PriceBox>
-          <img src={MinusIcon} alt="마이너스 아이콘" />
-          <S.PriceBox>
-            <S.PriceCategoryTxt>상품 할인</S.PriceCategoryTxt>
-            <strong>0</strong>
-            <span> 원</span>
-          </S.PriceBox>
-          <img src={PlustIcon} alt="플러스 아이콘" />
-          <S.PriceBox>
-            <S.PriceCategoryTxt>배송비</S.PriceCategoryTxt>
-            <strong>0</strong>
-            <span> 원</span>
-          </S.PriceBox>
-          <S.PriceBox>
-            <S.PriceCategoryTxt>결제 예정 금액</S.PriceCategoryTxt>
-            <S.PaymentPriceTxt>0</S.PaymentPriceTxt>
-            <span> 원</span>
-          </S.PriceBox>
-        </S.PriceTextWrapper>
+        <TotalPrice />
       )}
     </S.CartPageLayout>
   );

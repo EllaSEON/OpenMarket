@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import AmountBtn from "../common/AmountBtn/AmountBtn";
+import AmountBtn from "../../common/AmountBtn/AmountBtn";
 
 export const ProductList = styled.div`
   display: grid;
