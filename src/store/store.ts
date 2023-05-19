@@ -1,17 +1,19 @@
 import { configureStore } from "@reduxjs/toolkit";
 import joinSliceReducer from "../features/joinSlice";
 import loginSliceReducer from "../features/loginSlice";
-import productSlice from "../features/productSlice";
-import modalSlice from "../features/modalSlice";
-import postCartSlice from "../features/postCartSlice";
+import productSliceReducer from "../features/productSlice";
+import modalSliceReducer from "../features/modalSlice";
+import postCartSliceReducer from "../features/postCartSlice";
+import cartListSliceReducer from "../features/cartListSlice";
 
 export const store = configureStore({
   reducer: {
     join: joinSliceReducer,
     login: loginSliceReducer,
-    products: productSlice,
-    modal: modalSlice,
-    cart: postCartSlice,
+    products: productSliceReducer,
+    modal: modalSliceReducer,
+    cart: postCartSliceReducer,
+    cartList: cartListSliceReducer,
   },
 });
 

@@ -29,19 +29,21 @@ function Modal({ children, onClickYes }: ModalProps) {
     <S.Background ref={backgroundRef} onClick={handleClickOutside}>
       <S.ModalContainer>
         <S.ModalText>{children}</S.ModalText>
-        <S.ModalBtn
-          type="button"
-          size="s"
-          color="white"
-          onClick={() => {
-            dispatch(closeModal());
-          }}
-        >
-          아니오
-        </S.ModalBtn>
-        <S.ModalBtn type="button" size="s" onClick={handleYesBtn}>
-          예
-        </S.ModalBtn>
+        <S.ModalBtnWrapper>
+          <S.ModalBtn
+            type="button"
+            size="s"
+            color="white"
+            onClick={() => {
+              dispatch(closeModal());
+            }}
+          >
+            아니오
+          </S.ModalBtn>
+          <S.ModalBtn type="button" size="s" onClick={handleYesBtn}>
+            예
+          </S.ModalBtn>
+        </S.ModalBtnWrapper>
       </S.ModalContainer>
     </S.Background>
   );

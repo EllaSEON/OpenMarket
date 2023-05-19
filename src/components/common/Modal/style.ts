@@ -8,13 +8,13 @@ export const Background = styled.div`
   left: 0;
   bottom: 0;
   right: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.4);
   z-index: 100;
 `;
 
 // 모달창 영역
 export const ModalContainer = styled.div`
-  position: fixed;
+  position: relative;
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -30,6 +30,15 @@ export const ModalText = styled.p`
   margin: 0 0 30px 0;
   font-size: 1.6rem;
   line-height: 20px;
+`;
+
+export const ModalBtnWrapper = styled.div`
+  position: absolute;
+  bottom: 40px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
 `;
 
 export const ModalBtn = styled(Button)`
