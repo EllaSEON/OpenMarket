@@ -28,6 +28,7 @@ export interface CartItems {
 interface CartListState {
   status: string;
   cartItems: CartItems[];
+  selectedTotalPrice: number;
   error: string;
 }
 
@@ -42,6 +43,7 @@ interface ModifiedQuantity {
 const initialState: CartListState = {
   status: "idle",
   cartItems: [],
+  selectedTotalPrice: 0,
   error: "",
 };
 
@@ -142,7 +144,18 @@ const cartSlice = createSlice({
       const cartItem = state.cartItems.find(
         (item) => item.product_id === action.payload.product_id
       );
-      if (cartItem) cartItem.isChecked = !cartItem.isChecked;
+      // 상품 선택 상태를 toggle
+      if (cartItem) {
+        cartItem.isChecked = !cartItem.isChecked;
+        // 상품이 선택 되면 가격을 추가하고, 그렇지 않으면 뺌
+        if (cartItem.isChecked) {
+          state.selectedTotalPrice +=
+            (cartItem.item?.price || 0) * cartItem.quantity;
+        } else {
+          state.selectedTotalPrice -=
+            (cartItem.item?.price || 0) * cartItem.quantity;
+        }
+      }
     },
     // 장바구니 모든 아이템 체크박스
     checkAllItem: (state) => {
@@ -154,9 +167,19 @@ const cartSlice = createSlice({
         state.cartItems.forEach((item) => {
           item.isChecked = false;
         });
+        state.selectedTotalPrice = 0;
       } else {
         state.cartItems.forEach((item) => {
           item.isChecked = true;
+          state.selectedTotalPrice = state.cartItems.reduce(
+            (totalPrice, cartItem) => {
+              if (cartItem.isChecked && cartItem.item) {
+                totalPrice += cartItem.item.price * cartItem.quantity;
+              }
+              return totalPrice;
+            },
+            0
+          );
         });
       }
     },
@@ -187,6 +210,16 @@ const cartSlice = createSlice({
         if (cartItem) {
           cartItem.item = action.payload;
         }
+        // 총 상품 금액 초기화
+        state.selectedTotalPrice = state.cartItems.reduce(
+          (totalPrice, cartItem) => {
+            if (cartItem.isChecked && cartItem.item) {
+              totalPrice += cartItem.item.price * cartItem.quantity;
+            }
+            return totalPrice;
+          },
+          0
+        );
       })
       //장바구니 수량 수정
       .addCase(fetchModifyCartQuantity.fulfilled, (state, action) => {
@@ -195,7 +228,12 @@ const cartSlice = createSlice({
           (item) => item.product_id === product_id
         );
         if (cartItem) {
+          const priceDiff =
+            (quantity - cartItem.quantity) * (cartItem.item?.price || 0);
           cartItem.quantity = quantity;
+          if (cartItem.isChecked) {
+            state.selectedTotalPrice += priceDiff;
+          }
         }
       })
       .addCase(fetchDeleteProduct.fulfilled, (state, action) => {
@@ -204,6 +242,11 @@ const cartSlice = createSlice({
           (item) => item.cart_item_id === cart_item_id
         );
         if (index > -1) {
+          const deletedCartItem = state.cartItems[index];
+          if (deletedCartItem.isChecked && deletedCartItem.item) {
+            state.selectedTotalPrice -=
+              deletedCartItem.item.price * deletedCartItem.quantity;
+          }
           state.cartItems.splice(index, 1);
         }
       });
