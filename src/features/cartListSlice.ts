@@ -136,7 +136,31 @@ export const fetchDeleteProduct = createAsyncThunk(
 const cartSlice = createSlice({
   name: "cartList",
   initialState,
-  reducers: {},
+  reducers: {
+    // 장바구니 개별 아이템 체크박스
+    checkItem: (state, action) => {
+      const cartItem = state.cartItems.find(
+        (item) => item.product_id === action.payload.product_id
+      );
+      if (cartItem) cartItem.isChecked = !cartItem.isChecked;
+    },
+    // 장바구니 모든 아이템 체크박스
+    checkAllItem: (state) => {
+      const areAllItemsChecked = state.cartItems.every(
+        (item) => item.isChecked
+      );
+
+      if (areAllItemsChecked) {
+        state.cartItems.forEach((item) => {
+          item.isChecked = false;
+        });
+      } else {
+        state.cartItems.forEach((item) => {
+          item.isChecked = true;
+        });
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchGetCartList.pending, (state) => {
@@ -148,6 +172,7 @@ const cartSlice = createSlice({
         state.cartItems = action.payload.results.map((cartItem: CartItems) => ({
           ...cartItem,
           item: null, // 초기에는 item을 null로 설정합니다.
+          isChecked: true, // 초기 장바구니 담겨질때는 각 아이템 체크박스 true로 설정
         }));
       })
       .addCase(fetchGetCartList.rejected, (state, action) => {
@@ -158,16 +183,16 @@ const cartSlice = createSlice({
         const productId = action.payload.product_id; // product_id 속성 사용
         const cartItem = state.cartItems.find(
           (item) => item.product_id === productId
-        ); //기존 cartItem 의 product_id 와 fetchGetProductDetail 의 product_id 와 비교해서 같은거일때 cartItem 의 item 값에 추가
+        ); //기존 cartItem 의 product_id 와 fetchGetProductDetail 의 파라미터 product_id 와 비교해서 같은거일때 cartItem 의 item 값에 추가
         if (cartItem) {
           cartItem.item = action.payload;
         }
       })
       //장바구니 수량 수정
       .addCase(fetchModifyCartQuantity.fulfilled, (state, action) => {
-        const { cart_item_id, quantity } = action.payload;
+        const { product_id, quantity } = action.payload;
         const cartItem = state.cartItems.find(
-          (item) => item.cart_item_id === cart_item_id
+          (item) => item.product_id === product_id
         );
         if (cartItem) {
           cartItem.quantity = quantity;
@@ -184,5 +209,7 @@ const cartSlice = createSlice({
       });
   },
 });
+
+export const { checkItem, checkAllItem } = cartSlice.actions;
 
 export default cartSlice.reducer;

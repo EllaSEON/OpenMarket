@@ -25,17 +25,6 @@ export const MenuUl = styled.ul`
   height: 60px;
   border-radius: 10px;
   background: #f2f2f2;
-  input {
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border: 2px solid ${({ theme }) => theme.colors.green};
-    border-radius: 50%;
-    cursor: pointer;
-  }
-  input:checked {
-    background: ${({ theme }) => theme.colors.green};
-  }
   li {
     font-size: 1.8rem;
     line-height: 22px;

@@ -3,11 +3,16 @@ import { useState } from "react";
 import AmountBtn from "../../common/AmountBtn/AmountBtn";
 import Button from "../../common/Button/Button";
 import Modal from "../../common/Modal/Modal";
-import { CartItems, fetchDeleteProduct } from "../../../features/cartListSlice";
+import {
+  CartItems,
+  checkItem,
+  fetchDeleteProduct,
+} from "../../../features/cartListSlice";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { RootState } from "../../../store/store";
 import * as S from "./style";
 import { openModal } from "../../../features/modalSlice";
+import CheckCircleBtn from "../../common/CheckBtn/CheckCircleBtn";
 
 interface CartItemProps {
   cartItem: CartItems;
@@ -29,12 +34,19 @@ function CartItem({ cartItem, quantity }: CartItemProps) {
       fetchDeleteProduct({ TOKEN, cart_item_id: cartItem.cart_item_id })
     );
   };
+
+  const handleCheckboxToggle = () => {
+    dispatch(checkItem({ product_id: cartItem.product_id }));
+  };
   return (
     <S.ProductList>
       {modal && (
         <Modal onClickYes={handleConfirmDelete}>삭제하시겠습니까?</Modal>
       )}
-      <input type="checkbox" />
+      <CheckCircleBtn
+        isChecked={cartItem.isChecked}
+        onChange={handleCheckboxToggle}
+      />
       <S.ProductInfoBox>
         <img src={cartItem.item?.image} alt="상품이미지" />
         <div>

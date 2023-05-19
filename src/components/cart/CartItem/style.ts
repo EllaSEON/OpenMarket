@@ -12,17 +12,6 @@ export const ProductList = styled.div`
   padding: 20px 100px 18px 20px;
   border-radius: 10px;
   border: 1px solid ${({ theme }) => theme.colors.lightGray};
-  input {
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border: 2px solid ${({ theme }) => theme.colors.green};
-    border-radius: 50%;
-    cursor: pointer;
-  }
-  input:checked {
-    background: ${({ theme }) => theme.colors.green};
-  }
 `;
 
 export const ProductInfoBox = styled.div`
