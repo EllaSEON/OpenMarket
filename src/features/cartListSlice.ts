@@ -29,6 +29,7 @@ interface CartListState {
   status: string;
   cartItems: CartItems[];
   selectedTotalPrice: number;
+  deliveryPrice: number;
   error: string;
 }
 
@@ -44,6 +45,7 @@ const initialState: CartListState = {
   status: "idle",
   cartItems: [],
   selectedTotalPrice: 0,
+  deliveryPrice: 0,
   error: "",
 };
 
@@ -151,9 +153,11 @@ const cartSlice = createSlice({
         if (cartItem.isChecked) {
           state.selectedTotalPrice +=
             (cartItem.item?.price || 0) * cartItem.quantity;
+          state.deliveryPrice += cartItem.item?.shipping_fee || 0;
         } else {
           state.selectedTotalPrice -=
             (cartItem.item?.price || 0) * cartItem.quantity;
+          state.deliveryPrice -= cartItem.item?.shipping_fee || 0;
         }
       }
     },
@@ -168,6 +172,7 @@ const cartSlice = createSlice({
           item.isChecked = false;
         });
         state.selectedTotalPrice = 0;
+        state.deliveryPrice = 0;
       } else {
         state.cartItems.forEach((item) => {
           item.isChecked = true;
@@ -177,6 +182,15 @@ const cartSlice = createSlice({
                 totalPrice += cartItem.item.price * cartItem.quantity;
               }
               return totalPrice;
+            },
+            0
+          );
+          state.deliveryPrice = state.cartItems.reduce(
+            (totalShippingFee, cartItem) => {
+              if (cartItem.isChecked && cartItem.item) {
+                totalShippingFee += cartItem.item.shipping_fee;
+              }
+              return totalShippingFee;
             },
             0
           );
@@ -220,6 +234,16 @@ const cartSlice = createSlice({
           },
           0
         );
+        // 배송비 초기화
+        state.deliveryPrice = state.cartItems.reduce(
+          (totalShippingFee, cartItem) => {
+            if (cartItem.isChecked && cartItem.item) {
+              totalShippingFee += cartItem.item.shipping_fee;
+            }
+            return totalShippingFee;
+          },
+          0
+        );
       })
       //장바구니 수량 수정
       .addCase(fetchModifyCartQuantity.fulfilled, (state, action) => {
@@ -228,6 +252,7 @@ const cartSlice = createSlice({
           (item) => item.product_id === product_id
         );
         if (cartItem) {
+          // 총 상품 금액 재계산
           const priceDiff =
             (quantity - cartItem.quantity) * (cartItem.item?.price || 0);
           cartItem.quantity = quantity;
@@ -242,6 +267,7 @@ const cartSlice = createSlice({
           (item) => item.cart_item_id === cart_item_id
         );
         if (index > -1) {
+          // 총 상품금액 재계산
           const deletedCartItem = state.cartItems[index];
           if (deletedCartItem.isChecked && deletedCartItem.item) {
             state.selectedTotalPrice -=
@@ -249,6 +275,16 @@ const cartSlice = createSlice({
           }
           state.cartItems.splice(index, 1);
         }
+        // 배송비 재계산
+        state.deliveryPrice = state.cartItems.reduce(
+          (totalShippingFee, cartItem) => {
+            if (cartItem.isChecked && cartItem.item) {
+              totalShippingFee += cartItem.item.shipping_fee;
+            }
+            return totalShippingFee;
+          },
+          0
+        );
       });
   },
 });
