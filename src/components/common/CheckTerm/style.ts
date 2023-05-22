@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 const CheckContainer = styled.div`
-  width: 55rem;
   margin: 0 auto;
   text-align: center;
 `;

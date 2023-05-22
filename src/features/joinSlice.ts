@@ -70,7 +70,7 @@ export const fetchBuyerJoin = createAsyncThunk(
         phone_number,
         name,
       });
-      console.log(response.data);
+      // console.log(response.data);
       return response.data;
     } catch (error: any) {
       console.log(error.response.data);
@@ -108,7 +108,7 @@ export const fetchSellerJoin = createAsyncThunk(
         `${BASE_URL}/accounts/signup_seller/`,
         data
       );
-      console.log(response.data);
+      // console.log(response.data);
       return response.data;
     } catch (error: any) {
       console.log(error.response.data);
