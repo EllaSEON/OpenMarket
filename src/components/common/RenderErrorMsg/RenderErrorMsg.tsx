@@ -8,7 +8,7 @@ function RenderErrorMsg(error: any) {
     return <SuccessTxt>{errorMessage?.toString()}</SuccessTxt>;
   }
 
-  if (errorType === "fail") {
+  if (errorType === "required" || "pattern") {
     return <ErrorText>{errorMessage?.toString()}</ErrorText>;
   }
 

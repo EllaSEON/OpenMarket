@@ -29,6 +29,8 @@ function JoinForm() {
   const [idChecked, setIdChecked] = useState(false);
   const [businessChecked, setBusinessChecked] = useState(false);
 
+  // console.log(idChecked);
+
   const navigate = useNavigate();
 
   const {
@@ -66,6 +68,7 @@ function JoinForm() {
       });
     } else {
       // 에러 메시지를 resultAction에서 가져와서 setError 호출
+      setIdChecked(false);
       setError("id", {
         type: "fail",
         message:
@@ -122,7 +125,7 @@ function JoinForm() {
       "checkbox",
     ];
 
-    if (toggleType === "seller") {
+    if (toggleType === "SELLER") {
       requiredFields.push("businessNo", "storeName");
     }
 
@@ -140,7 +143,7 @@ function JoinForm() {
       alert("아이디 인증을 완료해 주세요.");
       return;
     }
-    if (toggleType === "seller" && !businessChecked) {
+    if (toggleType === "SELLER" && !businessChecked) {
       alert("사업자 등록 번호 인증을 완료해주세요");
       return;
     }
@@ -152,10 +155,10 @@ function JoinForm() {
       name: data.userName,
     };
 
-    if (toggleType === "buyer") {
+    if (toggleType === "BUYER") {
       const buyerData: BuyerPostData = { ...commonData };
       handleResultAction(await dispatch(fetchBuyerJoin(buyerData)));
-    } else if (toggleType === "seller") {
+    } else if (toggleType === "SELLER") {
       const sellerData: SellerPostData = {
         ...commonData,
         company_registration_number: data.businessNo,
@@ -176,7 +179,7 @@ function JoinForm() {
         });
       }
       if (
-        toggleType === "seller" &&
+        toggleType === "SELLER" &&
         errorMessages &&
         errorMessages.store_name
       ) {
@@ -350,7 +353,7 @@ function JoinForm() {
           </S.EmailInputWrapper>
           {RenderErrorMsg(errors.startEmail) || RenderErrorMsg(errors.endEmail)}
         </InputWrapper>
-        {toggleType === "seller" && (
+        {toggleType === "SELLER" && (
           <>
             <JoinInput
               label="사업자 등록번호"
@@ -386,14 +389,14 @@ function JoinForm() {
             {RenderErrorMsg(errors.storeName)}
           </>
         )}
+        <CheckTerm
+          register={register("checkbox")}
+          children="호두샵의 이용약관 및 개인정보처리방침에 대해 동의합니다"
+        />
+        <S.JoinBtn type="submit" size="md" disabled={!isJoinValid}>
+          가입하기
+        </S.JoinBtn>
       </S.JoinForm>
-      <CheckTerm
-        register={register("checkbox")}
-        children="호두샵의 이용약관 및 개인정보처리방침에 대해 동의합니다"
-      />
-      <S.JoinBtn type="submit" size="md" disabled={!isJoinValid}>
-        가입하기
-      </S.JoinBtn>
     </section>
   );
 }
