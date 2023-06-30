@@ -46,6 +46,10 @@ function Navbar() {
     }
   };
 
+  const handleMoveToAdminPage = () => {
+    navigate("/admin");
+  };
+
   const needLoginModal = (
     <Modal onClickYes={() => navigate("/login")}>
       로그인이 필요한 서비스입니다.
@@ -109,7 +113,11 @@ function Navbar() {
               <S.UserText>마이페이지</S.UserText>
               {token && dropDown && <DropDown />}
             </S.UserBtn>
-            <S.ShoppingBagBtn type="button" size="ms">
+            <S.ShoppingBagBtn
+              type="button"
+              size="ms"
+              onClick={handleMoveToAdminPage}
+            >
               판매자센터
             </S.ShoppingBagBtn>
           </S.HeaderUserWrapper>

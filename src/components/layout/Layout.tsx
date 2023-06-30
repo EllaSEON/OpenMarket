@@ -1,18 +1,36 @@
+import styled from "styled-components";
 import { Outlet } from "react-router-dom";
 import Navbar from "../common/Navbar/Navbar";
 import Footer from "../common/Footer/Footer";
-import * as S from "./style";
+import SellerHeader from "../Seller/SellerHeader";
 
-function MainLayout() {
+export default function MainLayout() {
   return (
     <>
       <Navbar />
-      <S.ContentWrap>
+      <ContentWrap>
         <Outlet />
-      </S.ContentWrap>
+      </ContentWrap>
       <Footer />
     </>
   );
 }
 
-export default MainLayout;
+export function SellerLayout() {
+  return (
+    <>
+      <SellerHeader />
+      <ContentWrap>
+        <Outlet />
+      </ContentWrap>
+    </>
+  );
+}
+
+export const ContentWrap = styled.div`
+  max-width: 1380px;
+  min-width: 770px;
+  min-height: 800px;
+  margin: 0 auto;
+  padding-bottom: 100px;
+`;
