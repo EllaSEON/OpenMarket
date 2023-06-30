@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import MainLayout from "../components/layout/Layout";
+import MainLayout, { SellerLayout } from "../components/layout/Layout";
 import LoginPage from "../Pages/LoginPage/LoginPage";
 import JoinPage from "../Pages/JoinPage/JoinPage";
 import HomePage from "../Pages/HomePage/HomePage";
@@ -10,6 +10,8 @@ import ProductDetailPage from "../Pages/ProductDetailPage/ProductDetailPage";
 import { useAppSelector } from "../store/hooks";
 import { RootState } from "../store/store";
 import NotFound from "../Pages/NotFound/NotFound";
+import SellerAdminPage from "../Pages/SellerAdminPage/SellerAdminPage";
+import SellerRegisterPage from "../Pages/SellerRegisterPage/SellerRegisterPage";
 
 function Router() {
   const token = useAppSelector((state: RootState) => state.login.token);
@@ -22,6 +24,10 @@ function Router() {
           <Route path="/mypage" element={token ? <MyPage /> : <NotFound />} />
           <Route path="/search" element={<SearchResultPage />} />
           <Route path="/products/:productId" element={<ProductDetailPage />} />
+        </Route>
+        <Route element={<SellerLayout />}>
+          <Route path="/admin" element={<SellerAdminPage />} />
+          <Route path="/register" element={<SellerRegisterPage />} />
         </Route>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/join" element={<JoinPage />} />

@@ -1,5 +1,5 @@
 import LoginForm from "../../components/LoginForm/LoginForm";
-import HeaderLogo from "../../components/common/HeaderLogo/HeaderLogo";
+import HeaderLogo from "../../components/common/JoinLogo/JoinLogo";
 import * as S from "./style";
 
 function LoginPage() {

@@ -1,4 +1,15 @@
 import styled from "styled-components";
+import HoduLogo from "../../../assets/images/Logo-hodu.svg";
+
+function JoinLogo() {
+  return (
+    <Header>
+      <Logo src={HoduLogo} alt="호두마켓 로고" />
+    </Header>
+  );
+}
+
+export default JoinLogo;
 
 const Header = styled.header`
   height: 100%;
@@ -13,8 +24,3 @@ const Logo = styled.img`
   width: 23.8rem;
   height: 7.4rem;
 `;
-
-export const S = {
-  Header,
-  Logo,
-};
