@@ -16,6 +16,7 @@ const LogoWrapper = styled.header`
   align-items: center;
   max-width: 1380px;
   padding: 26px 0 26px 100px;
+  margin: 0 auto;
   box-shadow: 0px 4px 5px -4px #0000001a;
 `;
 

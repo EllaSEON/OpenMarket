@@ -1,4 +1,4 @@
-import HeaderLogo from "../../components/common/HeaderLogo/JoinLogo";
+import HeaderLogo from "../../components/common/JoinLogo/JoinLogo";
 import { JoinForm } from "../../components/Join/JoinForm/JoinForm";
 
 function JoinPage() {
