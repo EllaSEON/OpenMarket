@@ -11,6 +11,7 @@ import { useAppSelector } from "../store/hooks";
 import { RootState } from "../store/store";
 import NotFound from "../Pages/NotFound/NotFound";
 import SellerAdminPage from "../Pages/SellerAdminPage/SellerAdminPage";
+import SellerRegisterPage from "../Pages/SellerRegisterPage/SellerRegisterPage";
 
 function Router() {
   const token = useAppSelector((state: RootState) => state.login.token);
@@ -26,6 +27,7 @@ function Router() {
         </Route>
         <Route element={<SellerLayout />}>
           <Route path="/admin" element={<SellerAdminPage />} />
+          <Route path="/register" element={<SellerRegisterPage />} />
         </Route>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/join" element={<JoinPage />} />

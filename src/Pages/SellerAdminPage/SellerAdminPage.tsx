@@ -1,9 +1,16 @@
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Button from "../../components/common/Button/Button";
 import SellerAdminCategory from "../../components/Seller/SellerAdminCategory";
 import SellerAdminContent from "../../components/Seller/SellerAdminContent";
 
 function SellerAdminPage() {
+  const navigate = useNavigate();
+
+  const handleMoveToPage = () => {
+    navigate("/register");
+  };
+
   return (
     <section>
       <H2Wrapper>
@@ -11,7 +18,7 @@ function SellerAdminPage() {
           <H2>대시보드</H2>
           <SellerName>백엔드 글로벌</SellerName>
         </div>
-        <Button type="button" size="ms">
+        <Button type="button" size="ms" onClick={handleMoveToPage}>
           상품 업로드
         </Button>
       </H2Wrapper>
