@@ -1,62 +1,62 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import axios from "axios";
+import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { fetchLogin } from "../../features/loginSlice";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { RootState } from "../../store/store";
 import ToggleBtn from "../common/ToggleBtn/ToggleBtn";
 import * as S from "./style";
+import { BASE_URL } from "../../constant/config";
+import { LoginData } from "../../features/loginSlice";
 
 function LoginForm() {
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [toggleType, setToggleType] = useState("BUYER");
-  const [message, setMessage] = useState("");
-  const loginError = useAppSelector((state: RootState) => state.login.error);
-  const status = useAppSelector((state: RootState) => state.login.loginStatus);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [loginForm, setLoginForm] = useState({ username: "", password: "" });
+  const { username, password } = loginForm;
 
   const idInput = useRef<HTMLInputElement>(null);
 
-  const initialValues = {
-    username: "",
-    password: "",
-  };
-
-  const [inputs, setInputs] = useState(initialValues);
-
   // 아이디 & 비밀번호 입력
-  const handleData = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeLoginForm = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setInputs({ ...inputs, [name]: value });
+    setLoginForm({ ...loginForm, [name]: value });
   };
+
+  // 로그인 유효성 검사
+  useEffect(() => {
+    if (username === "" || password === "") {
+      setErrorMsg("공백을 입력해주세요");
+    }
+  }, [loginForm, errorMsg]);
+
+  const fetchLogin = async (data: LoginData) => {
+    const response = await axios.post(`${BASE_URL}/accounts/login/`, data);
+    return response.data;
+  };
+
+  const loginMutation = useMutation(fetchLogin, {
+    onSuccess: () => {
+      navigate("/");
+    },
+    onError: (error: any) => {
+      setErrorMsg(error.response.data.FAIL_Message);
+      if (idInput.current !== null) {
+        idInput.current.focus();
+      }
+    },
+  });
 
   // 로그인 폼 제출
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setMessage("");
+    setErrorMsg("");
     const loginData = {
-      username: inputs.username,
-      password: inputs.password,
+      username: username,
+      password: password,
       login_type: toggleType,
     };
-    await dispatch(fetchLogin(loginData));
+    await loginMutation.mutateAsync(loginData);
   };
-
-  useEffect(() => {
-    if (status === "failed") {
-      if (loginError === "Rejected") {
-        setMessage("아이디 또는 비밀번호를 입력해주세요");
-      } else {
-        setMessage(loginError); // 로그인 정보 틀릴 시 에러메세지
-      }
-      setInputs(initialValues);
-      if (idInput.current) {
-        idInput.current.focus();
-      }
-    }
-    if (status === "succeeded") {
-      navigate("/");
-    }
-  }, [status, loginError]);
 
   return (
     <section>
@@ -66,21 +66,21 @@ function LoginForm() {
         <S.LoginInput
           placeholder="아이디"
           type="text"
-          onChange={handleData}
+          onChange={handleChangeLoginForm}
           name="username"
-          value={inputs.username}
+          value={username}
           ref={idInput}
           required
         />
         <S.LoginInput
           placeholder="비밀번호"
           type="password"
-          onChange={handleData}
+          onChange={handleChangeLoginForm}
           name="password"
-          value={inputs.password}
+          value={password}
           required
         />
-        {loginError ? <S.ErrorText>{message}</S.ErrorText> : null}
+        {loginMutation.isError ? <S.ErrorText>{errorMsg}</S.ErrorText> : null}
         <S.LoginBtn type="submit" size="md">
           로그인
         </S.LoginBtn>
