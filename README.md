@@ -1,5 +1,5 @@
 # OPEN MARKET 프로젝트
-- 🔗[배포URL](https://hodumarket-mxh7pjz29-ellaseon.vercel.app/)
+- 🔗[배포URL](https://hodumarket.vercel.app/)
 - 🔒서비스 이용을 위한 계정<br/>  
    구매 회원 계정<br/>
    id : test9512 <br/>
