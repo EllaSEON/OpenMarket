@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { BASE_URL } from "../constant/config";
+import { BASE_URL } from "../constant/baseUrl";
 
 interface CartItem {
   my_cart?: number;

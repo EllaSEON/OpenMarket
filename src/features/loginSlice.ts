@@ -1,12 +1,14 @@
+// 로그인 관련 token 과 userType을 전역상태로 저장하는 파일입니다.
+
 import { createSlice } from "@reduxjs/toolkit";
 import { getCookie } from "../utils/Cookies";
-
-const tokenItem = getCookie("token");
 
 interface LoginState {
   token?: string | null;
   userType?: string;
 }
+
+const tokenItem = getCookie("token");
 
 const initialState: LoginState = {
   token: tokenItem ? tokenItem : null,

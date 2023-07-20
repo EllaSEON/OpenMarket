@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import ToggleBtn from "../../common/ToggleBtn/ToggleBtn";
 import * as S from "./style";
-import { BASE_URL } from "../../../constant/config";
+import { BASE_URL } from "../../../constant/baseUrl";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { setCookie } from "../../../utils/Cookies";
 import { updateToken } from "../../../features/loginSlice";

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { BASE_URL } from "../constant/config";
+import { BASE_URL } from "../constant/baseUrl";
 
 interface LoginData {
   username: string;
@@ -8,8 +8,8 @@ interface LoginData {
 }
 
 const authAPI = {
-  async createLogin(data: LoginData) {
-    const response = await axios.post(`${BASE_URL}/accounts/login/`, data);
+  async createLogin(loginForm: LoginData) {
+    const response = await axios.post(`${BASE_URL}/accounts/login/`, loginForm);
     if (response.data) {
       return response.data.token;
     }
