@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { BASE_URL } from "../constant/config";
+import { BASE_URL } from "../constant/baseUrl";
 
 export interface Item {
   image: string;
