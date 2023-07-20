@@ -5,9 +5,10 @@ import { useNavigate } from "react-router-dom";
 import ToggleBtn from "../common/ToggleBtn/ToggleBtn";
 import * as S from "./style";
 import { BASE_URL } from "../../constant/config";
-import { useAppDispatch } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { setCookie } from "../../utils/Cookies";
-import { setToken } from "../../features/loginSlice";
+import { updateToken } from "../../features/loginSlice";
+import { RootState } from "../../store/store";
 
 interface LoginData {
   username: string;
@@ -16,9 +17,11 @@ interface LoginData {
 }
 
 function LoginForm() {
+  const toggleUserType = useAppSelector(
+    (state: RootState) => state.login.userType || ""
+  );
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [toggleUserType, setToggleUserType] = useState("BUYER");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [loginForm, setLoginForm] = useState({ username: "", password: "" });
   const { username, password } = loginForm;
@@ -42,7 +45,7 @@ function LoginForm() {
     const response = await axios.post(`${BASE_URL}/accounts/login/`, data);
     if (response.data) {
       setCookie("token", response.data.token);
-      dispatch(setToken(response.data.token));
+      dispatch(updateToken(response.data.token));
     }
   };
 
@@ -73,10 +76,7 @@ function LoginForm() {
   return (
     <section>
       <h2 className="hidden">로그인 페이지</h2>
-      <ToggleBtn
-        toggleType={toggleUserType}
-        setToggleType={setToggleUserType}
-      />
+      <ToggleBtn />
       <S.LoginForm onSubmit={handleSubmit}>
         <S.LoginInput
           placeholder="아이디"

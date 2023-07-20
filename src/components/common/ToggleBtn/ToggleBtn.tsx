@@ -1,17 +1,20 @@
 import { MouseEvent } from "react";
+import { useAppSelector, useAppDispatch } from "../../../store/hooks";
+import { RootState } from "../../../store/store";
+import { changeUserType } from "../../../features/loginSlice";
 import * as S from "./style";
 
-interface ToggleBtnProps {
-  toggleType: string;
-  setToggleType: React.Dispatch<React.SetStateAction<string>>;
-}
+function ToggleBtn() {
+  const dispatch = useAppDispatch();
+  const toggleUserType = useAppSelector(
+    (state: RootState) => state.login.userType
+  );
 
-function ToggleBtn({ toggleType, setToggleType }: ToggleBtnProps) {
   const handleToggle = (e: MouseEvent<HTMLButtonElement>) => {
     if ((e.target as HTMLButtonElement).name === "BUYER") {
-      setToggleType("BUYER");
+      dispatch(changeUserType("BUYER"));
     } else {
-      setToggleType("SELLER");
+      dispatch(changeUserType("SELLER"));
     }
   };
 
@@ -22,16 +25,16 @@ function ToggleBtn({ toggleType, setToggleType }: ToggleBtnProps) {
       <S.ToggleWrapper>
         <S.ToggleText
           name="BUYER"
-          value={toggleType}
-          active={toggleType === "BUYER"}
+          value={toggleUserType}
+          active={toggleUserType === "BUYER"}
           onClick={handleToggle}
         >
           {path === "/login" ? "구매회원 로그인" : "구매회원가입"}
         </S.ToggleText>
         <S.ToggleText
           name="SELLER"
-          active={toggleType === "SELLER"}
-          value={toggleType}
+          active={toggleUserType === "SELLER"}
+          value={toggleUserType}
           onClick={handleToggle}
         >
           {path === "/login" ? "판매회원 로그인" : "판매회원가입"}

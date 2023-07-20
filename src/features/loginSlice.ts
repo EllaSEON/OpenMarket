@@ -6,7 +6,7 @@ import { getCookie, removeCookie } from "../utils/Cookies";
 const tokenItem = getCookie("token");
 const typeItem = getCookie("userType");
 const TOKEN = tokenItem === null ? null : tokenItem;
-const USER_TYPE = typeItem === null ? null : typeItem;
+// const USER_TYPE = typeItem === null ? null : typeItem;
 
 interface LoginState {
   error: string;
@@ -17,7 +17,7 @@ interface LoginState {
 const initialState: LoginState = {
   error: "",
   token: TOKEN ? TOKEN : null,
-  userType: USER_TYPE ? USER_TYPE : "BUYER",
+  userType: "BUYER",
 };
 
 export const fetchLogout = createAsyncThunk("login/fetchLogout", async () => {
@@ -35,8 +35,11 @@ const loginSlice = createSlice({
   name: "login",
   initialState,
   reducers: {
-    setToken: (state, action) => {
+    updateToken: (state, action) => {
       state.token = action.payload;
+    },
+    changeUserType: (state, action) => {
+      state.userType = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -50,6 +53,6 @@ const loginSlice = createSlice({
   },
 });
 
-export let { setToken } = loginSlice.actions;
+export let { updateToken, changeUserType } = loginSlice.actions;
 
 export default loginSlice.reducer;

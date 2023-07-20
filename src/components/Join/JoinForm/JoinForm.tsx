@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useAppDispatch } from "../../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import regExp from "../../../utils/regExp";
 import { JoinInput } from "../JoinInput/JoinInput";
 import { InputWrapper, Label, Select, Input } from "../JoinInput/style";
@@ -17,6 +17,7 @@ import {
   fetchSellerJoin,
   SellerPostData,
 } from "../../../features/joinSlice";
+import { RootState } from "../../../store/store";
 
 interface ErrorMessages {
   phone_number?: string[];
@@ -24,7 +25,10 @@ interface ErrorMessages {
 }
 
 function JoinForm() {
-  const [toggleType, setToggleType] = useState("BUYER");
+  const toggleUserType = useAppSelector(
+    (state: RootState) => state.login.userType
+  );
+
   const [isJoinValid, setIsJoinValid] = useState(false);
   const [idChecked, setIdChecked] = useState(false);
   const [businessChecked, setBusinessChecked] = useState(false);
@@ -125,7 +129,7 @@ function JoinForm() {
       "checkbox",
     ];
 
-    if (toggleType === "SELLER") {
+    if (toggleUserType === "SELLER") {
       requiredFields.push("businessNo", "storeName");
     }
 
@@ -134,7 +138,7 @@ function JoinForm() {
     );
 
     setIsJoinValid(allFieldsFilled);
-  }, [watchedValues, toggleType]);
+  }, [watchedValues, toggleUserType]);
 
   // 회원가입 form 제출
   const onSubmit = async (data: Record<string, any>) => {
@@ -143,7 +147,7 @@ function JoinForm() {
       alert("아이디 인증을 완료해 주세요.");
       return;
     }
-    if (toggleType === "SELLER" && !businessChecked) {
+    if (toggleUserType === "SELLER" && !businessChecked) {
       alert("사업자 등록 번호 인증을 완료해주세요");
       return;
     }
@@ -155,10 +159,10 @@ function JoinForm() {
       name: data.userName,
     };
 
-    if (toggleType === "BUYER") {
+    if (toggleUserType === "BUYER") {
       const buyerData: BuyerPostData = { ...commonData };
       handleResultAction(await dispatch(fetchBuyerJoin(buyerData)));
-    } else if (toggleType === "SELLER") {
+    } else if (toggleUserType === "SELLER") {
       const sellerData: SellerPostData = {
         ...commonData,
         company_registration_number: data.businessNo,
@@ -179,7 +183,7 @@ function JoinForm() {
         });
       }
       if (
-        toggleType === "SELLER" &&
+        toggleUserType === "SELLER" &&
         errorMessages &&
         errorMessages.store_name
       ) {
@@ -203,7 +207,7 @@ function JoinForm() {
   return (
     <section>
       <h2 className="hidden">회원가입 페이지</h2>
-      <ToggleBtn toggleType={toggleType} setToggleType={setToggleType} />
+      <ToggleBtn />
       <S.JoinForm onSubmit={handleSubmit(onSubmit)}>
         <JoinInput
           label="아이디"
@@ -353,7 +357,7 @@ function JoinForm() {
           </S.EmailInputWrapper>
           {RenderErrorMsg(errors.startEmail) || RenderErrorMsg(errors.endEmail)}
         </InputWrapper>
-        {toggleType === "SELLER" && (
+        {toggleUserType === "SELLER" && (
           <>
             <JoinInput
               label="사업자 등록번호"
