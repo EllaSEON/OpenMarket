@@ -1,10 +1,7 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-import { BASE_URL } from "../constant/config";
-import { getCookie, removeCookie } from "../utils/Cookies";
+import { createSlice } from "@reduxjs/toolkit";
+import { getCookie } from "../utils/Cookies";
 
 const tokenItem = getCookie("token");
-const TOKEN = tokenItem === null ? null : tokenItem;
 
 interface LoginState {
   token?: string | null;
@@ -12,20 +9,9 @@ interface LoginState {
 }
 
 const initialState: LoginState = {
-  token: TOKEN ? TOKEN : null,
+  token: tokenItem ? tokenItem : null,
   userType: "BUYER",
 };
-
-export const fetchLogout = createAsyncThunk("login/fetchLogout", async () => {
-  try {
-    const response = await axios.post(`${BASE_URL}/accounts/logout/`);
-    console.log(response);
-    removeCookie("token");
-    removeCookie("userType");
-  } catch (error: any) {
-    console.log(error.response.data);
-  }
-});
 
 const loginSlice = createSlice({
   name: "login",
@@ -37,14 +23,6 @@ const loginSlice = createSlice({
     changeUserType: (state, action) => {
       state.userType = action.payload;
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      // 로그아웃
-      .addCase(fetchLogout.fulfilled, (state) => {
-        state.token = null;
-        state.userType = "BUYER";
-      });
   },
 });
 

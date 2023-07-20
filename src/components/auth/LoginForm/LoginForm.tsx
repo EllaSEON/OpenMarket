@@ -2,30 +2,24 @@ import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import ToggleBtn from "../common/ToggleBtn/ToggleBtn";
+import ToggleBtn from "../../common/ToggleBtn/ToggleBtn";
 import * as S from "./style";
-import { BASE_URL } from "../../constant/config";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { setCookie } from "../../utils/Cookies";
-import { updateToken } from "../../features/loginSlice";
-import { RootState } from "../../store/store";
-
-interface LoginData {
-  username: string;
-  password: string;
-  login_type: string;
-}
+import { BASE_URL } from "../../../constant/config";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { setCookie } from "../../../utils/Cookies";
+import { updateToken } from "../../../features/loginSlice";
+import { RootState } from "../../../store/store";
+import authAPI from "../../../API/authAPI";
 
 function LoginForm() {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const toggleUserType = useAppSelector(
     (state: RootState) => state.login.userType || ""
   );
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [loginForm, setLoginForm] = useState({ username: "", password: "" });
   const { username, password } = loginForm;
-
   const idInput = useRef<HTMLInputElement>(null);
 
   // 아이디 & 비밀번호 입력
@@ -41,16 +35,10 @@ function LoginForm() {
     }
   }, [loginForm, errorMsg]);
 
-  const fetchLogin = async (data: LoginData) => {
-    const response = await axios.post(`${BASE_URL}/accounts/login/`, data);
-    if (response.data) {
-      setCookie("token", response.data.token);
-      dispatch(updateToken(response.data.token));
-    }
-  };
-
-  const loginMutation = useMutation(fetchLogin, {
-    onSuccess: () => {
+  const loginMutation = useMutation(authAPI.createLogin, {
+    onSuccess: (token) => {
+      setCookie("token", token);
+      dispatch(updateToken(token));
       navigate("/");
     },
     onError: (error: any) => {
@@ -62,7 +50,7 @@ function LoginForm() {
   });
 
   // 로그인 폼 제출
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrorMsg("");
     const loginData = {
@@ -70,7 +58,7 @@ function LoginForm() {
       password: password,
       login_type: toggleUserType,
     };
-    await loginMutation.mutate(loginData);
+    loginMutation.mutate(loginData);
   };
 
   return (

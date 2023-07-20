@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Input } from "../../Join/JoinInput/style";
+import { Input } from "../../auth/JoinInput/style";
 import SearchIcon from "../../../assets/images/icon-search.svg";
 import ShoppingBagIcon from "../../../assets/images/icon-shopping-bag.svg";
 import Button from "../Button/Button";

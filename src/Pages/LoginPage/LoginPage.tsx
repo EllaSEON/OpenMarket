@@ -1,4 +1,4 @@
-import LoginForm from "../../components/LoginForm/LoginForm";
+import LoginForm from "../../components/auth/LoginForm/LoginForm";
 import HeaderLogo from "../../components/common/JoinLogo/JoinLogo";
 import * as S from "./style";
 

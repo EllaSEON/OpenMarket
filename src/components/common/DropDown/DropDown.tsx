@@ -1,29 +1,25 @@
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import { useAppDispatch } from "../../../store/hooks";
 import * as S from "./style";
-import { BASE_URL } from "../../../constant/config";
 import { removeCookie } from "../../../utils/Cookies";
 import { updateToken } from "../../../features/loginSlice";
+import authAPI from "../../../API/authAPI";
 
 function DropDown() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const fetchLogout = async () => {
-    await axios.post(`${BASE_URL}/accounts/logout/`);
-    removeCookie("token");
-    dispatch(updateToken(null));
-  };
-  const logoutMutation = useMutation(fetchLogout, {
+  const logoutMutation = useMutation(authAPI.createLogout, {
     onSuccess: () => {
+      removeCookie("token");
+      dispatch(updateToken(null));
       navigate("/");
     },
   });
 
-  const handleLogout = async () => {
-    await logoutMutation.mutate();
+  const handleLogout = () => {
+    logoutMutation.mutate();
   };
 
   return (
