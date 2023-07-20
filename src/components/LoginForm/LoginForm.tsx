@@ -70,7 +70,7 @@ function LoginForm() {
       password: password,
       login_type: toggleUserType,
     };
-    await loginMutation.mutateAsync(loginData);
+    await loginMutation.mutate(loginData);
   };
 
   return (

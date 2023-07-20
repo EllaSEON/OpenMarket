@@ -4,18 +4,14 @@ import { BASE_URL } from "../constant/config";
 import { getCookie, removeCookie } from "../utils/Cookies";
 
 const tokenItem = getCookie("token");
-const typeItem = getCookie("userType");
 const TOKEN = tokenItem === null ? null : tokenItem;
-// const USER_TYPE = typeItem === null ? null : typeItem;
 
 interface LoginState {
-  error: string;
   token?: string | null;
   userType?: string;
 }
 
 const initialState: LoginState = {
-  error: "",
   token: TOKEN ? TOKEN : null,
   userType: "BUYER",
 };
@@ -48,7 +44,6 @@ const loginSlice = createSlice({
       .addCase(fetchLogout.fulfilled, (state) => {
         state.token = null;
         state.userType = "BUYER";
-        state.error = "";
       });
   },
 });
