@@ -5,11 +5,20 @@ import { useNavigate } from "react-router-dom";
 import ToggleBtn from "../common/ToggleBtn/ToggleBtn";
 import * as S from "./style";
 import { BASE_URL } from "../../constant/config";
-import { LoginData } from "../../features/loginSlice";
+import { useAppDispatch } from "../../store/hooks";
+import { setCookie } from "../../utils/Cookies";
+import { setToken } from "../../features/loginSlice";
+
+interface LoginData {
+  username: string;
+  password: string;
+  login_type: string;
+}
 
 function LoginForm() {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [toggleType, setToggleType] = useState("BUYER");
+  const [toggleUserType, setToggleUserType] = useState("BUYER");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [loginForm, setLoginForm] = useState({ username: "", password: "" });
   const { username, password } = loginForm;
@@ -31,7 +40,10 @@ function LoginForm() {
 
   const fetchLogin = async (data: LoginData) => {
     const response = await axios.post(`${BASE_URL}/accounts/login/`, data);
-    return response.data;
+    if (response.data) {
+      setCookie("token", response.data.token);
+      dispatch(setToken(response.data.token));
+    }
   };
 
   const loginMutation = useMutation(fetchLogin, {
@@ -53,7 +65,7 @@ function LoginForm() {
     const loginData = {
       username: username,
       password: password,
-      login_type: toggleType,
+      login_type: toggleUserType,
     };
     await loginMutation.mutateAsync(loginData);
   };
@@ -61,7 +73,10 @@ function LoginForm() {
   return (
     <section>
       <h2 className="hidden">로그인 페이지</h2>
-      <ToggleBtn toggleType={toggleType} setToggleType={setToggleType} />
+      <ToggleBtn
+        toggleType={toggleUserType}
+        setToggleType={setToggleUserType}
+      />
       <S.LoginForm onSubmit={handleSubmit}>
         <S.LoginInput
           placeholder="아이디"

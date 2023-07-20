@@ -1,18 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_URL } from "../constant/config";
-import { setCookie, getCookie, removeCookie } from "../utils/Cookies";
+import { getCookie, removeCookie } from "../utils/Cookies";
 
 const tokenItem = getCookie("token");
 const typeItem = getCookie("userType");
 const TOKEN = tokenItem === null ? null : tokenItem;
 const USER_TYPE = typeItem === null ? null : typeItem;
-
-export interface LoginData {
-  username: string;
-  password: string;
-  login_type: string;
-}
 
 interface LoginState {
   error: string;
@@ -40,7 +34,11 @@ export const fetchLogout = createAsyncThunk("login/fetchLogout", async () => {
 const loginSlice = createSlice({
   name: "login",
   initialState,
-  reducers: {},
+  reducers: {
+    setToken: (state, action) => {
+      state.token = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       // 로그아웃
@@ -51,5 +49,7 @@ const loginSlice = createSlice({
       });
   },
 });
+
+export let { setToken } = loginSlice.actions;
 
 export default loginSlice.reducer;
