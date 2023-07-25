@@ -1,5 +1,4 @@
-import { useAppSelector } from "../../../store/hooks";
-import { RootState } from "../../../store/store";
+import { startTransition } from "react";
 import * as S from "./style";
 import { ReactComponent as LeftArrow } from "../../../assets/images/icon-swiper-left.svg";
 import { ReactComponent as RightArrow } from "../../../assets/images/icon-swiper-right.svg";
@@ -7,15 +6,18 @@ import { ReactComponent as RightArrow } from "../../../assets/images/icon-swiper
 interface PageNationProps {
   currentPage: number;
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+  totalPage: number;
 }
 
-function PageNation({ currentPage, setCurrentPage }: PageNationProps) {
-  const totalPage = useAppSelector(
-    (state: RootState) => state.products.totalPage
-  );
-
+function PageNation({
+  currentPage,
+  setCurrentPage,
+  totalPage,
+}: PageNationProps) {
   const handleClick = (page: number) => {
-    setCurrentPage(page);
+    startTransition(() => {
+      setCurrentPage(page);
+    });
   };
 
   const handleArrowClick = (direction: "left" | "right") => {
@@ -26,6 +28,7 @@ function PageNation({ currentPage, setCurrentPage }: PageNationProps) {
     }
   };
 
+  // totalPages 가 number 임으로 map 돌려주기 위해서 배열로 만들기
   const pages = [...Array(totalPage).keys()].map((i) => i + 1);
 
   return (

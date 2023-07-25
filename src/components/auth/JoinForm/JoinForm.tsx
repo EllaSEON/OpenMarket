@@ -1,28 +1,17 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { useAppSelector } from "../../../store/hooks";
 import regExp from "../../../utils/regExp";
 import { JoinInput } from "../JoinInput/JoinInput";
 import { InputWrapper, Label, Select, Input } from "../JoinInput/style";
-import CheckTerm from "../../common/CheckTerm/CheckTerm";
+import CheckTerm from "../CheckTerm/CheckTerm";
 import { S } from "./style";
 import ToggleBtn from "../../common/ToggleBtn/ToggleBtn";
-import RenderErrorMsg from "../../common/RenderErrorMsg/RenderErrorMsg";
-import {
-  fetchIdValidate,
-  fetchBusinessValidate,
-  fetchBuyerJoin,
-  BuyerPostData,
-  fetchSellerJoin,
-  SellerPostData,
-} from "../../../features/joinSlice";
+import RenderErrorMsg from "../RenderErrorMsg/RenderErrorMsg";
 import { RootState } from "../../../store/store";
-
-interface ErrorMessages {
-  phone_number?: string[];
-  store_name?: string[];
-}
+import authAPI from "../../../API/authAPI";
 
 function JoinForm() {
   const toggleUserType = useAppSelector(
@@ -30,10 +19,8 @@ function JoinForm() {
   );
 
   const [isJoinValid, setIsJoinValid] = useState(false);
-  const [idChecked, setIdChecked] = useState(false);
-  const [businessChecked, setBusinessChecked] = useState(false);
-
-  // console.log(idChecked);
+  const [isIdChecked, setIsIdChecked] = useState(false);
+  const [isBusinessChecked, setIsBusinessChecked] = useState(false);
 
   const navigate = useNavigate();
 
@@ -47,69 +34,100 @@ function JoinForm() {
     formState: { errors },
   } = useForm({ mode: "onChange" });
 
-  const dispatch = useAppDispatch();
+  const validateUserNameMutation = useMutation(authAPI.createValidateUserName, {
+    onSuccess: (data) => {
+      setIsIdChecked(true);
+      setError("id", {
+        type: "success",
+        message: data.Success,
+      });
+    },
+    onError: (error: any) => {
+      setIsIdChecked(false);
+      setError("id", {
+        type: "fail",
+        message: error.response.data.FAIL_Message,
+      });
+    },
+  });
+
+  const validateCompanyNoMutation = useMutation(
+    authAPI.createValidateCompanyNo,
+    {
+      onSuccess: (data) => {
+        setIsBusinessChecked(true);
+        setError("businessNo", {
+          type: "success",
+          message: data.Success,
+        });
+      },
+      onError: (error: any) => {
+        setError("businessNo", {
+          type: "fail",
+          message: error.response.data.FAIL_Message,
+        });
+      },
+    }
+  );
+
+  const signupBuyerMutation = useMutation(authAPI.createSignupBuyer, {
+    onSuccess: () => {
+      navigate("/login");
+    },
+    onError: (error: any) => {
+      if ((error.message = "Request failed with status code 400")) {
+        alert("해당 사용자 전화번호는 이미 존재합니다.");
+      } else {
+        alert("에러가 발생했습니다.");
+      }
+    },
+  });
+  const signupSellerMutation = useMutation(authAPI.createSignupSeller, {
+    onSuccess: () => {
+      navigate("/login");
+    },
+    onError: (error: any) => {
+      if (error.response && error.response.data) {
+        const errorData = error.response.data;
+        if (errorData.store_name) {
+          alert(errorData.store_name[0]); // "해당 스토어이름은 이미 존재합니다."
+        }
+        if (errorData.phone_number) {
+          alert(errorData.phone_number[0]); // "이미 있는 사용자입니다."
+        }
+      } else {
+        // 서버 응답 형식이 예상과 다른 경우 또는 에러 메시지가 없는 경우에 대한 처리
+        alert("에러가 발생했습니다.");
+      }
+    },
+  });
 
   // id 중복 확인 검증
   const handleCheckId = async (
-    id: string,
+    username: string,
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
+    validateUserNameMutation.mutate({ username });
 
     // 아이디 유효성 검사
     const isValid = await trigger("id");
     if (!isValid) {
       return;
     }
-
-    // 아이디 중복 확인 검증 에러메세지 렌더링
-    const resultAction = await dispatch(fetchIdValidate(id));
-    if (fetchIdValidate.fulfilled.match(resultAction)) {
-      setIdChecked(true);
-      setError("id", {
-        type: "success",
-        message: resultAction.payload,
-      });
-    } else {
-      // 에러 메시지를 resultAction에서 가져와서 setError 호출
-      setIdChecked(false);
-      setError("id", {
-        type: "fail",
-        message:
-          typeof resultAction.payload === "string"
-            ? resultAction.payload
-            : undefined,
-      });
-    }
   };
 
   // 사업자등록 번호 인증
   const handleCheckBusiness = async (
-    businessNo: string,
-    e: React.MouseEvent<HTMLButtonElement>
+    company_registration_number: number,
+    e: any
   ) => {
     e.preventDefault();
+    validateCompanyNoMutation.mutate({ company_registration_number });
     // 사업자 번호 유효성 검사
     const isValid = await trigger("businessNo");
     if (!isValid) {
       return;
-    }
-    // 사업자 번호 인증
-    const resultAction = await dispatch(fetchBusinessValidate(businessNo));
-    if (fetchBusinessValidate.fulfilled.match(resultAction)) {
-      setBusinessChecked(true);
-      setError("businessNo", {
-        type: "success",
-        message: resultAction.payload,
-      });
-    } else {
-      setError("businessNo", {
-        type: "fail",
-        message:
-          typeof resultAction.payload === "string"
-            ? resultAction.payload
-            : undefined,
-      });
     }
   };
 
@@ -143,11 +161,11 @@ function JoinForm() {
   // 회원가입 form 제출
   const onSubmit = async (data: Record<string, any>) => {
     // 아이디/ 사업자 번호 인증 안할 시 alert창
-    if (!idChecked) {
+    if (!isIdChecked) {
       alert("아이디 인증을 완료해 주세요.");
       return;
     }
-    if (toggleUserType === "SELLER" && !businessChecked) {
+    if (toggleUserType === "SELLER" && !isBusinessChecked) {
       alert("사업자 등록 번호 인증을 완료해주세요");
       return;
     }
@@ -159,38 +177,20 @@ function JoinForm() {
       name: data.userName,
     };
 
-    if (toggleUserType === "BUYER") {
-      const buyerData: BuyerPostData = { ...commonData };
-      handleResultAction(await dispatch(fetchBuyerJoin(buyerData)));
-    } else if (toggleUserType === "SELLER") {
-      const sellerData: SellerPostData = {
-        ...commonData,
-        company_registration_number: data.businessNo,
-        store_name: data.storeName,
-      };
-      handleResultAction(await dispatch(fetchSellerJoin(sellerData)));
-    }
-  };
-
-  const handleResultAction = (resultAction: any) => {
-    if (resultAction.meta.requestStatus === "fulfilled") {
-      navigate("/login");
-    } else if (resultAction.meta.requestStatus === "rejected") {
-      const errorMessages = resultAction.payload as ErrorMessages;
-      if (errorMessages && errorMessages.phone_number) {
-        setError("centerPhoneNum", {
-          message: errorMessages.phone_number[0],
-        });
+    try {
+      if (toggleUserType === "BUYER") {
+        const buyerData = { ...commonData };
+        signupBuyerMutation.mutate(buyerData);
+      } else if (toggleUserType === "SELLER") {
+        const sellerData = {
+          ...commonData,
+          company_registration_number: data.businessNo,
+          store_name: data.storeName,
+        };
+        signupSellerMutation.mutate(sellerData);
       }
-      if (
-        toggleUserType === "SELLER" &&
-        errorMessages &&
-        errorMessages.store_name
-      ) {
-        setError("storeName", {
-          message: errorMessages.store_name[0],
-        });
-      }
+    } catch (error: any) {
+      console.log(error);
     }
   };
 
@@ -224,8 +224,8 @@ function JoinForm() {
                 "20자 이내의 영문,소문자, 대문자, 숫자만 사용 가능합니다.",
             },
             onChange: () => {
-              if (idChecked) {
-                setIdChecked(false);
+              if (isIdChecked) {
+                setIsIdChecked(false);
               }
             },
           })}
@@ -321,7 +321,7 @@ function JoinForm() {
             />
           </div>
         </InputWrapper>
-        {RenderErrorMsg(errors.centerPhoneNum) ||
+        {RenderErrorMsg(errors.centerPhoneNum) &&
           RenderErrorMsg(errors.endPhoneNum)}
         <InputWrapper>
           <Label htmlFor="email">이메일</Label>
@@ -355,7 +355,7 @@ function JoinForm() {
               })}
             />
           </S.EmailInputWrapper>
-          {RenderErrorMsg(errors.startEmail) || RenderErrorMsg(errors.endEmail)}
+          {RenderErrorMsg(errors.startEmail) && RenderErrorMsg(errors.endEmail)}
         </InputWrapper>
         {toggleUserType === "SELLER" && (
           <>
@@ -374,8 +374,8 @@ function JoinForm() {
                   message: "10자리의 숫자를 입력해야 합니다.",
                 },
                 onChange: () => {
-                  if (businessChecked) {
-                    setBusinessChecked(false);
+                  if (isBusinessChecked) {
+                    setIsBusinessChecked(false);
                   }
                 },
               })}
@@ -405,4 +405,4 @@ function JoinForm() {
   );
 }
 
-export { JoinForm };
+export default JoinForm;

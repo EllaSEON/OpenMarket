@@ -1,5 +1,4 @@
 import { configureStore } from "@reduxjs/toolkit";
-import joinSliceReducer from "../features/joinSlice";
 import loginSliceReducer from "../features/loginSlice";
 import productSliceReducer from "../features/productSlice";
 import modalSliceReducer from "../features/modalSlice";
@@ -8,7 +7,6 @@ import cartListSliceReducer from "../features/cartListSlice";
 
 export const store = configureStore({
   reducer: {
-    join: joinSliceReducer,
     login: loginSliceReducer,
     products: productSliceReducer,
     modal: modalSliceReducer,
