@@ -1,15 +1,15 @@
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { useAppSelector } from "../../../store/hooks";
 import regExp from "../../../utils/regExp";
 import { JoinInput } from "../JoinInput/JoinInput";
 import { InputWrapper, Label, Select, Input } from "../JoinInput/style";
-import CheckTerm from "../../common/CheckTerm/CheckTerm";
+import CheckTerm from "../CheckTerm/CheckTerm";
 import { S } from "./style";
 import ToggleBtn from "../../common/ToggleBtn/ToggleBtn";
-import RenderErrorMsg from "../../common/RenderErrorMsg/RenderErrorMsg";
+import RenderErrorMsg from "../RenderErrorMsg/RenderErrorMsg";
 import { RootState } from "../../../store/store";
 import authAPI from "../../../API/authAPI";
 
@@ -35,11 +35,11 @@ function JoinForm() {
   } = useForm({ mode: "onChange" });
 
   const validateUserNameMutation = useMutation(authAPI.createValidateUserName, {
-    onSuccess: (message) => {
+    onSuccess: (data) => {
       setIsIdChecked(true);
       setError("id", {
         type: "success",
-        message: message.Success,
+        message: data.Success,
       });
     },
     onError: (error: any) => {
@@ -54,11 +54,11 @@ function JoinForm() {
   const validateCompanyNoMutation = useMutation(
     authAPI.createValidateCompanyNo,
     {
-      onSuccess: (message) => {
+      onSuccess: (data) => {
         setIsBusinessChecked(true);
         setError("businessNo", {
           type: "success",
-          message: message.Success,
+          message: data.Success,
         });
       },
       onError: (error: any) => {
@@ -71,16 +71,35 @@ function JoinForm() {
   );
 
   const signupBuyerMutation = useMutation(authAPI.createSignupBuyer, {
-    onSuccess: (message) => {
+    onSuccess: () => {
       navigate("/login");
     },
-    onError: (error: any) => {},
+    onError: (error: any) => {
+      if ((error.message = "Request failed with status code 400")) {
+        alert("해당 사용자 전화번호는 이미 존재합니다.");
+      } else {
+        alert("에러가 발생했습니다.");
+      }
+    },
   });
   const signupSellerMutation = useMutation(authAPI.createSignupSeller, {
-    onSuccess: (message) => {
+    onSuccess: () => {
       navigate("/login");
     },
-    onError: (error: any) => {},
+    onError: (error: any) => {
+      if (error.response && error.response.data) {
+        const errorData = error.response.data;
+        if (errorData.store_name) {
+          alert(errorData.store_name[0]); // "해당 스토어이름은 이미 존재합니다."
+        }
+        if (errorData.phone_number) {
+          alert(errorData.phone_number[0]); // "이미 있는 사용자입니다."
+        }
+      } else {
+        // 서버 응답 형식이 예상과 다른 경우 또는 에러 메시지가 없는 경우에 대한 처리
+        alert("에러가 발생했습니다.");
+      }
+    },
   });
 
   // id 중복 확인 검증
