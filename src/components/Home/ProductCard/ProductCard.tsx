@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Product } from "../../../features/productSlice";
+import { Product } from "../../../types/Product.type";
 import * as S from "./style";
 
 function ProductCard({ product }: { product: Product }) {
