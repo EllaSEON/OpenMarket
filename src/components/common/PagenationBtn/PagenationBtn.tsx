@@ -14,6 +14,7 @@ function PageNation({
   setCurrentPage,
   totalPage,
 }: PageNationProps) {
+  const displayPages = 5; // 한 번에 보여줄 페이지 수
   const handleClick = (page: number) => {
     startTransition(() => {
       setCurrentPage(page);
@@ -28,8 +29,14 @@ function PageNation({
     }
   };
 
-  // totalPages 가 number 임으로 map 돌려주기 위해서 배열로 만들기
-  const pages = [...Array(totalPage).keys()].map((i) => i + 1);
+  // 가장 왼쪽에 표시될 페이지 번호를 계산
+  let startPage =
+    Math.floor((currentPage - 1) / displayPages) * displayPages + 1;
+
+  // 시작 페이지부터 displayPages만큼의 페이지를 표시함
+  const pages = [...Array(totalPage).keys()]
+    .slice(startPage - 1, startPage - 1 + displayPages)
+    .map((i) => i + 1);
 
   return (
     <S.PaginationWrapper>
