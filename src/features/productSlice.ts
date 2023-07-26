@@ -31,20 +31,6 @@ const initialState: ProductState = {
   totalPage: 1,
 };
 
-export const fetchSearch = createAsyncThunk(
-  "products/fetchSearch",
-  async (keyword: string) => {
-    try {
-      const searchResults = await axios.get(
-        `${BASE_URL}/products/?search=${keyword}`
-      );
-      return searchResults.data;
-    } catch (error: any) {
-      console.log(error);
-    }
-  }
-);
-
 export const fetchGetProductDetail = createAsyncThunk(
   "products/fetchGetProductDetail",
   async (productId: number) => {
@@ -67,18 +53,6 @@ const productSlice = createSlice({
     clearProductDetail: (state) => {
       state.productDetail = {};
     },
-  },
-  extraReducers: (builder) => {
-    builder
-
-      // 상품 검색
-      .addCase(fetchSearch.fulfilled, (state, action) => {
-        state.products = action.payload.results;
-      })
-      // 상품 디테일
-      .addCase(fetchGetProductDetail.fulfilled, (state, action) => {
-        state.productDetail = action.payload;
-      });
   },
 });
 
