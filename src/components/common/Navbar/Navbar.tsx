@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useState, startTransition } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../../../store/hooks";
 import { openModal } from "../../../features/modalSlice";
-import { fetchSearch } from "../../../features/productSlice";
 import { RootState } from "../../../store/store";
 import Modal from "../Modal/Modal";
 import DropDown from "../DropDown/DropDown";
@@ -29,11 +28,16 @@ function Navbar() {
     }
   };
 
+  const handleChangeKeyword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setKeyword(e.target.value);
+  };
+
   // 상품 검색
   const handleSearch = async () => {
     if (keyword) {
-      await dispatch(fetchSearch(keyword));
-      navigate("/search");
+      startTransition(() => {
+        navigate("/search", { state: { keyword } });
+      });
       setKeyword("");
     }
   };
@@ -72,7 +76,7 @@ function Navbar() {
             <S.SearchInp
               type="text"
               value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
+              onChange={handleChangeKeyword}
               onKeyPress={handleKeyPress}
               placeholder="상품을 검색해보세요!"
             />

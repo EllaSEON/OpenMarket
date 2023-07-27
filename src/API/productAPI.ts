@@ -14,7 +14,7 @@ const productAPI = {
     );
     return searchResults.data;
   },
-  async fetchProductDetail(productId: number) {
+  async fetchProductDetail(productId: string) {
     const detailResults = await axios.get(`${BASE_URL}/products/${productId}`);
     return detailResults.data;
   },
