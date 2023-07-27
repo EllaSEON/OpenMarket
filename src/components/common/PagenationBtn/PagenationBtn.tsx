@@ -18,6 +18,7 @@ function PageNation({
   const handleClick = (page: number) => {
     startTransition(() => {
       setCurrentPage(page);
+      window.scrollTo({ top: 0, behavior: "smooth" }); // 페이지 맨 위로 부드럽게 스크롤
     });
   };
 

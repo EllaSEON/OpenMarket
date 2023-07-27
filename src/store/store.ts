@@ -1,6 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
 import loginSliceReducer from "../features/loginSlice";
-import productSliceReducer from "../features/productSlice";
 import modalSliceReducer from "../features/modalSlice";
 import postCartSliceReducer from "../features/postCartSlice";
 import cartListSliceReducer from "../features/cartListSlice";
@@ -8,7 +7,6 @@ import cartListSliceReducer from "../features/cartListSlice";
 export const store = configureStore({
   reducer: {
     login: loginSliceReducer,
-    products: productSliceReducer,
     modal: modalSliceReducer,
     cart: postCartSliceReducer,
     cartList: cartListSliceReducer,

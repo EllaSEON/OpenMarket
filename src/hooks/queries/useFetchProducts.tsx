@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import productAPI from "../../API/productAPI";
 
-export const useFetchProduct = (currentPage: number) => {
+export const useFetchProducts = (currentPage: number) => {
   return useQuery(
     ["products", currentPage],
     () => {
@@ -11,4 +11,4 @@ export const useFetchProduct = (currentPage: number) => {
   );
 };
 
-export default useFetchProduct;
+export default useFetchProducts;

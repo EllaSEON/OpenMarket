@@ -3,14 +3,14 @@ import Carousel from "../../components/Home/Carousel/Carousel";
 import ProductCard from "../../components/Home/ProductCard/ProductCard";
 import * as S from "./style";
 import PageNation from "../../components/common/PagenationBtn/PagenationBtn";
-import useFetchProduct from "../../hooks/queries/useFetchProducts";
+import { useFetchProducts } from "../../hooks/queries/useFetchProducts";
 import { Product } from "../../types/Product.type";
 import Loading from "../../components/common/Loading/Loading";
 
 function HomePage() {
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { data } = useFetchProduct(currentPage);
+  const { data } = useFetchProducts(currentPage);
 
   return (
     <>
