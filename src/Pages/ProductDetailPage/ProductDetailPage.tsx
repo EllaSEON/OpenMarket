@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { RootState } from "../../store/store";
 import Modal from "../../components/common/Modal/Modal";
@@ -8,31 +8,39 @@ import ProductDetail from "../../components/ProductDetail/ProductDetail";
 import AmountBtn from "../../components/common/AmountBtn/AmountBtn";
 import * as S from "./style";
 import { openModal } from "../../features/modalSlice";
-import { fetchPostCart } from "../../features/postCartSlice";
 import useFetchProductDetail from "../../hooks/queries/useFetchProductDetail";
+import cartAPI from "../../API/cartAPI";
 
 function ProductDetailPage() {
-  const { productId } = useParams();
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const token = useAppSelector((state: RootState) => state.login.token);
   const modal = useAppSelector((state: RootState) => state.modal.isOpen);
   const userType = useAppSelector((state: RootState) => state.login.userType);
   const [count, setCount] = useState(1);
+  const { productId } = useParams();
+  const productIdValue = productId || "defaultProductId";
 
-  const { data } = useFetchProductDetail(productId as string);
+  const { data } = useFetchProductDetail(productIdValue);
+
+  const cartMutation = useMutation(cartAPI.createCart, {
+    onSuccess: () => {
+      navigate("/cart");
+    },
+    onError: (error: any) => {
+      console.log(error);
+    },
+  });
 
   const handlePostCart = async () => {
     if (token) {
-      await dispatch(
-        fetchPostCart({
-          TOKEN: token,
-          product_id: data?.product_id || 1,
-          quantity: count,
-          check: true,
-        })
-      );
-      navigate("/cart");
+      const cartData = {
+        token: token,
+        product_id: productIdValue,
+        quantity: count,
+        check: true,
+      };
+      cartMutation.mutate(cartData);
     } else {
       dispatch(openModal());
     }
