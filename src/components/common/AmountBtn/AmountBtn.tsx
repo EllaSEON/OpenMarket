@@ -1,7 +1,8 @@
-import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { useAppSelector } from "../../../store/hooks";
 import { RootState } from "../../../store/store";
-import { fetchModifyCartQuantity } from "../../../features/cartListSlice";
 import * as S from "./style";
+import { useMutation } from "@tanstack/react-query";
+import cartAPI from "../../../API/cartAPI";
 
 interface AmountBtnProps {
   count: number;
@@ -18,23 +19,25 @@ function AmountBtn({
   productId,
   cartId,
 }: AmountBtnProps) {
-  const dispatch = useAppDispatch();
   const token = useAppSelector((state: RootState) => state.login.token) || "";
+
+  const updateQuantityMutation = useMutation(cartAPI.updateCartQuantity, {
+    onSuccess: () => {},
+  });
 
   const handleDecrease = () => {
     if (count > 1) {
       setCount(count - 1);
     }
     if (productId !== undefined && cartId !== undefined) {
-      dispatch(
-        fetchModifyCartQuantity({
-          TOKEN: token,
-          product_id: productId,
-          cart_item_id: cartId,
-          quantity: count - 1,
-          is_active: true,
-        })
-      );
+      const quantityData = {
+        token: token,
+        product_id: productId,
+        cart_item_id: cartId,
+        quantity: count - 1,
+        is_active: true,
+      };
+      updateQuantityMutation.mutate(quantityData);
     }
   };
 
@@ -43,15 +46,14 @@ function AmountBtn({
       setCount(count + 1);
     }
     if (productId !== undefined && cartId !== undefined) {
-      dispatch(
-        fetchModifyCartQuantity({
-          TOKEN: token,
-          product_id: productId,
-          cart_item_id: cartId,
-          quantity: count + 1,
-          is_active: true,
-        })
-      );
+      const quantityData = {
+        token: token,
+        product_id: productId,
+        cart_item_id: cartId,
+        quantity: count + 1,
+        is_active: true,
+      };
+      updateQuantityMutation.mutate(quantityData);
     }
   };
 

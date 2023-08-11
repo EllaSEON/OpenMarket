@@ -21,6 +21,7 @@ function CartItem({ cartItem, quantity, cartItemId }: CartItemProps) {
   const dispatch = useAppDispatch();
   const token = useAppSelector((state: RootState) => state.login.token) || "";
   const modal = useAppSelector((state: RootState) => state.modal.isOpen);
+  console.log(modal);
   const [count, setCount] = useState(quantity);
   const queryClient = useQueryClient();
 
