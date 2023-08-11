@@ -23,7 +23,7 @@ function ProductDetailPage() {
 
   const { data } = useFetchProductDetail(productIdValue);
 
-  const cartMutation = useMutation(cartAPI.createCart, {
+  const cartMutation = useMutation(cartAPI.createCartProduct, {
     onSuccess: () => {
       navigate("/cart");
     },

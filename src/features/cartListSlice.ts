@@ -35,7 +35,7 @@ interface CartListState {
 
 interface ModifiedQuantity {
   TOKEN: string;
-  product_id: number;
+  product_id: string;
   cart_item_id: number;
   quantity: number;
   is_active: Boolean;
@@ -211,10 +211,6 @@ const cartSlice = createSlice({
           item: null, // 초기에는 item을 null로 설정합니다.
           isChecked: true, // 초기 장바구니 담겨질때는 각 아이템 체크박스 true로 설정
         }));
-      })
-      .addCase(fetchGetCartList.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message || "Something was wrong";
       })
       .addCase(fetchGetProductDetail.fulfilled, (state, action) => {
         const productId = action.payload.product_id; // product_id 속성 사용

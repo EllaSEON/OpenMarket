@@ -3,23 +3,20 @@ import { useState } from "react";
 import AmountBtn from "../../common/AmountBtn/AmountBtn";
 import Button from "../../common/Button/Button";
 import Modal from "../../common/Modal/Modal";
-import {
-  CartItems,
-  checkItem,
-  fetchDeleteProduct,
-} from "../../../features/cartListSlice";
+import { fetchDeleteProduct } from "../../../features/cartListSlice";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { RootState } from "../../../store/store";
 import * as S from "./style";
 import { openModal } from "../../../features/modalSlice";
-import CheckCircleBtn from "../../common/CheckBtn/CheckCircleBtn";
+import { ProductDetailType } from "../../../types/Cart.type";
 
 interface CartItemProps {
-  cartItem: CartItems;
+  cartItem: ProductDetailType;
   quantity: number;
+  cartItemId: number;
 }
 
-function CartItem({ cartItem, quantity }: CartItemProps) {
+function CartItem({ cartItem, quantity, cartItemId }: CartItemProps) {
   const dispatch = useAppDispatch();
   const TOKEN = useAppSelector((state: RootState) => state.login.token) || "";
   const modal = useAppSelector((state: RootState) => state.modal.isOpen);
@@ -30,38 +27,33 @@ function CartItem({ cartItem, quantity }: CartItemProps) {
   };
 
   const handleConfirmDelete = () => {
-    dispatch(
-      fetchDeleteProduct({ TOKEN, cart_item_id: cartItem.cart_item_id })
-    );
+    dispatch(fetchDeleteProduct({ TOKEN, cart_item_id: cartItemId }));
   };
 
-  const handleCheckboxToggle = () => {
-    dispatch(checkItem({ product_id: cartItem.product_id }));
-  };
+  // const handleCheckboxToggle = () => {
+  //   dispatch(checkItem({ product_id: cartItem.product_id }));
+  // };
   return (
     <S.ProductList>
       {modal && (
         <Modal onClickYes={handleConfirmDelete}>삭제하시겠습니까?</Modal>
       )}
-      <CheckCircleBtn
+      {/* <CheckCircleBtn
         isChecked={cartItem.isChecked}
         onChange={handleCheckboxToggle}
-      />
+      /> */}
       <S.ProductInfoBox>
-        <img src={cartItem.item?.image} alt="상품이미지" />
+        <img src={cartItem.image} alt="상품이미지" />
         <div>
-          <S.ShopText>{cartItem.item?.store_name}</S.ShopText>
-          <S.ProductNameTxt>{cartItem.item?.product_name}</S.ProductNameTxt>
+          <S.ShopText>{cartItem.store_name}</S.ShopText>
+          <S.ProductNameTxt>{cartItem.product_name}</S.ProductNameTxt>
           <S.ProductPriceTxt>
-            {cartItem.item?.price.toLocaleString()}원
+            {cartItem.price.toLocaleString()}원
           </S.ProductPriceTxt>
           <S.ShipText>
-            {cartItem.item?.shipping_method === "PARCEL"
-              ? "직접배송"
-              : "택배배송"}{" "}
-            /
-            {cartItem.item?.shipping_fee
-              ? `${cartItem.item?.shipping_fee.toLocaleString()}원`
+            {cartItem.shipping_method === "PARCEL" ? "직접배송" : "택배배송"} /
+            {cartItem.shipping_fee
+              ? `${cartItem.shipping_fee.toLocaleString()}원`
               : "무료배송"}
           </S.ShipText>
         </div>
@@ -69,18 +61,14 @@ function CartItem({ cartItem, quantity }: CartItemProps) {
       <AmountBtn
         count={count}
         setCount={setCount}
-        stock={cartItem.item?.stock}
-        productId={cartItem.item?.product_id}
-        cartId={cartItem.cart_item_id}
+        stock={cartItem.stock}
+        productId={cartItem.product_id}
+        cartId={cartItemId}
       />
       <S.TotalPriceWrapper>
         <S.TotalPriceTxt>
-          {cartItem.item?.price !== undefined &&
-          cartItem.item?.shipping_fee !== undefined
-            ? (
-                cartItem.item?.price * count +
-                cartItem.item?.shipping_fee
-              ).toLocaleString()
+          {cartItem.price !== undefined && cartItem.shipping_fee !== undefined
+            ? (cartItem.price * count + cartItem.shipping_fee).toLocaleString()
             : "가격 정보 없음"}{" "}
           원
         </S.TotalPriceTxt>
