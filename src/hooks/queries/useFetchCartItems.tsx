@@ -4,7 +4,6 @@ import useFetchCartList from "./useFetchCartList";
 import { CartType } from "../../types/Cart.type";
 
 const useFetchCartItems = (token: string) => {
-  // CartList 가져오기
   const { data: cartList } = useFetchCartList(token);
   // console.log(cartList);
 

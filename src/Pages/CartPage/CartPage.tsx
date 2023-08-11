@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import CartItem from "../../components/cart/CartItem/CartItem";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import * as S from "./style";
@@ -18,7 +17,7 @@ function CartPage() {
   );
 
   // 장바구니 정보 가져오기
-  let { cartItems } = useFetchCartItems(token);
+  const { cartItems } = useFetchCartItems(token);
 
   return (
     <S.CartPageLayout>

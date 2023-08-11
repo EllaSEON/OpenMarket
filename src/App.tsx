@@ -7,6 +7,7 @@ import { store } from "./store/store";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Suspense } from "react";
 import Loading from "./components/common/Loading/Loading";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,6 +26,7 @@ function App() {
           <ThemeProvider theme={theme}>
             <GlobalStyle />
             <Router />
+            <ReactQueryDevtools />
           </ThemeProvider>
         </Provider>
       </QueryClientProvider>

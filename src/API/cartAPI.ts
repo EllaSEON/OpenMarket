@@ -49,6 +49,20 @@ const cartAPI = {
     // console.log(quantityResults.data);
     return quantityResults.data;
   },
+  async deleteCartItem({
+    token,
+    cart_item_id,
+  }: {
+    token: string;
+    cart_item_id: number;
+  }) {
+    const config = {
+      headers: {
+        Authorization: `JWT ${token}`,
+      },
+    };
+    await axios.delete(`${BASE_URL}/cart/${cart_item_id}`, config);
+  },
 };
 
 export default cartAPI;

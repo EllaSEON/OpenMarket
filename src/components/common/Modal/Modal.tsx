@@ -1,5 +1,4 @@
 import { useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import * as S from "./style";
 import { useAppDispatch } from "../../../store/hooks";
 import { closeModal } from "../../../features/modalSlice";

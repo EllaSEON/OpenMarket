@@ -3,7 +3,7 @@ import cartAPI from "../../API/cartAPI";
 
 export const useFetchCartList = (token: string) => {
   return useQuery(
-    ["CartList", token],
+    ["cartList", token],
     () => {
       return cartAPI.fetchCartList(token);
     },
