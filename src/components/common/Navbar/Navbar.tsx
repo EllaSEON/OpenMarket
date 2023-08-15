@@ -62,6 +62,46 @@ function Navbar() {
     </Modal>
   );
 
+  // userType === "BUYER" /토큰이 없을때 guest Header
+  const buyerHeader = (
+    <S.HeaderUserWrapper>
+      <S.CartBtn
+        type="button"
+        aria-label="장바구니에 담기 버튼"
+        onClick={
+          token
+            ? () => navigate("/cart")
+            : () => {
+                dispatch(openModal());
+              }
+        }
+      >
+        <img src={CartIcon} alt="장바구니 아이콘버튼" />
+        <S.CartText>장바구니</S.CartText>
+      </S.CartBtn>
+
+      <S.UserBtn onClick={handleUserClick}>
+        <img src={UserIcon} alt="유저 아이콘 버튼" />
+        <S.UserText>{token ? "마이페이지" : "로그인"}</S.UserText>
+        {token && dropDown && <DropDown />}
+      </S.UserBtn>
+    </S.HeaderUserWrapper>
+  );
+
+  // userType === "SELLER"
+  const sellerHeader = (
+    <S.HeaderUserWrapper>
+      <S.UserBtn onClick={handleUserClick}>
+        <img src={UserIcon} alt="유저 아이콘 버튼" />
+        <S.UserText>마이페이지</S.UserText>
+        {token && dropDown && <DropDown />}
+      </S.UserBtn>
+      <S.ShoppingBagBtn type="button" size="ms" onClick={handleMoveToAdminPage}>
+        판매자센터
+      </S.ShoppingBagBtn>
+    </S.HeaderUserWrapper>
+  );
+
   return (
     <S.HomeHeader>
       {!token && modal ? needLoginModal : null}
@@ -87,45 +127,11 @@ function Navbar() {
             />
           </S.SearchBarWrapper>
         </S.HeaderSearchWrapper>
-        {userType === "BUYER" ? (
-          <S.HeaderUserWrapper>
-            <S.CartBtn
-              type="button"
-              aria-label="장바구니에 담기 버튼"
-              onClick={
-                token
-                  ? () => navigate("/cart")
-                  : () => {
-                      dispatch(openModal());
-                    }
-              }
-            >
-              <img src={CartIcon} alt="장바구니 아이콘버튼" />
-              <S.CartText>장바구니</S.CartText>
-            </S.CartBtn>
-
-            <S.UserBtn onClick={handleUserClick}>
-              <img src={UserIcon} alt="유저 아이콘 버튼" />
-              <S.UserText>{token ? "마이페이지" : "로그인"}</S.UserText>
-              {token && dropDown && <DropDown />}
-            </S.UserBtn>
-          </S.HeaderUserWrapper>
-        ) : (
-          <S.HeaderUserWrapper>
-            <S.UserBtn onClick={handleUserClick}>
-              <img src={UserIcon} alt="유저 아이콘 버튼" />
-              <S.UserText>마이페이지</S.UserText>
-              {token && dropDown && <DropDown />}
-            </S.UserBtn>
-            <S.ShoppingBagBtn
-              type="button"
-              size="ms"
-              onClick={handleMoveToAdminPage}
-            >
-              판매자센터
-            </S.ShoppingBagBtn>
-          </S.HeaderUserWrapper>
-        )}
+        {userType === "BUYER"
+          ? buyerHeader
+          : token
+          ? sellerHeader
+          : buyerHeader}
       </S.Navbar>
     </S.HomeHeader>
   );
