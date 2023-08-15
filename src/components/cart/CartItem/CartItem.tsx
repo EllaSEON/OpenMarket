@@ -3,10 +3,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import AmountBtn from "../../common/AmountBtn/AmountBtn";
 import Button from "../../common/Button/Button";
 import Modal from "../../common/Modal/Modal";
-import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { useAppSelector } from "../../../store/hooks";
 import { RootState } from "../../../store/store";
 import * as S from "./style";
-import { openModal } from "../../../features/modalSlice";
 import { ProductDetailType } from "../../../types/Cart.type";
 import cartAPI from "../../../API/cartAPI";
 // import CheckCircleBtn from "../../common/CheckBtn/CheckCircleBtn";
@@ -18,16 +17,10 @@ interface CartItemProps {
 }
 
 function CartItem({ cartItem, quantity, cartItemId }: CartItemProps) {
-  const dispatch = useAppDispatch();
   const token = useAppSelector((state: RootState) => state.login.token) || "";
-  const modal = useAppSelector((state: RootState) => state.modal.isOpen);
-  console.log(modal);
+  const [isOpenModal, setIsOpenModal] = useState(false);
   const [count, setCount] = useState(quantity);
   const queryClient = useQueryClient();
-
-  const handleOpenDeleteModal = () => {
-    dispatch(openModal());
-  };
 
   const deleteCartItemMutation = useMutation(cartAPI.deleteCartItem, {
     onMutate: async (data) => {
@@ -57,12 +50,19 @@ function CartItem({ cartItem, quantity, cartItemId }: CartItemProps) {
     },
   });
 
+  const handleOpenDeleteModal = () => {
+    setIsOpenModal(true);
+    console.log("클릭된값", cartItemId);
+  };
+
   const handleConfirmDelete = () => {
     const data = {
       token: token,
       cart_item_id: cartItemId,
     };
+    // console.log("삭제되는 값", data.cart_item_id);
     deleteCartItemMutation.mutate(data);
+    setIsOpenModal(false);
   };
 
   // const handleCheckboxToggle = () => {
@@ -70,8 +70,18 @@ function CartItem({ cartItem, quantity, cartItemId }: CartItemProps) {
   // };
   return (
     <S.ProductList>
-      {modal && (
-        <Modal onClickYes={handleConfirmDelete}>삭제하시겠습니까?</Modal>
+      {isOpenModal && (
+        <Modal
+          onClickYes={handleConfirmDelete}
+          onClickNo={() => {
+            setIsOpenModal(false);
+          }}
+          onClickOutside={() => {
+            setIsOpenModal(false);
+          }}
+        >
+          삭제하시겠습니까?
+        </Modal>
       )}
       {/* <CheckCircleBtn
         isChecked={cartItem.isChecked}

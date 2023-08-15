@@ -6,21 +6,38 @@ import { closeModal } from "../../../features/modalSlice";
 interface ModalProps {
   children: React.ReactNode;
   onClickYes: () => void;
+  onClickNo?: () => void;
+  onClickOutside?: () => void;
 }
 
-function Modal({ children, onClickYes }: ModalProps) {
+function Modal({
+  children,
+  onClickYes,
+  onClickNo,
+  onClickOutside,
+}: ModalProps) {
   const backgroundRef = useRef() as React.MutableRefObject<HTMLInputElement>;
   const dispatch = useAppDispatch();
 
   // 배경화면 클릭시 모달창 닫기
   const handleClickOutside = (e: React.MouseEvent<HTMLElement>) => {
     if (backgroundRef.current === e.target) {
+      if (onClickOutside) {
+        onClickOutside();
+      }
       dispatch(closeModal());
     }
   };
 
   const handleYesBtn = () => {
     onClickYes();
+    dispatch(closeModal());
+  };
+
+  const handleNoBtn = () => {
+    if (onClickNo) {
+      onClickNo();
+    }
     dispatch(closeModal());
   };
 
@@ -33,9 +50,7 @@ function Modal({ children, onClickYes }: ModalProps) {
             type="button"
             size="s"
             color="white"
-            onClick={() => {
-              dispatch(closeModal());
-            }}
+            onClick={handleNoBtn}
           >
             아니오
           </S.ModalBtn>
