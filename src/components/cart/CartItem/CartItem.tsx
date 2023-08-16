@@ -3,20 +3,29 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import AmountBtn from "../../common/AmountBtn/AmountBtn";
 import Button from "../../common/Button/Button";
 import Modal from "../../common/Modal/Modal";
-import { useAppSelector } from "../../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { RootState } from "../../../store/store";
 import * as S from "./style";
 import { ProductDetailType } from "../../../types/Cart.type";
 import cartAPI from "../../../API/cartAPI";
-// import CheckCircleBtn from "../../common/CheckBtn/CheckCircleBtn";
+import CheckCircleBtn from "../../common/CheckBtn/CheckCircleBtn";
 
 interface CartItemProps {
   cartItem: ProductDetailType;
   quantity: number;
   cartItemId: number;
+  isChecked: boolean;
+  onToggle: () => void;
 }
 
-function CartItem({ cartItem, quantity, cartItemId }: CartItemProps) {
+function CartItem({
+  cartItem,
+  quantity,
+  cartItemId,
+  isChecked,
+  onToggle,
+}: CartItemProps) {
+  const dispatch = useAppDispatch();
   const token = useAppSelector((state: RootState) => state.login.token) || "";
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [count, setCount] = useState(quantity);
@@ -52,7 +61,7 @@ function CartItem({ cartItem, quantity, cartItemId }: CartItemProps) {
 
   const handleOpenDeleteModal = () => {
     setIsOpenModal(true);
-    console.log("클릭된값", cartItemId);
+    // console.log("클릭된값", cartItemId);
   };
 
   const handleConfirmDelete = () => {
@@ -64,10 +73,6 @@ function CartItem({ cartItem, quantity, cartItemId }: CartItemProps) {
     deleteCartItemMutation.mutate(data);
     setIsOpenModal(false);
   };
-
-  // const handleCheckboxToggle = () => {
-  //   dispatch(checkItem({ product_id: cartItem.product_id }));
-  // };
   return (
     <S.ProductList>
       {isOpenModal && (
@@ -83,10 +88,7 @@ function CartItem({ cartItem, quantity, cartItemId }: CartItemProps) {
           삭제하시겠습니까?
         </Modal>
       )}
-      {/* <CheckCircleBtn
-        isChecked={cartItem.isChecked}
-        onChange={handleCheckboxToggle}
-      /> */}
+      <CheckCircleBtn isChecked={isChecked} onChange={onToggle} />
       <S.ProductInfoBox>
         <img src={cartItem?.image} alt="상품이미지" />
         <div>

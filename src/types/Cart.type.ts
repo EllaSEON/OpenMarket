@@ -18,6 +18,7 @@ export interface CartType {
   product_id: string;
   quantity: number;
   is_active: boolean;
+  isChecked: boolean;
 }
 
 export interface CartItemType extends CartType {
