@@ -14,6 +14,9 @@ function CartPage() {
   const { cartItems, initialTotalPrice, initialDeliveryFee } =
     useFetchCartItems(token);
 
+  const [totalPrice, setTotalPrice] = useState(initialTotalPrice);
+  const [totalDeliveryFee, setTotalDeliveryFee] = useState(initialDeliveryFee);
+
   //체크박스 로직
   const [isCheckedArray, setIsCheckedArray] = useState(
     new Array(cartItems.length).fill(true)
@@ -28,6 +31,27 @@ function CartPage() {
     setIsCheckedArray(newIsCheckedArray);
     // console.log(newIsCheckedArray);
 
+    if (!newIsCheckedArray[index] && cartItems[index]?.productDetail?.price) {
+      // 체크박스가 해제되면 금액을 뺌
+      setTotalPrice(
+        (prev: any) => prev - cartItems[index]?.productDetail?.price
+      );
+      setTotalDeliveryFee(
+        (prev: any) => prev - cartItems[index]?.productDetail?.shipping_fee
+      );
+    } else if (
+      newIsCheckedArray[index] &&
+      cartItems[index]?.productDetail?.price
+    ) {
+      // 체크박스가 선택되면 금액을 더함
+      setTotalDeliveryFee(
+        (prev: any) => prev - cartItems[index]?.productDetail?.shipping_fee
+      );
+      setTotalPrice(
+        (prev: any) => prev + cartItems[index]?.productDetail?.price
+      );
+    }
+
     // 모든 체크박스가 체크되어 있으면 전체 선택 체크박스도 체크, 아니면 해제
     setIsAllChecked(newIsCheckedArray.every((val) => val));
   };
@@ -35,6 +59,15 @@ function CartPage() {
   const handleToggleAllCheckbox = () => {
     const newValue = !isAllChecked;
     setIsAllChecked(newValue);
+    if (newValue) {
+      // 모든 체크박스가 선택되면 초기 금액
+      setTotalDeliveryFee(initialDeliveryFee);
+      setTotalPrice(initialTotalPrice);
+    } else {
+      // 모든 체크박스가 해제되면 0
+      setTotalPrice(0);
+      setTotalDeliveryFee(0);
+    }
     setIsCheckedArray(new Array(cartItems.length).fill(newValue));
   };
   return (
@@ -66,8 +99,8 @@ function CartPage() {
         </S.NoItemBox>
       ) : (
         <TotalPrice
-          initialDeliveryFee={initialDeliveryFee}
-          initialTotalPrice={initialTotalPrice}
+          totalDeliveryFee={totalDeliveryFee}
+          totalPrice={totalPrice}
         />
       )}
     </S.CartPageLayout>
