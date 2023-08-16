@@ -9,7 +9,7 @@ function TotalPrice() {
     (state: RootState) => state.cartList.selectedTotalPrice
   );
   const deliveryPrice = useAppSelector(
-    (state: RootState) => state.cartList.deliveryPrice
+    (state: RootState) => state.cartList.deliveryTotalPrice
   );
   return (
     <S.PriceTextWrapper>

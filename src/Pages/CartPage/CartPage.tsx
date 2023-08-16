@@ -7,13 +7,38 @@ import TotalPrice from "../../components/cart/TotalPrice/TotalPrice";
 import CheckCircleBtn from "../../components/common/CheckBtn/CheckCircleBtn";
 import { CartItemType } from "../../types/Cart.type";
 import useFetchCartItems from "../../hooks/queries/useFetchCartItems";
+import {
+  setDeliveryTotalPrice,
+  setSelectedTotalPrice,
+} from "../../features/cartListSlice";
 
 function CartPage() {
+  const dispatch = useAppDispatch();
   const token = useAppSelector((state: RootState) => state.login.token) || "";
 
   // 장바구니 정보 가져오기
   const { cartItems } = useFetchCartItems(token);
 
+  const priceArray = cartItems.map(
+    (item: CartItemType) => item.productDetail.price
+  );
+  const deliveryFeeArray = cartItems.map(
+    (item: CartItemType) => item.productDetail.shipping_fee
+  );
+
+  const initialTotalPrice = priceArray.reduce(
+    (accumulator: number, currentValue: number) => accumulator + currentValue,
+    0
+  );
+  dispatch(setSelectedTotalPrice(initialTotalPrice));
+
+  const initialTotalDeliveryFee = deliveryFeeArray.reduce(
+    (accumulator: number, currentValue: number) => accumulator + currentValue,
+    0
+  );
+  dispatch(setDeliveryTotalPrice(initialTotalDeliveryFee));
+
+  //체크박스 로직
   const [isCheckedArray, setIsCheckedArray] = useState(
     new Array(cartItems.length).fill(true)
   );
