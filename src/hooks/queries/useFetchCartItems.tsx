@@ -1,7 +1,7 @@
 import { useQueries } from "@tanstack/react-query";
 import productAPI from "../../API/productAPI";
 import useFetchCartList from "./useFetchCartList";
-import { CartType } from "../../types/Cart.type";
+import { CartItemType, CartType } from "../../types/Cart.type";
 
 const useFetchCartItems = (token: string) => {
   const { data: cartList } = useFetchCartList(token);
@@ -29,7 +29,25 @@ const useFetchCartItems = (token: string) => {
     productDetail: cartItemsResponses[index]?.data,
   }));
 
-  return { cartItems };
+  // 상품금액
+  const PriceArray = cartItems.map(
+    (item: CartItemType) => item.productDetail?.price
+  );
+  const initialTotalPrice = PriceArray.reduce(
+    (accumulator: number, currentValue: number) => accumulator + currentValue,
+    0
+  );
+
+  //배송비
+  const deliveryFeeArray = cartItems.map(
+    (item: CartItemType) => item.productDetail?.shipping_fee
+  );
+  const initialDeliveryFee = deliveryFeeArray.reduce(
+    (accumulator: number, currentValue: number) => accumulator + currentValue,
+    0
+  );
+
+  return { cartItems, initialTotalPrice, initialDeliveryFee };
 };
 
 export default useFetchCartItems;

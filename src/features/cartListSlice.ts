@@ -14,16 +14,23 @@ const cartSlice = createSlice({
   name: "cartList",
   initialState,
   reducers: {
-    setSelectedTotalPrice: (state, action) => {
+    updateSelectedTotalPrice: (state, action) => {
       state.selectedTotalPrice = action.payload;
     },
-    setDeliveryTotalPrice: (state, action) => {
+    updateDeliveryTotalPrice: (state, action) => {
       state.deliveryTotalPrice = action.payload;
+    },
+    resetTotalPrices: (state) => {
+      state.selectedTotalPrice = 0;
+      state.deliveryTotalPrice = 0;
     },
   },
 });
 
-export const { setSelectedTotalPrice, setDeliveryTotalPrice } =
-  cartSlice.actions;
+export const {
+  updateSelectedTotalPrice,
+  updateDeliveryTotalPrice,
+  resetTotalPrices,
+} = cartSlice.actions;
 
 export default cartSlice.reducer;

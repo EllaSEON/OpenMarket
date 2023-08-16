@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CartItem from "../../components/cart/CartItem/CartItem";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import * as S from "./style";
@@ -7,36 +7,12 @@ import TotalPrice from "../../components/cart/TotalPrice/TotalPrice";
 import CheckCircleBtn from "../../components/common/CheckBtn/CheckCircleBtn";
 import { CartItemType } from "../../types/Cart.type";
 import useFetchCartItems from "../../hooks/queries/useFetchCartItems";
-import {
-  setDeliveryTotalPrice,
-  setSelectedTotalPrice,
-} from "../../features/cartListSlice";
 
 function CartPage() {
-  const dispatch = useAppDispatch();
   const token = useAppSelector((state: RootState) => state.login.token) || "";
-
   // 장바구니 정보 가져오기
-  const { cartItems } = useFetchCartItems(token);
-
-  const priceArray = cartItems.map(
-    (item: CartItemType) => item.productDetail.price
-  );
-  const deliveryFeeArray = cartItems.map(
-    (item: CartItemType) => item.productDetail.shipping_fee
-  );
-
-  const initialTotalPrice = priceArray.reduce(
-    (accumulator: number, currentValue: number) => accumulator + currentValue,
-    0
-  );
-  dispatch(setSelectedTotalPrice(initialTotalPrice));
-
-  const initialTotalDeliveryFee = deliveryFeeArray.reduce(
-    (accumulator: number, currentValue: number) => accumulator + currentValue,
-    0
-  );
-  dispatch(setDeliveryTotalPrice(initialTotalDeliveryFee));
+  const { cartItems, initialTotalPrice, initialDeliveryFee } =
+    useFetchCartItems(token);
 
   //체크박스 로직
   const [isCheckedArray, setIsCheckedArray] = useState(
@@ -47,7 +23,7 @@ function CartPage() {
   // 각 개별 아이템 체크박스 토글
   const handleToggleCheckbox = (index: number) => {
     const newIsCheckedArray = [...isCheckedArray];
-    //체크박스를 클릭했을 때 토클 true이면 false로 변경해줌
+    //체크박스를 클릭했을 때 토글 true이면 false로 변경해줌
     newIsCheckedArray[index] = !newIsCheckedArray[index];
     setIsCheckedArray(newIsCheckedArray);
     // console.log(newIsCheckedArray);
@@ -89,7 +65,10 @@ function CartPage() {
           <small>원하는 상품을 장바구니에 담아보세요!</small>
         </S.NoItemBox>
       ) : (
-        <TotalPrice />
+        <TotalPrice
+          initialDeliveryFee={initialDeliveryFee}
+          initialTotalPrice={initialTotalPrice}
+        />
       )}
     </S.CartPageLayout>
   );
