@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { RootState } from "../../store/store";
 import Modal from "../../components/common/Modal/Modal";
@@ -25,10 +25,16 @@ function ProductDetailPage() {
 
   const cartMutation = useMutation(cartAPI.createCartProduct, {
     onSuccess: () => {
-      navigate("/cart");
+      // eslint-disable-next-line no-restricted-globals
+      const cartAlert = confirm(
+        "장바구니에 담았습니다. 장바구니로 이동하시겠습니까?"
+      );
+      if (cartAlert === true) {
+        navigate("/cart");
+      }
     },
-    onError: (error: any) => {
-      console.log(error);
+    onError: () => {
+      alert("재고가 없어서 상품을 장바구니에 추가하지 못합니다.");
     },
   });
 

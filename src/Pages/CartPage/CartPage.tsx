@@ -45,7 +45,7 @@ function CartPage() {
     ) {
       // 체크박스가 선택되면 금액을 더함
       setTotalDeliveryFee(
-        (prev: any) => prev - cartItems[index]?.productDetail?.shipping_fee
+        (prev: any) => prev + cartItems[index]?.productDetail?.shipping_fee
       );
       setTotalPrice(
         (prev: any) => prev + cartItems[index]?.productDetail?.price
@@ -90,6 +90,10 @@ function CartPage() {
           cartItem={cartItem.productDetail}
           isChecked={isCheckedArray[index]}
           onToggle={() => handleToggleCheckbox(index)}
+          totalPrice={totalPrice}
+          totalDeliveryFee={totalDeliveryFee}
+          setTotalPrice={setTotalPrice}
+          setTotalDeliveryFee={setTotalDeliveryFee}
         />
       ))}
       {cartItems.length === 0 ? (

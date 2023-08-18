@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import AmountBtn from "../../common/AmountBtn/AmountBtn";
 import Button from "../../common/Button/Button";
@@ -6,9 +6,13 @@ import Modal from "../../common/Modal/Modal";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { RootState } from "../../../store/store";
 import * as S from "./style";
-import { ProductDetailType } from "../../../types/Cart.type";
+import {
+  OldDataResultsType,
+  ProductDetailType,
+} from "../../../types/Cart.type";
 import cartAPI from "../../../API/cartAPI";
 import CheckCircleBtn from "../../common/CheckBtn/CheckCircleBtn";
+import { createKeywordTypeNode } from "typescript";
 
 interface CartItemProps {
   cartItem: ProductDetailType;
@@ -16,6 +20,22 @@ interface CartItemProps {
   cartItemId: number;
   isChecked: boolean;
   onToggle: () => void;
+  setTotalPrice: Dispatch<SetStateAction<number>>;
+  setTotalDeliveryFee: Dispatch<SetStateAction<number>>;
+  totalPrice: number;
+  totalDeliveryFee: number;
+}
+
+interface oldDataType {
+  count: number;
+  next: string | null; //"https://openmarket.weniv.co.kr/cart/?page=2"
+  previous: string | null;
+  results: OldDataResultsType[];
+}
+
+interface DeleteCartItemMutationDataType {
+  cart_item_id: number;
+  token: string;
 }
 
 function CartItem({
@@ -24,15 +44,26 @@ function CartItem({
   cartItemId,
   isChecked,
   onToggle,
+  totalPrice,
+  totalDeliveryFee,
+  setTotalPrice,
+  setTotalDeliveryFee,
 }: CartItemProps) {
   const dispatch = useAppDispatch();
   const token = useAppSelector((state: RootState) => state.login.token) || "";
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [count, setCount] = useState(quantity);
   const queryClient = useQueryClient();
+  // console.log(cartItem);
 
   const deleteCartItemMutation = useMutation(cartAPI.deleteCartItem, {
-    onMutate: async (data) => {
+    onSuccess: (data) => {
+      const itemPrice = cartItem.price;
+      const itemDeliveryFee = cartItem.shipping_fee;
+      setTotalPrice(totalPrice - itemPrice);
+      setTotalDeliveryFee(totalDeliveryFee - itemDeliveryFee);
+    },
+    onMutate: async (data: DeleteCartItemMutationDataType) => {
       // 낙관적 업데이트를 덮어쓰지 않기위해 쿼리를 수동으로 삭제
       await queryClient.cancelQueries({
         queryKey: ["cartList", token],
@@ -42,19 +73,24 @@ function CartItem({
       const previousCartItems = queryClient.getQueryData(["cartList", token]);
 
       // 새로운 값으로 낙관적 업데이트를 진행
-      queryClient.setQueryData(["cartList", token], (oldData: any) => {
-        // console.log(oldData);
-        const filteredData = oldData.results.filter(
-          (item: any) => item.cart_item_id !== data.cart_item_id
-        );
-        return { ...oldData, results: filteredData };
-      });
+      queryClient.setQueryData(
+        ["cartList", token],
+        (oldData: oldDataType | undefined) => {
+          if (!oldData) return;
+
+          const filteredData = oldData.results.filter(
+            (item: OldDataResultsType) =>
+              item.cart_item_id !== data.cart_item_id
+          );
+          return { ...oldData, results: filteredData };
+        }
+      );
 
       // 값이 들어있는 context 객체 반환
       return { previousCartItems };
     },
     // mutation이 실패해서 데이터 업데이트가 되지 않았을때 onMutate에서 반환된 이전의 백업된 context를 사용하여 롤백 진행
-    onError: (error, context: any) => {
+    onError: (_, context: any) => {
       queryClient.setQueryData(["cartList", token], context.previousCartItems);
     },
   });
