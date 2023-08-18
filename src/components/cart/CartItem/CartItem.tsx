@@ -147,6 +147,9 @@ function CartItem({
         stock={cartItem?.stock}
         productId={cartItem?.product_id}
         cartId={cartItemId}
+        isChecked={isChecked}
+        productPrice={cartItem?.price}
+        setTotalPrice={setTotalPrice}
       />
       <S.TotalPriceWrapper>
         <S.TotalPriceTxt>

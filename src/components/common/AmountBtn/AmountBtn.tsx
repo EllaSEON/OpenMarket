@@ -10,14 +10,20 @@ interface AmountBtnProps {
   stock?: number;
   productId?: string;
   cartId?: number;
+  isChecked?: boolean;
+  productPrice?: number;
+  setTotalPrice?: React.Dispatch<React.SetStateAction<number>>;
 }
 
 function AmountBtn({
+  isChecked,
   count,
   setCount,
   stock,
   productId,
   cartId,
+  productPrice,
+  setTotalPrice,
 }: AmountBtnProps) {
   const token = useAppSelector((state: RootState) => state.login.token) || "";
 
@@ -39,6 +45,9 @@ function AmountBtn({
       };
       updateQuantityMutation.mutate(quantityData);
     }
+    if (isChecked && productPrice !== undefined) {
+      setTotalPrice?.((prev) => prev - productPrice);
+    }
   };
 
   const handleIncrease = () => {
@@ -54,6 +63,9 @@ function AmountBtn({
         is_active: true,
       };
       updateQuantityMutation.mutate(quantityData);
+    }
+    if (isChecked && productPrice !== undefined) {
+      setTotalPrice?.((prev) => prev + productPrice);
     }
   };
 

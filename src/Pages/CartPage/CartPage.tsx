@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import CartItem from "../../components/cart/CartItem/CartItem";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import * as S from "./style";
@@ -7,6 +7,7 @@ import TotalPrice from "../../components/cart/TotalPrice/TotalPrice";
 import CheckCircleBtn from "../../components/common/CheckBtn/CheckCircleBtn";
 import { CartItemType } from "../../types/Cart.type";
 import useFetchCartItems from "../../hooks/queries/useFetchCartItems";
+import Loading from "../../components/common/Loading/Loading";
 
 function CartPage() {
   const token = useAppSelector((state: RootState) => state.login.token) || "";
@@ -14,8 +15,13 @@ function CartPage() {
   const { cartItems, initialTotalPrice, initialDeliveryFee } =
     useFetchCartItems(token);
 
-  const [totalPrice, setTotalPrice] = useState(initialTotalPrice);
-  const [totalDeliveryFee, setTotalDeliveryFee] = useState(initialDeliveryFee);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [totalDeliveryFee, setTotalDeliveryFee] = useState(0);
+
+  useEffect(() => {
+    setTotalPrice(initialTotalPrice);
+    setTotalDeliveryFee(initialDeliveryFee);
+  }, [initialTotalPrice, initialDeliveryFee]);
 
   //체크박스 로직
   const [isCheckedArray, setIsCheckedArray] = useState(
@@ -73,6 +79,7 @@ function CartPage() {
   return (
     <S.CartPageLayout>
       <S.CartText>장바구니</S.CartText>
+
       <S.MenuUl>
         <CheckCircleBtn
           isChecked={isAllChecked}
@@ -103,8 +110,8 @@ function CartPage() {
         </S.NoItemBox>
       ) : (
         <TotalPrice
-          totalDeliveryFee={totalDeliveryFee}
           totalPrice={totalPrice}
+          totalDeliveryFee={totalDeliveryFee}
         />
       )}
     </S.CartPageLayout>

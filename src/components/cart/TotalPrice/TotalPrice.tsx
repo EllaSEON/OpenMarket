@@ -1,6 +1,8 @@
+import { Suspense } from "react";
 import MinusIcon from "../../../assets/images/icon-minus-line.svg";
 import PlusIcon from "../../../assets/images/icon-plus-line.svg";
 import * as S from "./style";
+import Loading from "../../common/Loading/Loading";
 
 interface TotalPriceProps {
   totalPrice: number;
