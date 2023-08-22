@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { RootState } from "../../store/store";
 import Modal from "../../components/common/Modal/Modal";
@@ -21,14 +21,20 @@ function ProductDetailPage() {
   const { productId } = useParams();
   const productIdValue = productId || "defaultProductId";
 
-  const { data } = useFetchProductDetail(productIdValue);
+  const { data: productDetailData } = useFetchProductDetail(productIdValue);
 
   const cartMutation = useMutation(cartAPI.createCartProduct, {
     onSuccess: () => {
-      navigate("/cart");
+      // eslint-disable-next-line no-restricted-globals
+      const cartAlert = confirm(
+        "장바구니에 담았습니다. 장바구니로 이동하시겠습니까?"
+      );
+      if (cartAlert === true) {
+        navigate("/cart");
+      }
     },
-    onError: (error: any) => {
-      console.log(error);
+    onError: () => {
+      alert("재고보다 더 많은 상품을 담을 수 없습니다.");
     },
   });
 
@@ -59,26 +65,30 @@ function ProductDetailPage() {
       <S.ProductWrapper>
         {!token && modal ? needLoginModal : null}
         <S.ProductImgBox>
-          <img src={data.image} alt="상품 사진" />
+          <img src={productDetailData.image} alt="상품 사진" />
         </S.ProductImgBox>
         <S.ProductCartWrapper>
-          <S.SellerText>{data.store_name}</S.SellerText>
-          <S.ProductText>{data.product_name}</S.ProductText>
+          <S.SellerText>{productDetailData.store_name}</S.SellerText>
+          <S.ProductText>{productDetailData.product_name}</S.ProductText>
           <S.PriceText>
-            {data.price?.toLocaleString()}
+            {productDetailData.price?.toLocaleString()}
             <span>원</span>
           </S.PriceText>
           <S.DeliveryText>
-            {data.shipping_method === "PARCEL" ? "직접배송" : "택배배송"} /{" "}
-            {data.shipping_fee === 0
+            {productDetailData.shipping_method === "PARCEL"
+              ? "직접배송"
+              : "택배배송"}{" "}
+            /{" "}
+            {productDetailData.shipping_fee === 0
               ? "무료배송"
-              : `배송비 ${data.shipping_fee?.toLocaleString()} 원`}
+              : `배송비 ${productDetailData.shipping_fee?.toLocaleString()} 원`}
           </S.DeliveryText>
           <S.hr />
           <AmountBtn
             count={count}
             setCount={setCount}
-            stock={data.stock || 0}
+            stock={productDetailData.stock || 0}
+            productPrice={productDetailData.price}
           />
           <S.hr />
           <S.TotalPriceWrapper>
@@ -90,8 +100,8 @@ function ProductDetailPage() {
               </S.TotalAmountText>
               <S.TotalPriceText>
                 {(
-                  (data.price || 0) * count +
-                  (data.shipping_fee || 0)
+                  (productDetailData.price || 0) * count +
+                  (productDetailData.shipping_fee || 0)
                 ).toLocaleString()}{" "}
                 <span>원</span>
               </S.TotalPriceText>

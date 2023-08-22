@@ -1,15 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import loginSliceReducer from "../features/loginSlice";
 import modalSliceReducer from "../features/modalSlice";
-import postCartSliceReducer from "../features/postCartSlice";
-import cartListSliceReducer from "../features/cartListSlice";
+import paymentAmountSliceReducer from "../features/paymentAmountSlice";
 
 export const store = configureStore({
   reducer: {
     login: loginSliceReducer,
     modal: modalSliceReducer,
-    cart: postCartSliceReducer,
-    cartList: cartListSliceReducer,
+    paymentAmount: paymentAmountSliceReducer,
   },
 });
 

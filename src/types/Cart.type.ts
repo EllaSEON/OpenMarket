@@ -12,12 +12,21 @@ export interface UpdateCartQuantityType {
   is_active: boolean;
 }
 
+export interface OldDataResultsType {
+  my_cart: number;
+  cart_item_id: number;
+  product_id: string;
+  quantity: number;
+  is_active: boolean;
+}
+
 export interface CartType {
   my_cart: number;
   cart_item_id: number;
   product_id: string;
   quantity: number;
   is_active: boolean;
+  isChecked: boolean;
 }
 
 export interface CartItemType extends CartType {
