@@ -20,17 +20,17 @@ const queryClient = new QueryClient({
 
 function App() {
   return (
-    // <Suspense fallback={<Loading />}>
-    <QueryClientProvider client={queryClient}>
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <GlobalStyle />
-          <Router />
-          <ReactQueryDevtools />
-        </ThemeProvider>
-      </Provider>
-    </QueryClientProvider>
-    // </Suspense>
+    <Suspense fallback={<Loading />}>
+      <QueryClientProvider client={queryClient}>
+        <Provider store={store}>
+          <ThemeProvider theme={theme}>
+            <GlobalStyle />
+            <Router />
+            <ReactQueryDevtools />
+          </ThemeProvider>
+        </Provider>
+      </QueryClientProvider>
+    </Suspense>
   );
 }
 

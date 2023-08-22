@@ -12,7 +12,7 @@ import {
 } from "../../../types/Cart.type";
 import cartAPI from "../../../API/cartAPI";
 import CheckCircleBtn from "../../common/CheckBtn/CheckCircleBtn";
-import { createKeywordTypeNode } from "typescript";
+import { setPaymentAmount } from "../../../features/paymentAmountSlice";
 
 interface CartItemProps {
   cartItem: ProductDetailType;
@@ -20,10 +20,6 @@ interface CartItemProps {
   cartItemId: number;
   isChecked: boolean;
   onToggle: () => void;
-  setTotalPrice: Dispatch<SetStateAction<number>>;
-  setTotalDeliveryFee: Dispatch<SetStateAction<number>>;
-  totalPrice: number;
-  totalDeliveryFee: number;
 }
 
 interface oldDataType {
@@ -44,12 +40,11 @@ function CartItem({
   cartItemId,
   isChecked,
   onToggle,
-  totalPrice,
-  totalDeliveryFee,
-  setTotalPrice,
-  setTotalDeliveryFee,
 }: CartItemProps) {
   const dispatch = useAppDispatch();
+  const { totalPrice, totalShippingFee } = useAppSelector(
+    (state) => state.paymentAmount
+  );
   const token = useAppSelector((state: RootState) => state.login.token) || "";
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [count, setCount] = useState(quantity);
@@ -59,9 +54,13 @@ function CartItem({
   const deleteCartItemMutation = useMutation(cartAPI.deleteCartItem, {
     onSuccess: (data) => {
       const itemPrice = cartItem.price;
-      const itemDeliveryFee = cartItem.shipping_fee;
-      setTotalPrice(totalPrice - itemPrice);
-      setTotalDeliveryFee(totalDeliveryFee - itemDeliveryFee);
+      const itemShippingFee = cartItem.shipping_fee;
+      dispatch(
+        setPaymentAmount({
+          totalPrice: totalPrice - itemPrice * count,
+          totalShippingFee: totalShippingFee - itemShippingFee,
+        })
+      );
     },
     onMutate: async (data: DeleteCartItemMutationDataType) => {
       // 낙관적 업데이트를 덮어쓰지 않기위해 쿼리를 수동으로 삭제
@@ -149,7 +148,6 @@ function CartItem({
         cartId={cartItemId}
         isChecked={isChecked}
         productPrice={cartItem?.price}
-        setTotalPrice={setTotalPrice}
       />
       <S.TotalPriceWrapper>
         <S.TotalPriceTxt>

@@ -1,8 +1,10 @@
-import { useAppSelector } from "../../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { RootState } from "../../../store/store";
 import * as S from "./style";
-import { useMutation } from "@tanstack/react-query";
+import { QueryClient, useMutation } from "@tanstack/react-query";
 import cartAPI from "../../../API/cartAPI";
+import { setPaymentAmount } from "../../../features/paymentAmountSlice";
+import useFetchCartItems from "../../../hooks/queries/useFetchCartItems";
 
 interface AmountBtnProps {
   count: number;
@@ -12,7 +14,6 @@ interface AmountBtnProps {
   cartId?: number;
   isChecked?: boolean;
   productPrice?: number;
-  setTotalPrice?: React.Dispatch<React.SetStateAction<number>>;
 }
 
 function AmountBtn({
@@ -23,12 +24,19 @@ function AmountBtn({
   productId,
   cartId,
   productPrice,
-  setTotalPrice,
 }: AmountBtnProps) {
+  const queryClient = new QueryClient();
+  const dispatch = useAppDispatch();
   const token = useAppSelector((state: RootState) => state.login.token) || "";
+  const { totalPrice, totalShippingFee } = useAppSelector(
+    (state) => state.paymentAmount
+  );
+  const { refetch } = useFetchCartItems(token);
 
   const updateQuantityMutation = useMutation(cartAPI.updateCartQuantity, {
-    onSuccess: () => {},
+    onSuccess: () => {
+      refetch();
+    },
   });
 
   const handleDecrease = () => {
@@ -46,7 +54,12 @@ function AmountBtn({
       updateQuantityMutation.mutate(quantityData);
     }
     if (isChecked && productPrice !== undefined) {
-      setTotalPrice?.((prev) => prev - productPrice);
+      dispatch(
+        setPaymentAmount({
+          totalPrice: totalPrice - productPrice,
+          totalShippingFee: totalShippingFee,
+        })
+      );
     }
   };
 
@@ -65,7 +78,12 @@ function AmountBtn({
       updateQuantityMutation.mutate(quantityData);
     }
     if (isChecked && productPrice !== undefined) {
-      setTotalPrice?.((prev) => prev + productPrice);
+      dispatch(
+        setPaymentAmount({
+          totalPrice: totalPrice + productPrice,
+          totalShippingFee: totalShippingFee,
+        })
+      );
     }
   };
 

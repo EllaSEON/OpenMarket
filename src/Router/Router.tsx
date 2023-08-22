@@ -4,7 +4,7 @@ import LoginPage from "../Pages/LoginPage/LoginPage";
 import JoinPage from "../Pages/JoinPage/JoinPage";
 import HomePage from "../Pages/HomePage/HomePage";
 import CartPage from "../Pages/CartPage/CartPage";
-import MyPage from "../Pages/MyPage/MyPage";
+// import MyPage from "../Pages/MyPage/MyPage";
 import SearchResultPage from "../Pages/SearchResultPage/SearchResultPage";
 import ProductDetailPage from "../Pages/ProductDetailPage/ProductDetailPage";
 import { useAppSelector } from "../store/hooks";
@@ -21,7 +21,7 @@ function Router() {
         <Route element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/cart" element={token ? <CartPage /> : <NotFound />} />
-          <Route path="/mypage" element={token ? <MyPage /> : <NotFound />} />
+          {/* <Route path="/mypage" element={token ? <MyPage /> : <NotFound />} /> */}
           <Route path="/search" element={<SearchResultPage />} />
           <Route path="/products/:productId" element={<ProductDetailPage />} />
         </Route>

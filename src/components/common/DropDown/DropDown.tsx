@@ -26,7 +26,8 @@ function DropDown() {
     <S.DropDownWrapper>
       <S.DropDownList
         onClick={() => {
-          navigate("/mypage");
+          // navigate("/mypage");
+          alert("준비중인 기능입니다.");
         }}
       >
         마이페이지

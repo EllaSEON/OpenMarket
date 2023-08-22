@@ -7,21 +7,28 @@ import TotalPrice from "../../components/cart/TotalPrice/TotalPrice";
 import CheckCircleBtn from "../../components/common/CheckBtn/CheckCircleBtn";
 import { CartItemType } from "../../types/Cart.type";
 import useFetchCartItems from "../../hooks/queries/useFetchCartItems";
-import Loading from "../../components/common/Loading/Loading";
+import { setPaymentAmount } from "../../features/paymentAmountSlice";
 
 function CartPage() {
+  const dispatch = useAppDispatch();
   const token = useAppSelector((state: RootState) => state.login.token) || "";
   // 장바구니 정보 가져오기
   const { cartItems, initialTotalPrice, initialDeliveryFee } =
     useFetchCartItems(token);
 
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [totalDeliveryFee, setTotalDeliveryFee] = useState(0);
-
+  // 카트 페이지가 로드될 때만 초기 값 설정
   useEffect(() => {
-    setTotalPrice(initialTotalPrice);
-    setTotalDeliveryFee(initialDeliveryFee);
-  }, [initialTotalPrice, initialDeliveryFee]);
+    dispatch(
+      setPaymentAmount({
+        totalPrice: initialTotalPrice,
+        totalShippingFee: initialDeliveryFee,
+      })
+    );
+  }, [dispatch, initialTotalPrice, initialDeliveryFee]);
+
+  const { totalPrice, totalShippingFee } = useAppSelector(
+    (state) => state.paymentAmount
+  );
 
   //체크박스 로직
   const [isCheckedArray, setIsCheckedArray] = useState(
@@ -39,22 +46,28 @@ function CartPage() {
 
     if (!newIsCheckedArray[index] && cartItems[index]?.productDetail?.price) {
       // 체크박스가 해제되면 금액을 뺌
-      setTotalPrice(
-        (prev: any) => prev - cartItems[index]?.productDetail?.price
-      );
-      setTotalDeliveryFee(
-        (prev: any) => prev - cartItems[index]?.productDetail?.shipping_fee
+      dispatch(
+        setPaymentAmount({
+          totalPrice:
+            totalPrice -
+            cartItems[index]?.productDetail?.price * cartItems[index]?.quantity,
+          totalShippingFee:
+            totalShippingFee - cartItems[index]?.productDetail?.shipping_fee,
+        })
       );
     } else if (
       newIsCheckedArray[index] &&
       cartItems[index]?.productDetail?.price
     ) {
       // 체크박스가 선택되면 금액을 더함
-      setTotalDeliveryFee(
-        (prev: any) => prev + cartItems[index]?.productDetail?.shipping_fee
-      );
-      setTotalPrice(
-        (prev: any) => prev + cartItems[index]?.productDetail?.price
+      dispatch(
+        setPaymentAmount({
+          totalPrice:
+            totalPrice +
+            cartItems[index]?.productDetail?.price * cartItems[index]?.quantity,
+          totalShippingFee:
+            totalShippingFee + cartItems[index]?.productDetail?.shipping_fee,
+        })
       );
     }
 
@@ -67,19 +80,26 @@ function CartPage() {
     setIsAllChecked(newValue);
     if (newValue) {
       // 모든 체크박스가 선택되면 초기 금액
-      setTotalDeliveryFee(initialDeliveryFee);
-      setTotalPrice(initialTotalPrice);
+      dispatch(
+        setPaymentAmount({
+          totalPrice: initialTotalPrice,
+          totalShippingFee: initialDeliveryFee,
+        })
+      );
     } else {
       // 모든 체크박스가 해제되면 0
-      setTotalPrice(0);
-      setTotalDeliveryFee(0);
+      dispatch(
+        setPaymentAmount({
+          totalPrice: 0,
+          totalShippingFee: 0,
+        })
+      );
     }
     setIsCheckedArray(new Array(cartItems.length).fill(newValue));
   };
   return (
     <S.CartPageLayout>
       <S.CartText>장바구니</S.CartText>
-
       <S.MenuUl>
         <CheckCircleBtn
           isChecked={isAllChecked}
@@ -97,10 +117,6 @@ function CartPage() {
           cartItem={cartItem.productDetail}
           isChecked={isCheckedArray[index]}
           onToggle={() => handleToggleCheckbox(index)}
-          totalPrice={totalPrice}
-          totalDeliveryFee={totalDeliveryFee}
-          setTotalPrice={setTotalPrice}
-          setTotalDeliveryFee={setTotalDeliveryFee}
         />
       ))}
       {cartItems.length === 0 ? (
@@ -109,10 +125,7 @@ function CartPage() {
           <small>원하는 상품을 장바구니에 담아보세요!</small>
         </S.NoItemBox>
       ) : (
-        <TotalPrice
-          totalPrice={totalPrice}
-          totalDeliveryFee={totalDeliveryFee}
-        />
+        <TotalPrice />
       )}
     </S.CartPageLayout>
   );

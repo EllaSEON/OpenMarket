@@ -2,9 +2,11 @@ import { useQueries } from "@tanstack/react-query";
 import productAPI from "../../API/productAPI";
 import useFetchCartList from "./useFetchCartList";
 import { CartItemType, CartType } from "../../types/Cart.type";
+import { useAppDispatch } from "../../store/hooks";
 
 const useFetchCartItems = (token: string) => {
-  const { data: cartList } = useFetchCartList(token);
+  const dispatch = useAppDispatch();
+  const { data: cartList, refetch } = useFetchCartList(token);
   // console.log(cartList);
 
   const productIds = cartList.results.map((item: any) => {
@@ -29,11 +31,14 @@ const useFetchCartItems = (token: string) => {
     productDetail: cartItemsResponses[index]?.data,
   }));
 
-  // 상품금액
-  const PriceArray = cartItems.map(
-    (item: CartItemType) => item.productDetail?.price
-  );
-  const initialTotalPrice = PriceArray.reduce(
+  // 각 상품의 수량 * 가격
+  const productTotalPrices = cartItems.map((item: CartItemType) => {
+    const productPrice = item.productDetail?.price || 0;
+    const productQuantity = item.quantity || 0;
+    return productPrice * productQuantity;
+  });
+
+  const initialTotalPrice = productTotalPrices.reduce(
     (accumulator: number, currentValue: number) => accumulator + currentValue,
     0
   );
@@ -47,7 +52,7 @@ const useFetchCartItems = (token: string) => {
     0
   );
 
-  return { cartItems, initialTotalPrice, initialDeliveryFee };
+  return { cartItems, initialTotalPrice, initialDeliveryFee, refetch };
 };
 
 export default useFetchCartItems;
