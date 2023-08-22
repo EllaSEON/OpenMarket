@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
@@ -10,6 +10,7 @@ import * as S from "./style";
 import { openModal } from "../../features/modalSlice";
 import useFetchProductDetail from "../../hooks/queries/useFetchProductDetail";
 import cartAPI from "../../API/cartAPI";
+import Loading from "../../components/common/Loading/Loading";
 
 function ProductDetailPage() {
   const navigate = useNavigate();
