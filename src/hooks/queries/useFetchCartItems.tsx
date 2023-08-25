@@ -6,7 +6,7 @@ import { useAppDispatch } from "../../store/hooks";
 
 const useFetchCartItems = (token: string) => {
   const dispatch = useAppDispatch();
-  const { data: cartList, refetch } = useFetchCartList(token);
+  const { data: cartList } = useFetchCartList(token);
   // console.log(cartList);
 
   const productIds = cartList.results.map((item: any) => {
@@ -52,7 +52,11 @@ const useFetchCartItems = (token: string) => {
     0
   );
 
-  return { cartItems, initialTotalPrice, initialDeliveryFee, refetch };
+  return {
+    cartItems,
+    initialTotalPrice,
+    initialDeliveryFee,
+  };
 };
 
 export default useFetchCartItems;

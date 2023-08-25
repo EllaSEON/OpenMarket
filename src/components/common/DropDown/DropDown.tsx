@@ -14,7 +14,7 @@ function DropDown() {
     onSuccess: () => {
       removeCookie("token");
       dispatch(updateToken(null));
-      navigate("/");
+      // navigate("/");
     },
   });
 

@@ -8,6 +8,7 @@ import CheckCircleBtn from "../../components/common/CheckBtn/CheckCircleBtn";
 import { CartItemType } from "../../types/Cart.type";
 import useFetchCartItems from "../../hooks/queries/useFetchCartItems";
 import { setPaymentAmount } from "../../features/paymentAmountSlice";
+import Loading from "../../components/common/Loading/Loading";
 
 function CartPage() {
   const dispatch = useAppDispatch();
@@ -31,9 +32,20 @@ function CartPage() {
   );
 
   //체크박스 로직
-  const [isCheckedArray, setIsCheckedArray] = useState(
+  const [isCheckedArray, setIsCheckedArray] = useState(() =>
     new Array(cartItems.length).fill(true)
   );
+
+  useEffect(() => {
+    const diffLength = cartItems.length - isCheckedArray.length;
+    if (diffLength > 0) {
+      setIsCheckedArray((prev) => [
+        ...prev,
+        ...new Array(diffLength).fill(true),
+      ]);
+    }
+  }, [cartItems]);
+
   const [isAllChecked, setIsAllChecked] = useState(true);
 
   // 각 개별 아이템 체크박스 토글
@@ -109,16 +121,18 @@ function CartPage() {
         <li>수량</li>
         <li>상품금액</li>
       </S.MenuUl>
-      {cartItems.map((cartItem: CartItemType, index: number) => (
-        <CartItem
-          key={cartItem.cart_item_id}
-          cartItemId={cartItem.cart_item_id}
-          quantity={cartItem.quantity}
-          cartItem={cartItem.productDetail}
-          isChecked={isCheckedArray[index]}
-          onToggle={() => handleToggleCheckbox(index)}
-        />
-      ))}
+      <Suspense fallback={<Loading />}>
+        {cartItems.map((cartItem: CartItemType, index: number) => (
+          <CartItem
+            key={cartItem.cart_item_id}
+            cartItemId={cartItem.cart_item_id}
+            quantity={cartItem.quantity}
+            cartItem={cartItem.productDetail}
+            isChecked={isCheckedArray[index]}
+            onToggle={() => handleToggleCheckbox(index)}
+          />
+        ))}
+      </Suspense>
       {cartItems.length === 0 ? (
         <S.NoItemBox>
           <p>장바구니에 담긴 상품이 없습니다.</p>

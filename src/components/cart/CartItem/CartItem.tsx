@@ -1,18 +1,14 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import AmountBtn from "../../common/AmountBtn/AmountBtn";
 import Button from "../../common/Button/Button";
 import Modal from "../../common/Modal/Modal";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { RootState } from "../../../store/store";
 import * as S from "./style";
-import {
-  OldDataResultsType,
-  ProductDetailType,
-} from "../../../types/Cart.type";
-import cartAPI from "../../../API/cartAPI";
+import { ProductDetailType } from "../../../types/Cart.type";
 import CheckCircleBtn from "../../common/CheckBtn/CheckCircleBtn";
-import { setPaymentAmount } from "../../../features/paymentAmountSlice";
+import { useDeleteCartItem } from "../../../hooks/queries/useDeleteCartItems";
 
 interface CartItemProps {
   cartItem: ProductDetailType;
@@ -22,18 +18,6 @@ interface CartItemProps {
   onToggle: () => void;
 }
 
-interface oldDataType {
-  count: number;
-  next: string | null; //"https://openmarket.weniv.co.kr/cart/?page=2"
-  previous: string | null;
-  results: OldDataResultsType[];
-}
-
-interface DeleteCartItemMutationDataType {
-  cart_item_id: number;
-  token: string;
-}
-
 function CartItem({
   cartItem,
   quantity,
@@ -41,57 +25,19 @@ function CartItem({
   isChecked,
   onToggle,
 }: CartItemProps) {
-  const dispatch = useAppDispatch();
   const { totalPrice, totalShippingFee } = useAppSelector(
     (state) => state.paymentAmount
   );
   const token = useAppSelector((state: RootState) => state.login.token) || "";
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [count, setCount] = useState(quantity);
-  const queryClient = useQueryClient();
   // console.log(cartItem);
 
-  const deleteCartItemMutation = useMutation(cartAPI.deleteCartItem, {
-    onSuccess: (data) => {
-      const itemPrice = cartItem.price;
-      const itemShippingFee = cartItem.shipping_fee;
-      dispatch(
-        setPaymentAmount({
-          totalPrice: totalPrice - itemPrice * count,
-          totalShippingFee: totalShippingFee - itemShippingFee,
-        })
-      );
-    },
-    onMutate: async (data: DeleteCartItemMutationDataType) => {
-      // 낙관적 업데이트를 덮어쓰지 않기위해 쿼리를 수동으로 삭제
-      await queryClient.cancelQueries({
-        queryKey: ["cartList", token],
-      });
-
-      // 이전값
-      const previousCartItems = queryClient.getQueryData(["cartList", token]);
-
-      // 새로운 값으로 낙관적 업데이트를 진행
-      queryClient.setQueryData(
-        ["cartList", token],
-        (oldData: oldDataType | undefined) => {
-          if (!oldData) return;
-
-          const filteredData = oldData.results.filter(
-            (item: OldDataResultsType) =>
-              item.cart_item_id !== data.cart_item_id
-          );
-          return { ...oldData, results: filteredData };
-        }
-      );
-
-      // 값이 들어있는 context 객체 반환
-      return { previousCartItems };
-    },
-    // mutation이 실패해서 데이터 업데이트가 되지 않았을때 onMutate에서 반환된 이전의 백업된 context를 사용하여 롤백 진행
-    onError: (_, context: any) => {
-      queryClient.setQueryData(["cartList", token], context.previousCartItems);
-    },
+  const { deleteCartItemMutation } = useDeleteCartItem({
+    totalPrice,
+    totalShippingFee,
+    cartItem,
+    count,
   });
 
   const handleOpenDeleteModal = () => {
