@@ -31,11 +31,11 @@ function AmountBtn({
   const { totalPrice, totalShippingFee } = useAppSelector(
     (state) => state.paymentAmount
   );
-  const { refetch } = useFetchCartItems(token);
+  // const { refetch } = useFetchCartItems(token);
 
   const updateQuantityMutation = useMutation(cartAPI.updateCartQuantity, {
     onSuccess: () => {
-      refetch();
+      // refetch();
     },
   });
 
@@ -43,7 +43,7 @@ function AmountBtn({
     if (count > 1) {
       setCount(count - 1);
     }
-    if (productId !== undefined && cartId !== undefined) {
+    if (isChecked && productId !== undefined && cartId !== undefined) {
       const quantityData = {
         token: token,
         product_id: productId,
@@ -67,7 +67,7 @@ function AmountBtn({
     if (stock !== undefined && count < stock) {
       setCount(count + 1);
     }
-    if (productId !== undefined && cartId !== undefined) {
+    if (isChecked && productId !== undefined && cartId !== undefined) {
       const quantityData = {
         token: token,
         product_id: productId,

@@ -39,7 +39,7 @@ function ProductDetailPage() {
     },
   });
 
-  const handlePostCart = async () => {
+  const handlePostCart = () => {
     if (token) {
       const cartData = {
         token: token,

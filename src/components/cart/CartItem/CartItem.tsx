@@ -37,6 +37,7 @@ function CartItem({
     totalPrice,
     totalShippingFee,
     cartItem,
+    count,
   });
 
   const handleOpenDeleteModal = () => {

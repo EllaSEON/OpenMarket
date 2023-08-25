@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MainLayout, { SellerLayout } from "../components/layout/Layout";
 import LoginPage from "../Pages/LoginPage/LoginPage";
@@ -12,15 +13,18 @@ import { RootState } from "../store/store";
 import NotFound from "../Pages/NotFound/NotFound";
 import SellerAdminPage from "../Pages/SellerAdminPage/SellerAdminPage";
 import SellerRegisterPage from "../Pages/SellerRegisterPage/SellerRegisterPage";
+import withAuth from "./withAuth";
 
 function Router() {
-  const token = useAppSelector((state: RootState) => state.login.token);
+  // const token = useAppSelector((state: RootState) => state.login.token);
+  const ProtectedCartPage = withAuth(CartPage);
+
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
-          <Route path="/cart" element={token ? <CartPage /> : <NotFound />} />
+          <Route path="/cart" element={<ProtectedCartPage />} />
           {/* <Route path="/mypage" element={token ? <MyPage /> : <NotFound />} /> */}
           <Route path="/search" element={<SearchResultPage />} />
           <Route path="/products/:productId" element={<ProductDetailPage />} />

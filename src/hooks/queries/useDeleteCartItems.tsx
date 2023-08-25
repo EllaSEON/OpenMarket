@@ -8,6 +8,7 @@ interface useDeleteCartItemType {
   totalPrice: number;
   totalShippingFee: number;
   cartItem: ProductDetailType;
+  count: number;
 }
 
 interface oldDataType {
@@ -26,6 +27,7 @@ export function useDeleteCartItem({
   totalPrice,
   totalShippingFee,
   cartItem,
+  count,
 }: useDeleteCartItemType) {
   const dispatch = useAppDispatch();
   const token = useAppSelector((state: any) => state.login.token) || "";
@@ -37,8 +39,8 @@ export function useDeleteCartItem({
       const itemShippingFee = cartItem.shipping_fee;
       dispatch(
         setPaymentAmount({
-          totalPrice: totalPrice - data.price * data.count,
-          totalShippingFee: totalShippingFee - data.shipping_fee,
+          totalPrice: totalPrice - itemPrice * count,
+          totalShippingFee: totalShippingFee - itemShippingFee,
         })
       );
     },
