@@ -1,10 +1,9 @@
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { RootState } from "../../../store/store";
 import * as S from "./style";
-import { QueryClient, useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import cartAPI from "../../../API/cartAPI";
 import { setPaymentAmount } from "../../../features/paymentAmountSlice";
-import useFetchCartItems from "../../../hooks/queries/useFetchCartItems";
 
 interface AmountBtnProps {
   count: number;
@@ -25,22 +24,20 @@ function AmountBtn({
   cartId,
   productPrice,
 }: AmountBtnProps) {
-  const queryClient = new QueryClient();
   const dispatch = useAppDispatch();
   const token = useAppSelector((state: RootState) => state.login.token) || "";
   const { totalPrice, totalShippingFee } = useAppSelector(
     (state) => state.paymentAmount
   );
-  // const { refetch } = useFetchCartItems(token);
-
+  const queryClient = useQueryClient();
   const updateQuantityMutation = useMutation(cartAPI.updateCartQuantity, {
-    onSuccess: () => {
-      // refetch();
+    onSuccess() {
+      queryClient.invalidateQueries(["cartList"]);
     },
   });
 
   const handleDecrease = () => {
-    if (count > 1) {
+    if (isChecked && count > 1) {
       setCount(count - 1);
     }
     if (isChecked && productId !== undefined && cartId !== undefined) {
@@ -64,7 +61,7 @@ function AmountBtn({
   };
 
   const handleIncrease = () => {
-    if (stock !== undefined && count < stock) {
+    if (isChecked && stock !== undefined && count < stock) {
       setCount(count + 1);
     }
     if (isChecked && productId !== undefined && cartId !== undefined) {

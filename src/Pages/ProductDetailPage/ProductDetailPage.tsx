@@ -90,6 +90,7 @@ function ProductDetailPage() {
             setCount={setCount}
             stock={productDetailData.stock || 0}
             productPrice={productDetailData.price}
+            isChecked={true}
           />
           <S.hr />
           <S.TotalPriceWrapper>

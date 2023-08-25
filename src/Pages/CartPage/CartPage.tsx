@@ -32,9 +32,20 @@ function CartPage() {
   );
 
   //체크박스 로직
-  const [isCheckedArray, setIsCheckedArray] = useState(
+  const [isCheckedArray, setIsCheckedArray] = useState(() =>
     new Array(cartItems.length).fill(true)
   );
+
+  useEffect(() => {
+    const diffLength = cartItems.length - isCheckedArray.length;
+    if (diffLength > 0) {
+      setIsCheckedArray((prev) => [
+        ...prev,
+        ...new Array(diffLength).fill(true),
+      ]);
+    }
+  }, [cartItems]);
+
   const [isAllChecked, setIsAllChecked] = useState(true);
 
   // 각 개별 아이템 체크박스 토글
@@ -121,15 +132,15 @@ function CartPage() {
             onToggle={() => handleToggleCheckbox(index)}
           />
         ))}
-        {cartItems.length === 0 ? (
-          <S.NoItemBox>
-            <p>장바구니에 담긴 상품이 없습니다.</p>
-            <small>원하는 상품을 장바구니에 담아보세요!</small>
-          </S.NoItemBox>
-        ) : (
-          <TotalPrice />
-        )}
       </Suspense>
+      {cartItems.length === 0 ? (
+        <S.NoItemBox>
+          <p>장바구니에 담긴 상품이 없습니다.</p>
+          <small>원하는 상품을 장바구니에 담아보세요!</small>
+        </S.NoItemBox>
+      ) : (
+        <TotalPrice />
+      )}
     </S.CartPageLayout>
   );
 }

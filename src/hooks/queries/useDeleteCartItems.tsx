@@ -11,7 +11,7 @@ interface useDeleteCartItemType {
   count: number;
 }
 
-interface oldDataType {
+export interface oldDataType {
   count: number;
   next: string | null; //"https://openmarket.weniv.co.kr/cart/?page=2"
   previous: string | null;
@@ -29,9 +29,9 @@ export function useDeleteCartItem({
   cartItem,
   count,
 }: useDeleteCartItemType) {
+  const queryClient = useQueryClient();
   const dispatch = useAppDispatch();
   const token = useAppSelector((state: any) => state.login.token) || "";
-  const queryClient = useQueryClient();
 
   const deleteCartItemMutation = useMutation(cartAPI.deleteCartItem, {
     onSuccess: (data: any) => {
@@ -46,6 +46,7 @@ export function useDeleteCartItem({
     },
     onMutate: async (data: DeleteCartItemMutationDataType) => {
       // 낙관적 업데이트를 덮어쓰지 않기위해 쿼리를 수동으로 삭제
+
       await queryClient.cancelQueries({
         queryKey: ["cartList", token],
       });

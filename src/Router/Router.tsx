@@ -16,7 +16,6 @@ import SellerRegisterPage from "../Pages/SellerRegisterPage/SellerRegisterPage";
 import withAuth from "./withAuth";
 
 function Router() {
-  // const token = useAppSelector((state: RootState) => state.login.token);
   const ProtectedCartPage = withAuth(CartPage);
 
   return (
@@ -25,7 +24,6 @@ function Router() {
         <Route element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/cart" element={<ProtectedCartPage />} />
-          {/* <Route path="/mypage" element={token ? <MyPage /> : <NotFound />} /> */}
           <Route path="/search" element={<SearchResultPage />} />
           <Route path="/products/:productId" element={<ProductDetailPage />} />
         </Route>
