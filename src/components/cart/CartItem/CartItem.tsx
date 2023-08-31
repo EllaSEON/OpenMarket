@@ -71,7 +71,11 @@ function CartItem({
       )}
       <CheckCircleBtn isChecked={isChecked} onChange={onToggle} />
       <S.ProductInfoBox>
-        <img src={cartItem?.image} alt="상품이미지" />
+        <img
+          src={`https://res.cloudinary.com/dgwitjjjd/image/fetch/c_scale,w_600/f_auto/q_auto/${cartItem?.image}
+        `}
+          alt="상품이미지"
+        />
         <div>
           <S.ShopText>{cartItem?.store_name}</S.ShopText>
           <S.ProductNameTxt>{cartItem?.product_name}</S.ProductNameTxt>
