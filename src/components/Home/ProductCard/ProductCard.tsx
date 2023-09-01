@@ -11,7 +11,11 @@ function ProductCard({ product }: { product: Product }) {
         navigate(`/products/${product.product_id}`);
       }}
     >
-      <S.ProductImg src={product.image} alt={product.product_name} />
+      <S.ProductImg
+        src={`https://res.cloudinary.com/dgwitjjjd/image/fetch/c_scale,w_600/f_auto/q_auto/${product.image}
+        `}
+        alt={product.product_name}
+      />
       <S.StoreName>{product.store_name}</S.StoreName>
       <S.ProductName>{product.product_name}</S.ProductName>
       <S.PriceWrapper>

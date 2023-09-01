@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@cloudinary/react": "^1.11.2",
+    "@cloudinary/url-gen": "^1.11.2",
     "@reduxjs/toolkit": "^1.9.3",
     "@tanstack/react-query": "^4.29.25",
     "@tanstack/react-query-devtools": "^4.32.6",
@@ -52,6 +54,7 @@
   },
   "devDependencies": {
     "@types/react-router-dom": "^5.3.3",
-    "@types/styled-components": "^5.1.26"
+    "@types/styled-components": "^5.1.26",
+    "cra-bundle-analyzer": "^0.1.1"
   }
 }
