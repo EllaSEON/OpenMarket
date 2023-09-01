@@ -54,6 +54,7 @@
   },
   "devDependencies": {
     "@types/react-router-dom": "^5.3.3",
-    "@types/styled-components": "^5.1.26"
+    "@types/styled-components": "^5.1.26",
+    "cra-bundle-analyzer": "^0.1.1"
   }
 }

@@ -66,7 +66,11 @@ function ProductDetailPage() {
       <S.ProductWrapper>
         {!token && modal ? needLoginModal : null}
         <S.ProductImgBox>
-          <img src={productDetailData.image} alt="상품 사진" />
+          <img
+            src={`https://res.cloudinary.com/dgwitjjjd/image/fetch/c_scale,w_1000/f_auto/q_auto/${productDetailData?.image}
+            `}
+            alt="상품 사진"
+          />
         </S.ProductImgBox>
         <S.ProductCartWrapper>
           <S.SellerText>{productDetailData.store_name}</S.SellerText>
