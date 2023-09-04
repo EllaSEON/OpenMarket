@@ -17,7 +17,6 @@
 1. [프로젝트 소개](#intro)
 2. [개발 환경](#environments)
 3. [UI](#ui)
-4. [핵심 코드](#code)
 
 </div>
 </details>
@@ -33,8 +32,7 @@
 ## 1) 개발기간 : 2023.3.13 ~ 진행중
 ## 2) 기술
 
-- FrontEnd : React,TypeScript, Styled-components, Redux Toolkit,
-- BackEnd : 제공된 API 사용
+[![stackticon](https://firebasestorage.googleapis.com/v0/b/stackticon-81399.appspot.com/o/images%2F1693810412527?alt=media&token=f79bbb32-2863-4ade-97e8-038f7e134847)](https://github.com/msdio/stackticon)
 
 ## 3) 설치 및 실행 가이드
 #### Install
@@ -60,4 +58,4 @@ npm start
 #### 5. 상품 검색 <br/>
 <img src="https://github.com/EllaSEON/OpenMarket/assets/107895498/9ec5ceda-5f3d-457f-b1df-6ba2292711dd" width="700" height="480"/> <br/>
 
-# <sapn id="code"> 4. 핵심 코드 </span>
+
