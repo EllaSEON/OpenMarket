@@ -3,6 +3,9 @@ import styled, { css } from "styled-components";
 export const ToggleWrapper = styled.div`
   width: 550px;
   margin: 0 auto;
+  @media screen and (max-width: 450px) {
+    width: 38rem;
+  }
 `;
 
 export const ToggleText = styled.button<{ active: boolean }>`

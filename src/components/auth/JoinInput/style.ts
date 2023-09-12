@@ -33,6 +33,20 @@ export const Input = styled.input`
     border: 1px solid ${({ theme }) => theme.colors.green};
     outline: none;
   }
+  @media screen and (max-width: 450px) {
+    width: ${(props) => {
+      switch (props.width) {
+        case 480:
+          return "32rem";
+        case 346:
+          return "28rem";
+        case 220:
+          return "16rem";
+        default:
+          return "12rem";
+      }
+    }};
+  }
 `;
 
 // Email input 스타일

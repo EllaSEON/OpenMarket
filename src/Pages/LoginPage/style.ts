@@ -1,6 +1,13 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
+export const LoginPageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
 export const LoginFooterUl = styled.ul`
   margin: 3rem auto;
   display: flex;

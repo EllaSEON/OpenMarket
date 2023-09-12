@@ -3,15 +3,20 @@ import Button from "../../common/Button/Button";
 
 export const LoginForm = styled.form`
   width: 55rem;
-  margin: 0 auto;
   padding: 3.4rem 3.5rem;
   border: 1px solid ${({ theme }) => theme.colors.lightGray};
   border-radius: 0 0 10px 10px;
+  @media screen and (max-width: 450px) {
+    width: 38rem;
+  }
 `;
 
 export const LoginBtn = styled(Button)`
   margin: 3.6rem auto 0 auto;
   display: block;
+  @media screen and (max-width: 450px) {
+    width: 30rem;
+  }
 `;
 
 export const LoginInput = styled.input`
@@ -29,6 +34,9 @@ export const LoginInput = styled.input`
   }
   &:focus {
     border-bottom: 1px solid ${({ theme }) => theme.colors.green};
+  }
+  @media screen and (max-width: 450px) {
+    width: 30rem;
   }
 `;
 

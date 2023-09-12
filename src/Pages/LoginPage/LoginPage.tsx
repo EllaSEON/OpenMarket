@@ -4,7 +4,7 @@ import * as S from "./style";
 
 function LoginPage() {
   return (
-    <>
+    <S.LoginPageWrapper>
       <HeaderLogo />
       <LoginForm />
       <footer>
@@ -17,7 +17,7 @@ function LoginPage() {
           </S.LoginFooterLi>
         </S.LoginFooterUl>
       </footer>
-    </>
+    </S.LoginPageWrapper>
   );
 }
 export default LoginPage;
