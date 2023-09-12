@@ -5,6 +5,10 @@ export const CarouselLayout = styled.div`
   height: 500px;
   background-color: #f2f2f2;
   overflow: hidden;
+  @media screen and (max-width: 450px) {
+    width: 100%;
+    height: 30rem;
+  }
 `;
 
 export const ImgBox = styled.div<{ opacity: string }>`
