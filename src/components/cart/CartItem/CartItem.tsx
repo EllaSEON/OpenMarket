@@ -1,9 +1,7 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import React, { useState } from "react";
 import AmountBtn from "../../common/AmountBtn/AmountBtn";
-import Button from "../../common/Button/Button";
 import Modal from "../../common/Modal/Modal";
-import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { useAppSelector } from "../../../store/hooks";
 import { RootState } from "../../../store/store";
 import * as S from "./style";
 import { ProductDetailType } from "../../../types/Cart.type";
@@ -69,14 +67,20 @@ function CartItem({
           삭제하시겠습니까?
         </Modal>
       )}
-      <CheckCircleBtn isChecked={isChecked} onChange={onToggle} />
+      <S.MobileDeleteBtnWrapper>
+        <CheckCircleBtn isChecked={isChecked} onChange={onToggle} />
+        {/* 모바일용 스타일 */}
+        <S.MobileDeleteBtn type="button" onClick={handleOpenDeleteModal}>
+          ✖️
+        </S.MobileDeleteBtn>
+      </S.MobileDeleteBtnWrapper>
       <S.ProductInfoBox>
         <img
           src={`https://res.cloudinary.com/dgwitjjjd/image/fetch/c_scale,w_600/f_auto/q_auto/${cartItem?.image}
         `}
           alt="상품이미지"
         />
-        <div>
+        <div style={{ width: "200px" }}>
           <S.ShopText>{cartItem?.store_name}</S.ShopText>
           <S.ProductNameTxt>{cartItem?.product_name}</S.ProductNameTxt>
           <S.ProductPriceTxt>
@@ -109,9 +113,9 @@ function CartItem({
             : "가격 정보 없음"}{" "}
           원
         </S.TotalPriceTxt>
-        <Button type="button" size="s" onClick={handleOpenDeleteModal}>
+        <S.WebDeleteBtn type="button" size="s" onClick={handleOpenDeleteModal}>
           삭제
-        </Button>
+        </S.WebDeleteBtn>
       </S.TotalPriceWrapper>
     </S.ProductList>
   );

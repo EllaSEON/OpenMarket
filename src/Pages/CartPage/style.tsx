@@ -30,6 +30,9 @@ export const MenuUl = styled.ul`
     line-height: 22px;
     text-align: center;
   }
+  @media screen and (max-width: 450px) {
+    display: none;
+  }
 `;
 
 export const NoItemBox = styled.div`
