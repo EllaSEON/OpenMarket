@@ -5,7 +5,7 @@ const TAB_ITEMS = [
   { id: 1, title: "상품상세" },
   { id: 2, title: "상품평" },
   { id: 3, title: "상품문의" },
-  { id: 4, title: "배송/교환/반품 안내" },
+  { id: 4, title: "반품안내" },
 ];
 
 function ProductDetail() {
