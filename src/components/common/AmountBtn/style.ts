@@ -7,6 +7,9 @@ export const AmountBox = styled.div`
   height: 5rem;
   border: 1px solid ${({ theme }) => theme.colors.lightGray};
   border-radius: 5px;
+  @media screen and (max-width: 450px) {
+    margin: 3rem auto;
+  }
 `;
 
 export const CountBtn = styled.button`

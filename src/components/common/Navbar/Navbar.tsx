@@ -76,12 +76,12 @@ function Navbar() {
               }
         }
       >
-        <img src={CartIcon} alt="장바구니 아이콘버튼" />
+        <S.IconImg src={CartIcon} alt="장바구니 아이콘버튼" />
         <S.CartText>장바구니</S.CartText>
       </S.CartBtn>
 
       <S.UserBtn onClick={handleUserClick}>
-        <img src={UserIcon} alt="유저 아이콘 버튼" />
+        <S.IconImg src={UserIcon} alt="유저 아이콘 버튼" />
         <S.UserText>{token ? "마이페이지" : "로그인"}</S.UserText>
         {token && dropDown && <DropDown />}
       </S.UserBtn>
@@ -92,7 +92,7 @@ function Navbar() {
   const sellerHeader = (
     <S.HeaderUserWrapper>
       <S.UserBtn onClick={handleUserClick}>
-        <img src={UserIcon} alt="유저 아이콘 버튼" />
+        <S.IconImg src={UserIcon} alt="유저 아이콘 버튼" />
         <S.UserText>마이페이지</S.UserText>
         {token && dropDown && <DropDown />}
       </S.UserBtn>

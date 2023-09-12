@@ -23,4 +23,7 @@ export const CircleBtn = styled.input`
   &:checked {
     background: ${({ theme }) => theme.colors.green};
   }
+  @media screen and (max-width: 450px) {
+    margin-bottom: 2rem;
+  }
 `;

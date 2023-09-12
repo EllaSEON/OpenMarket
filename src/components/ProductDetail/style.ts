@@ -18,6 +18,9 @@ export const TabTitle = styled.li<{ active?: boolean }>`
   font-weight: 700;
   font-size: 1.8rem;
   cursor: pointer;
+  @media screen and (max-width: 450px) {
+    font-size: 1rem;
+  }
 `;
 export const TabContent = styled.div`
   margin: 0 22px 0 22px;
@@ -27,4 +30,7 @@ export const TabContent = styled.div`
   border-right: 1px solid ${({ theme }) => theme.colors.lightGray};
   border-bottom: 1px solid ${({ theme }) => theme.colors.lightGray};
   border-left: 1px solid ${({ theme }) => theme.colors.lightGray};
+  @media screen and (max-width: 450px) {
+    font-size: 2rem;
+  }
 `;

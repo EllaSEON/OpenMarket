@@ -33,4 +33,7 @@ export const ContentWrap = styled.div`
   min-height: 800px;
   margin: 0 auto;
   padding-bottom: 100px;
+  @media screen and (max-width: 450px) {
+    min-width: 300px;
+  }
 `;

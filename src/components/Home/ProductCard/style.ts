@@ -11,6 +11,10 @@ export const ProductImg = styled.img`
   flex-direction: column;
   border-radius: 10px;
   border: 1px solid ${({ theme }) => theme.colors.lightGray};
+  @media screen and (max-width: 450px) {
+    width: 100%;
+    height: 60%;
+  }
 `;
 
 export const StoreName = styled.p`

@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import AmountBtn from "../../common/AmountBtn/AmountBtn";
+import Button from "../../common/Button/Button";
 
 export const ProductList = styled.div`
   display: grid;
@@ -8,10 +9,13 @@ export const ProductList = styled.div`
   align-items: center;
   gap: 30px;
   width: 100%;
-  height: 200px;
   padding: 20px 100px 18px 20px;
   border-radius: 10px;
   border: 1px solid ${({ theme }) => theme.colors.lightGray};
+  @media screen and (max-width: 450px) {
+    display: block;
+    padding: 2rem 2rem 0 2rem;
+  }
 `;
 
 export const ProductInfoBox = styled.div`
@@ -22,6 +26,12 @@ export const ProductInfoBox = styled.div`
     height: 160px;
     border-radius: 10px;
     margin-right: 3.6rem;
+  }
+  @media screen and (max-width: 450px) {
+    img {
+      width: 13rem;
+      height: 13rem;
+    }
   }
 `;
 
@@ -43,8 +53,6 @@ export const ProductPriceTxt = styled.p`
   font-weight: 700;
 `;
 
-export const AmountBox = styled(AmountBtn)``;
-
 export const TotalPriceWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -58,6 +66,26 @@ export const TotalPriceTxt = styled.p`
   line-height: 22px;
   font-weight: 700;
   color: #eb5757;
+`;
+
+export const WebDeleteBtn = styled(Button)`
+  @media screen and (max-width: 450px) {
+    display: none;
+  }
+`;
+
+export const MobileDeleteBtn = styled.button`
+  font-size: 2.5rem;
+  font-weight: 700;
+  display: none;
+  @media screen and (max-width: 450px) {
+    display: block;
+  }
+`;
+
+export const MobileDeleteBtnWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
 
 export const NoItemBox = styled.div`

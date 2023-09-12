@@ -15,18 +15,28 @@ export const Navbar = styled.nav`
   align-items: center;
   margin: 0 auto;
   padding: 22px;
+  @media screen and (max-width: 450px) {
+    padding-right: 10%;
+    justify-content: space-evenly;
+  }
 `;
 
 export const HeaderSearchWrapper = styled.div`
   display: flex;
   gap: 30px;
   align-items: center;
+  @media screen and (max-width: 450px) {
+    gap: 5%;
+  }
 `;
 
 export const Logo = styled.img`
   width: 124px;
   height: 38px;
   cursor: pointer;
+  @media screen and (max-width: 450px) {
+    width: 20%;
+  }
 `;
 
 export const SearchBarWrapper = styled.div`
@@ -41,6 +51,9 @@ export const SearchInp = styled(Input)`
   &:focus {
     border: 2px solid ${({ theme }) => theme.colors.green};
   }
+  @media screen and (max-width: 450px) {
+    width: 70%;
+  }
 `;
 
 export const SearchBtn = styled.button`
@@ -51,12 +64,25 @@ export const SearchBtn = styled.button`
   top: 50%;
   right: 30px;
   transform: translateY(-50%);
+  @media screen and (max-width: 450px) {
+    right: 10%;
+  }
+`;
+
+export const IconImg = styled.img`
+  @media screen and (max-width: 450px) {
+    width: 3rem;
+    height: 3rem;
+  }
 `;
 
 export const HeaderUserWrapper = styled.div`
   display: flex;
   gap: 26px;
   align-items: center;
+  @media screen and (max-width: 450px) {
+    gap: 10px;
+  }
 `;
 
 export const CartText = styled.span`

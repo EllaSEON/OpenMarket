@@ -5,6 +5,9 @@ export const PaginationWrapper = styled.ul`
   justify-content: center;
   align-items: center;
   margin: 8rem auto;
+  @media screen and (max-width: 450px) {
+    width: 10px;
+  }
 `;
 
 export const PageNumber = styled.li<{ active?: boolean }>`

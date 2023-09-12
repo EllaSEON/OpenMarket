@@ -12,10 +12,6 @@ function JoinLogo() {
 export default JoinLogo;
 
 const Header = styled.header`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   margin: 10rem 0 7rem 0;
 `;
 

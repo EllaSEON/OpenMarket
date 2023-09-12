@@ -43,6 +43,11 @@ const SnsBtnList = styled.ul`
   li:hover {
     opacity: 0.8;
   }
+  @media screen and (max-width: 450px) {
+    display: flex;
+    flex-direction: column;
+    padding-left: 2rem;
+  }
 `;
 
 const BottomWrap = styled.article`

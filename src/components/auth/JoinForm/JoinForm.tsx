@@ -344,7 +344,7 @@ function JoinForm() {
             </label>
             <Input
               type="text"
-              width="220"
+              width={220}
               id="endEmail"
               {...register("endEmail", {
                 required: "필수 정보입니다.",

@@ -5,6 +5,11 @@ export const ProductWrapper = styled.div`
   display: flex;
   gap: 5rem;
   padding: 8rem 2.2rem 0 2.2rem;
+  @media screen and (max-width: 450px) {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 export const ProductImgBox = styled.div`
@@ -15,10 +20,16 @@ export const ProductImgBox = styled.div`
     height: 100%;
     max-height: 600px;
   }
+  @media screen and (max-width: 450px) {
+    width: 100%;
+  }
 `;
 export const ProductCartWrapper = styled.div`
   max-width: 63rem;
   width: 50%;
+  @media screen and (max-width: 450px) {
+    width: 100%;
+  }
 `;
 
 export const SellerText = styled.p`
@@ -32,6 +43,9 @@ export const ProductText = styled.strong`
   margin: 16px auto 20px;
   font-size: 3.6rem;
   line-height: 4.5rem;
+  @media screen and (max-width: 450px) {
+    font-size: 2.5rem;
+  }
 `;
 
 export const PriceText = styled.p`
@@ -43,6 +57,10 @@ export const PriceText = styled.p`
     font-size: 1.8rem;
     line-height: 22px;
     font-weight: 400;
+  }
+  @media screen and (max-width: 450px) {
+    font-size: 2.5rem;
+    margin-bottom: 6rem;
   }
 `;
 
@@ -69,6 +87,9 @@ export const TotalText = styled.p`
   font-size: 1.8rem;
   font-weight: 500;
   line-height: 22px;
+  @media screen and (max-width: 450px) {
+    font-size: 1.4rem;
+  }
 `;
 
 export const TotalAmountText = styled(TotalText)`
@@ -93,6 +114,9 @@ export const TotalPriceText = styled.p`
   span {
     font-size: 1.8rem;
     line-height: 22px;
+  }
+  @media screen and (max-width: 450px) {
+    font-size: 2rem;
   }
 `;
 
