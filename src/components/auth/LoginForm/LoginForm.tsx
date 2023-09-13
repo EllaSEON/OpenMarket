@@ -15,8 +15,22 @@ function LoginForm() {
   const toggleUserType = useAppSelector(
     (state: RootState) => state.login.userType || ""
   );
+
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
   const [loginForm, setLoginForm] = useState({ username: "", password: "" });
+
+  //테스트 계정 value 에 포함시켜넣기
+  useEffect(() => {
+    if (toggleUserType === "BUYER") {
+      setLoginForm({ username: "test9512", password: "0525shinee@" });
+    } else if (toggleUserType === "SELLER") {
+      setLoginForm({ username: "test9512seller", password: "0525shinee@" });
+    } else {
+      setLoginForm({ username: "", password: "" });
+    }
+  }, [toggleUserType]);
+
   const { username, password } = loginForm;
   const idInput = useRef<HTMLInputElement>(null);
 
@@ -52,8 +66,8 @@ function LoginForm() {
     e.preventDefault();
     setErrorMsg("");
     const loginData = {
-      username: username,
-      password: password,
+      username: username || "",
+      password: password || "",
       login_type: toggleUserType,
     };
     loginMutation.mutate(loginData);
@@ -61,6 +75,13 @@ function LoginForm() {
 
   return (
     <section>
+      <S.TestAccountTxt>
+        <p>테스트 계정</p>
+        <span>구매 계정 아이디 : test9512 </span>
+        <span>/ 판매 계정 아이디 : test9512seller</span>
+        <br />
+        <span>비밀번호 : 0525shinee@ </span>
+      </S.TestAccountTxt>
       <h2 className="hidden">로그인 페이지</h2>
       <ToggleBtn />
       <S.LoginForm onSubmit={handleSubmit}>

@@ -47,3 +47,9 @@ export const ErrorText = styled.small`
   line-height: 2rem;
   color: ${({ theme }) => theme.colors.red};
 `;
+
+export const TestAccountTxt = styled.div`
+  font-size: 1.6rem;
+  padding: 1rem;
+  line-height: 2.4rem;
+`;

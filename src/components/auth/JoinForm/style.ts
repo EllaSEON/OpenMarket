@@ -3,7 +3,7 @@ import Button from "../../common/Button/Button";
 
 const JoinForm = styled.form`
   width: 55rem;
-  margin: 0 auto;
+  margin-bottom: 3rem;
   padding: 4rem 3rem;
   border: 1px solid ${({ theme }) => theme.colors.lightGray};
   border-radius: 0 0 10px 10px;
