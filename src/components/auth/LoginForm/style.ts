@@ -49,6 +49,7 @@ export const ErrorText = styled.small`
 `;
 
 export const TestAccountTxt = styled.div`
+  width: 38rem;
   font-size: 1.6rem;
   padding: 1rem;
   line-height: 2.4rem;
