@@ -16,6 +16,8 @@ function LoginForm() {
     (state: RootState) => state.login.userType || ""
   );
 
+  console.log("렌더링");
+
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const [loginForm, setLoginForm] = useState({ username: "", password: "" });

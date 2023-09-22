@@ -22,6 +22,8 @@ export const ProductImgBox = styled.div`
   }
   @media screen and (max-width: 450px) {
     width: 100%;
+    height: 368px;
+    object-fit: cover;
   }
 `;
 export const ProductCartWrapper = styled.div`

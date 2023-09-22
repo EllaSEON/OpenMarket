@@ -67,9 +67,9 @@ function ProductDetailPage() {
         {!token && modal ? needLoginModal : null}
         <S.ProductImgBox>
           <img
-            src={`https://res.cloudinary.com/dgwitjjjd/image/fetch/c_scale,w_1000/f_auto/q_auto/${productDetailData?.image}
+            src={`https://res.cloudinary.com/dgwitjjjd/image/fetch/c_scale,w_600/f_auto/q_auto/${productDetailData?.image}
             `}
-            alt="상품 사진"
+            alt={productDetailData.product_name}
           />
         </S.ProductImgBox>
         <S.ProductCartWrapper>
