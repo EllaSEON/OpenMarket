@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import useCreateValidation from "../../../hooks/queries/useCreateValidation";
+import useCreateSignup from "../../../hooks/queries/useCreateSignup";
 import { useAppSelector } from "../../../store/hooks";
 import regExp from "../../../utils/regExp";
 import { JoinInput } from "../JoinInput/JoinInput";
@@ -11,18 +11,21 @@ import { S } from "./style";
 import ToggleBtn from "../../common/ToggleBtn/ToggleBtn";
 import RenderErrorMsg from "../RenderErrorMsg/RenderErrorMsg";
 import { RootState } from "../../../store/store";
-import authAPI from "../../../API/authAPI";
+
+// 휴대폰 앞자리 옵션
+const options = [
+  { value: "010", label: "010" },
+  { value: "011", label: "011" },
+  { value: "016", label: "016" },
+  { value: "017", label: "017" },
+  { value: "018", label: "018" },
+  { value: "019", label: "019" },
+];
 
 function JoinForm() {
   const toggleUserType = useAppSelector(
     (state: RootState) => state.login.userType
   );
-
-  const [isJoinValid, setIsJoinValid] = useState(false);
-  const [isIdChecked, setIsIdChecked] = useState(false);
-  const [isBusinessChecked, setIsBusinessChecked] = useState(false);
-
-  const navigate = useNavigate();
 
   const {
     register,
@@ -34,73 +37,12 @@ function JoinForm() {
     formState: { errors },
   } = useForm({ mode: "onChange" });
 
-  const validateUserNameMutation = useMutation(authAPI.createValidateUserName, {
-    onSuccess: (data) => {
-      setIsIdChecked(true);
-      setError("id", {
-        type: "success",
-        message: data.Success,
-      });
-    },
-    onError: (error: any) => {
-      setIsIdChecked(false);
-      setError("id", {
-        type: "fail",
-        message: error.response.data.FAIL_Message,
-      });
-    },
-  });
-
-  const validateCompanyNoMutation = useMutation(
-    authAPI.createValidateCompanyNo,
-    {
-      onSuccess: (data) => {
-        setIsBusinessChecked(true);
-        setError("businessNo", {
-          type: "success",
-          message: data.Success,
-        });
-      },
-      onError: (error: any) => {
-        setError("businessNo", {
-          type: "fail",
-          message: error.response.data.FAIL_Message,
-        });
-      },
-    }
-  );
-
-  const signupBuyerMutation = useMutation(authAPI.createSignupBuyer, {
-    onSuccess: () => {
-      navigate("/login");
-    },
-    onError: (error: any) => {
-      if ((error.message = "Request failed with status code 400")) {
-        alert("해당 사용자 전화번호는 이미 존재합니다.");
-      } else {
-        alert("에러가 발생했습니다.");
-      }
-    },
-  });
-  const signupSellerMutation = useMutation(authAPI.createSignupSeller, {
-    onSuccess: () => {
-      navigate("/login");
-    },
-    onError: (error: any) => {
-      if (error.response && error.response.data) {
-        const errorData = error.response.data;
-        if (errorData.store_name) {
-          alert(errorData.store_name[0]); // "해당 스토어이름은 이미 존재합니다."
-        }
-        if (errorData.phone_number) {
-          alert(errorData.phone_number[0]); // "이미 있는 사용자입니다."
-        }
-      } else {
-        // 서버 응답 형식이 예상과 다른 경우 또는 에러 메시지가 없는 경우에 대한 처리
-        alert("에러가 발생했습니다.");
-      }
-    },
-  });
+  const [isJoinValid, setIsJoinValid] = useState(false);
+  const [isIdChecked, setIsIdChecked] = useState(false);
+  const [isBusinessChecked, setIsBusinessChecked] = useState(false);
+  const { signupBuyerMutation, signupSellerMutation } = useCreateSignup();
+  const { validateUserNameMutation, validateCompanyNoMutation } =
+    useCreateValidation(setIsIdChecked, setIsBusinessChecked, setError);
 
   // id 중복 확인 검증
   const handleCheckId = async (
@@ -193,16 +135,6 @@ function JoinForm() {
       console.log(error);
     }
   };
-
-  // 휴대폰 앞자리 옵션
-  const options = [
-    { value: "010", label: "010" },
-    { value: "011", label: "011" },
-    { value: "016", label: "016" },
-    { value: "017", label: "017" },
-    { value: "018", label: "018" },
-    { value: "019", label: "019" },
-  ];
 
   return (
     <section>
@@ -397,7 +329,7 @@ function JoinForm() {
           register={register("checkbox")}
           children="호두샵의 이용약관 및 개인정보처리방침에 대해 동의합니다"
         />
-        <S.JoinBtn type="submit" size="md" disabled={!isJoinValid}>
+        <S.JoinBtn type="submit" size="md" disabled={isJoinValid}>
           가입하기
         </S.JoinBtn>
       </S.JoinForm>

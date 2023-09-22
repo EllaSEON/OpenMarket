@@ -13,7 +13,7 @@ export const ProductImg = styled.img`
   border: 1px solid ${({ theme }) => theme.colors.lightGray};
   @media screen and (max-width: 450px) {
     width: 100%;
-    height: 60%;
+    height: 180px;
   }
 `;
 
