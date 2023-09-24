@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Product } from "../../../types/Product.type";
 import * as S from "./style";
+import { startTransition } from "react";
 
 function ProductCard({ product }: { product: Product }) {
   const navigate = useNavigate();
@@ -8,7 +9,7 @@ function ProductCard({ product }: { product: Product }) {
   return (
     <S.ProductCardList
       onClick={() => {
-        navigate(`/products/${product.product_id}`);
+        startTransition(() => navigate(`/products/${product.product_id}`));
       }}
     >
       <S.ProductImg

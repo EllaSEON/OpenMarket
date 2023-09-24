@@ -100,8 +100,6 @@ function JoinForm() {
     setIsJoinValid(allFieldsFilled);
   }, [watchedValues, toggleUserType]);
 
-  console.log(isJoinValid);
-
   // 회원가입 form 제출
   const onSubmit = async (data: Record<string, any>) => {
     // 아이디/ 사업자 번호 인증 안할 시 alert창

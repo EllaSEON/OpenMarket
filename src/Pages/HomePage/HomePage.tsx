@@ -14,22 +14,20 @@ function HomePage() {
 
   return (
     <>
-      <Suspense fallback={<Loading />}>
-        <Carousel />
-        <S.ProductSection>
-          <h2 className="hidden">상품리스트</h2>
-          <S.ProductLists>
-            {data.results.map((product: Product) => {
-              return <ProductCard key={product.product_id} product={product} />;
-            })}
-          </S.ProductLists>
-          <PageNation
-            currentPage={currentPage}
-            totalPage={Math.floor(data.count / 15 + 1)}
-            setCurrentPage={setCurrentPage}
-          />
-        </S.ProductSection>
-      </Suspense>
+      <Carousel />
+      <S.ProductSection>
+        <h2 className="hidden">상품리스트</h2>
+        <S.ProductLists>
+          {data.results.map((product: Product) => {
+            return <ProductCard key={product.product_id} product={product} />;
+          })}
+        </S.ProductLists>
+        <PageNation
+          currentPage={currentPage}
+          totalPage={Math.ceil(data.count / 15)}
+          setCurrentPage={setCurrentPage}
+        />
+      </S.ProductSection>
     </>
   );
 }

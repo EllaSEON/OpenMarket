@@ -20,7 +20,7 @@ const queryClient = new QueryClient({
 
 function App() {
   return (
-    <Suspense>
+    <Suspense fallback={<Loading />}>
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>
           <ThemeProvider theme={theme}>
