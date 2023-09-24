@@ -100,6 +100,8 @@ function JoinForm() {
     setIsJoinValid(allFieldsFilled);
   }, [watchedValues, toggleUserType]);
 
+  console.log(isJoinValid);
+
   // 회원가입 form 제출
   const onSubmit = async (data: Record<string, any>) => {
     // 아이디/ 사업자 번호 인증 안할 시 alert창
@@ -329,7 +331,7 @@ function JoinForm() {
           register={register("checkbox")}
           children="호두샵의 이용약관 및 개인정보처리방침에 대해 동의합니다"
         />
-        <S.JoinBtn type="submit" size="md" disabled={isJoinValid}>
+        <S.JoinBtn type="submit" size="md" disabled={!isJoinValid}>
           가입하기
         </S.JoinBtn>
       </S.JoinForm>
