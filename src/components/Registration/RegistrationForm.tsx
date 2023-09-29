@@ -1,47 +1,21 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import Button from "../common/Button/Button";
-import IconImg from "../../assets/images/icon-img.svg";
 import ProductInp from "../common/ProductInp/ProductInp";
 import regExp from "../../utils/regExp";
+import ImageUpload from "./ImageUpload";
 
-type FormData = {
+export interface FormData {
   productImg: FileList;
   productName: string;
   productPrice: number;
   shippingFee: number;
   stockNo: number;
   editor: string;
-};
+}
 
 function RegistrationForm() {
-  const { register, handleSubmit, watch } = useForm<FormData>();
-
-  const [preview, setPreview] = useState<string | null>(null);
-
-  const selectedFile = watch("productImg"); // 이미지 파일을 watch로 관찰
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const fileBlob = e.target.files[0];
-      if (fileBlob) {
-        const reader = new FileReader();
-        // console.log(reader);
-
-        reader.readAsDataURL(fileBlob); //Base64 인코딩된 url 로 읽는다.
-
-        reader.onloadend = (event) => {
-          if (event.target && typeof event.target.result === "string") {
-            setPreview(event.target.result);
-          }
-        };
-      } else {
-        setPreview(null);
-      }
-    }
-  };
-  // console.log(preview);
+  const { register, handleSubmit } = useForm<FormData>();
 
   const onSubmit = (data: FormData) => console.log(data);
 
@@ -49,24 +23,7 @@ function RegistrationForm() {
     <form style={{ marginLeft: "5rem" }} onSubmit={handleSubmit(onSubmit)}>
       <div style={{ display: "flex" }}>
         <ProductInfoWrapper>
-          <LabelWrapper>
-            <LabelTxt>상품 이미지</LabelTxt>
-
-            <ProductImgLabel htmlFor="ProductImg">
-              {" "}
-              <ProductImgInput
-                type="file"
-                id="ProductImg"
-                accept="image/*"
-                {...register("productImg", {
-                  required: true,
-                  onChange: handleImageChange,
-                })}
-              />
-              {preview && <PreviewImg src={preview} alt="preview" />}
-              <IconImgLogo src={IconImg} alt="이미지로고" />
-            </ProductImgLabel>
-          </LabelWrapper>
+          <ImageUpload register={register} />
         </ProductInfoWrapper>
         <ProductInpWrapper>
           <ProductInp
@@ -130,7 +87,7 @@ function RegistrationForm() {
         <Button type="button" size="ms" color="white">
           취소
         </Button>
-        <Button type="button" size="ms">
+        <Button type="submit" size="ms">
           저장하기
         </Button>
       </SaveBtnWrapper>
@@ -144,42 +101,11 @@ const ProductInfoWrapper = styled.div`
   display: flex;
 `;
 
-const LabelWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-`;
-
-const LabelTxt = styled.p`
+export const LabelTxt = styled.p`
   font-size: 1.6rem;
   line-height: 2rem;
   margin: 1.5rem 0 1rem 0;
   color: ${({ theme }) => theme.colors.darkGray};
-`;
-const ProductImgLabel = styled.label`
-  position: relative;
-  width: 45rem;
-  height: 45rem;
-  background: ${({ theme }) => theme.colors.lightGray};
-`;
-
-const PreviewImg = styled.img`
-  position: absolute;
-  z-index: 2;
-  width: 45rem;
-  height: 45rem;
-`;
-
-const IconImgLogo = styled.img`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  cursor: pointer;
-`;
-
-const ProductImgInput = styled.input`
-  display: none;
 `;
 
 const ProductInpWrapper = styled.div`
