@@ -11,6 +11,7 @@ import { S } from "./style";
 import ToggleBtn from "../../common/ToggleBtn/ToggleBtn";
 import RenderErrorMsg from "../RenderErrorMsg/RenderErrorMsg";
 import { RootState } from "../../../store/store";
+import { DevTool } from "@hookform/devtools";
 
 // 휴대폰 앞자리 옵션
 const options = [
@@ -34,6 +35,7 @@ function JoinForm() {
     setError,
     watch,
     trigger,
+    control,
     formState: { errors },
   } = useForm({ mode: "onChange" });
 
@@ -138,6 +140,7 @@ function JoinForm() {
 
   return (
     <section>
+      <DevTool control={control} placement="top-left" />
       <h2 className="hidden">회원가입 페이지</h2>
       <ToggleBtn />
       <S.JoinForm onSubmit={handleSubmit(onSubmit)}>
@@ -253,7 +256,7 @@ function JoinForm() {
             />
           </div>
         </InputWrapper>
-        {RenderErrorMsg(errors.centerPhoneNum) &&
+        {RenderErrorMsg(errors.centerPhoneNum) ||
           RenderErrorMsg(errors.endPhoneNum)}
         <InputWrapper>
           <Label htmlFor="email">이메일</Label>
@@ -287,7 +290,7 @@ function JoinForm() {
               })}
             />
           </S.EmailInputWrapper>
-          {RenderErrorMsg(errors.startEmail) && RenderErrorMsg(errors.endEmail)}
+          {RenderErrorMsg(errors.startEmail) || RenderErrorMsg(errors.endEmail)}
         </InputWrapper>
         {toggleUserType === "SELLER" && (
           <>

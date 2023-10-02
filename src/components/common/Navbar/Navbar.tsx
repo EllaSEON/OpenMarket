@@ -1,4 +1,4 @@
-import { useState, startTransition } from "react";
+import { useState, startTransition, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../../../store/hooks";
 import { openModal } from "../../../features/modalSlice";
@@ -17,7 +17,10 @@ function Navbar() {
   const userType = useAppSelector((state: RootState) => state.login.userType);
   const modal = useAppSelector((state: RootState) => state.modal.isOpen);
 
-  const [keyword, setKeyword] = useState("");
+  // const [keyword, setKeyword] = useState("");
+
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
+
   const [dropDown, setDropDown] = useState(false);
 
   const handleUserClick = () => {
@@ -28,17 +31,21 @@ function Navbar() {
     }
   };
 
-  const handleChangeKeyword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setKeyword(e.target.value);
-  };
+  // const handleChangeKeyword = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setKeyword(e.target.value);
+  // };
 
   // 상품 검색
   const handleSearch = async () => {
-    if (keyword) {
-      startTransition(() => {
-        navigate("/search", { state: { keyword } });
-      });
-      setKeyword("");
+    if (searchInputRef.current) {
+      // 추가된 체크
+      const keyword = searchInputRef.current.value;
+      if (keyword) {
+        startTransition(() => {
+          navigate("/search", { state: { keyword } });
+        });
+      }
+      searchInputRef.current.value = ""; // 입력 필드 초기화
     }
   };
 
@@ -46,7 +53,9 @@ function Navbar() {
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleSearch();
-      setKeyword("");
+      if (searchInputRef.current) {
+        searchInputRef.current.value = ""; // 입력 필드 초기화
+      }
     }
   };
 
@@ -115,8 +124,8 @@ function Navbar() {
           <S.SearchBarWrapper>
             <S.SearchInp
               type="text"
-              value={keyword}
-              onChange={handleChangeKeyword}
+              ref={searchInputRef}
+              // onChange={handleChangeKeyword}
               onKeyPress={handleKeyPress}
               placeholder="상품을 검색해보세요!"
             />

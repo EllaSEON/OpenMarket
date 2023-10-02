@@ -7,7 +7,7 @@ export const useFetchProducts = (currentPage: number) => {
     () => {
       return productAPI.fetchProducts(currentPage);
     },
-    { suspense: true }
+    { suspense: true, staleTime: 1000 * 20 }
   );
 };
 
