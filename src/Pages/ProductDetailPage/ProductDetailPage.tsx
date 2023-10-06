@@ -1,24 +1,20 @@
 import { Suspense, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { RootState } from "../../store/store";
 import Modal from "../../components/common/Modal/Modal";
 import ProductDetail from "../../components/ProductDetail/ProductDetail";
 import AmountBtn from "../../components/common/AmountBtn/AmountBtn";
 import * as S from "./style";
 import { openModal } from "../../features/modalSlice";
 import useFetchProductDetail from "../../hooks/queries/useFetchProductDetail";
-import cartAPI from "../../API/cartAPI";
-import Loading from "../../components/common/Loading/Loading";
 import useCreateCartProduct from "../../hooks/queries/useCreateCartProduct";
 
 function ProductDetailPage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const token = useAppSelector((state: RootState) => state.login.token);
-  const modal = useAppSelector((state: RootState) => state.modal.isOpen);
-  const userType = useAppSelector((state: RootState) => state.login.userType);
+  const token = useAppSelector((state) => state.login.token);
+  const modal = useAppSelector((state) => state.modal.isOpen);
+  const userType = useAppSelector((state) => state.login.userType);
   const [count, setCount] = useState(1);
   const { productId } = useParams();
   const productIdValue = productId || "defaultProductId";

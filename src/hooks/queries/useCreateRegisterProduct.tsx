@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import sellerRegisterAPI from "../../API/sellerRegisterAPI";
 
 function useCreateRegisterProduct() {
@@ -8,7 +8,9 @@ function useCreateRegisterProduct() {
     onSuccess: () => {
       navigate("/admin");
     },
-    onError: (error: any) => {},
+    onError: (error) => {
+      console.log(error);
+    },
   });
 }
 

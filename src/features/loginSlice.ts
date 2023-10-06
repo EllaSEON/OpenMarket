@@ -5,14 +5,22 @@ import { getCookie } from "../utils/Cookies";
 
 interface LoginState {
   token?: string | null;
-  userType?: string;
+  userType?: "BUYER" | "SELLER";
 }
 
+// 전역상태는 새로고침 하면 초기화 되기 때문에 토큰은 쿠키에서 받아온 값을,
+// userType 은 로컬스토리지에서 받아온 값을 초기값으로 설정한다.
+
 const tokenItem = getCookie("token");
+const userTypeItem = localStorage.getItem("userType");
+const userType =
+  userTypeItem === "BUYER" || userTypeItem === "SELLER"
+    ? userTypeItem
+    : undefined;
 
 const initialState: LoginState = {
   token: tokenItem ? tokenItem : null,
-  userType: "BUYER",
+  userType: userType,
 };
 
 const loginSlice = createSlice({
@@ -24,6 +32,7 @@ const loginSlice = createSlice({
     },
     changeUserType: (state, action) => {
       state.userType = action.payload;
+      localStorage.setItem("userType", action.payload);
     },
   },
 });

@@ -1,12 +1,16 @@
 import axios from "axios";
 import { BASE_URL } from "../constant/baseUrl";
-import { SellerRegister } from "../types/SellerRegister.type";
+import { SellerRegisterWithToken } from "../types/SellerRegister.type";
 
 const sellerRegisterAPI = {
-  async createRegisterProduct({ token, ...productData }: SellerRegister) {
+  async createRegisterProduct({
+    token,
+    ...productData
+  }: SellerRegisterWithToken) {
     const config = {
       headers: {
         Authorization: `JWT ${token}`,
+        "Content-Type": "multipart/form-data",
       },
     };
 
@@ -15,7 +19,7 @@ const sellerRegisterAPI = {
       productData,
       config
     );
-    // console.log(result.data);
+
     return result.data;
   },
 };

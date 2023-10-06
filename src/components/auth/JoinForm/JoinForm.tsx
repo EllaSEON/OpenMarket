@@ -8,9 +8,8 @@ import { JoinInput } from "../JoinInput/JoinInput";
 import { InputWrapper, Label, Select, Input } from "../JoinInput/style";
 import CheckTerm from "../CheckTerm/CheckTerm";
 import { S } from "./style";
-import ToggleBtn from "../../common/ToggleBtn/ToggleBtn";
-import RenderErrorMsg from "../RenderErrorMsg/RenderErrorMsg";
-import { RootState } from "../../../store/store";
+import ToggleBtn from "../ToggleBtn/ToggleBtn";
+import RenderErrorMsg from "../../common/AmountBtn/RenderErrorMsg/RenderErrorMsg";
 import { DevTool } from "@hookform/devtools";
 
 // 휴대폰 앞자리 옵션
@@ -24,9 +23,7 @@ const options = [
 ];
 
 function JoinForm() {
-  const toggleUserType = useAppSelector(
-    (state: RootState) => state.login.userType
-  );
+  const toggleUserType = useAppSelector((state) => state.login.userType);
 
   const {
     register,

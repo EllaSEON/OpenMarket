@@ -4,26 +4,38 @@ import Button from "../common/Button/Button";
 import ProductInp from "../common/ProductInp/ProductInp";
 import regExp from "../../utils/regExp";
 import ImageUpload from "./ImageUpload";
-import RenderErrorMsg from "../auth/RenderErrorMsg/RenderErrorMsg";
-
-export interface FormData {
-  productImg: FileList;
-  productName: string;
-  productPrice: number;
-  deliveryType: string;
-  shippingFee: number;
-  stockNo: number;
-  editor: string;
-}
+import RenderErrorMsg from "../common/AmountBtn/RenderErrorMsg/RenderErrorMsg";
+import useCreateRegisterProduct from "../../hooks/queries/useCreateRegisterProduct";
+import { SellerRegister } from "../../types/SellerRegister.type";
+import { useAppSelector } from "../../store/hooks";
 
 function RegistrationForm() {
+  const token = useAppSelector((state) => state.login.token) || "";
+  const userType = useAppSelector((state) => state.login.userType);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>();
+  } = useForm<SellerRegister>();
 
-  const onSubmit = (data: FormData) => console.log(data);
+  const registrationMutation = useCreateRegisterProduct();
+
+  const onSubmit = (data: SellerRegister) => {
+    if (userType === "SELLER") {
+      const productData = {
+        token: token,
+        product_name: data.product_name,
+        image: data.image[0],
+        price: data.price,
+        shipping_method: data.shipping_method,
+        shipping_fee: data.shipping_fee,
+        stock: data.stock,
+        product_info: data.product_info,
+      };
+      registrationMutation.mutate(productData);
+    }
+  };
 
   return (
     <form style={{ marginLeft: "5rem" }} onSubmit={handleSubmit(onSubmit)}>
@@ -34,34 +46,34 @@ function RegistrationForm() {
         <ProductInpWrapper>
           <ProductInp
             type="text"
-            htmlFor="productName"
+            htmlFor="product_name"
             labelText="상품명"
             width="35rem"
             placeholder="20자 이내로 입력"
-            {...register("productName", {
+            {...register("product_name", {
               required: "필수 정보입니다.",
               maxLength: 20,
             })}
           />
-          {RenderErrorMsg(errors.productName)}
+          {RenderErrorMsg(errors.product_name)}
           <ProductInp
             type="number"
             htmlFor="productPrice"
             labelText="판매가"
             placeholder="숫자만 입력"
-            {...register("productPrice", {
+            {...register("price", {
               required: "필수 정보입니다.",
               pattern: regExp.PRICE_REGEX,
             })}
           />
-          {RenderErrorMsg(errors.productPrice)}
+          {RenderErrorMsg(errors.price)}
           <LabelTxt>배송 방법</LabelTxt>
           <InputRadioGroup>
             <InputRadio
               type="radio"
               id="parcel"
               value="PARCEL"
-              {...register("deliveryType")}
+              {...register("shipping_method")}
               defaultChecked
             />
             <InpRadioLabel htmlFor="parcel">택배,소포,등기</InpRadioLabel>
@@ -69,43 +81,43 @@ function RegistrationForm() {
               type="radio"
               id="delivery"
               value="DELIVERY"
-              {...register("deliveryType")}
+              {...register("shipping_method")}
             />
             <InpRadioLabel htmlFor="delivery">직접배송(화물배달)</InpRadioLabel>
           </InputRadioGroup>
           <ProductInp
             type="number"
-            htmlFor="shippingFee"
+            htmlFor="shipping_fee"
             labelText="기본 배송비"
             placeholder="숫자만 입력"
-            {...register("shippingFee", {
+            {...register("shipping_fee", {
               required: "필수 정보입니다.",
               pattern: regExp.PRICE_REGEX,
             })}
           />
-          {RenderErrorMsg(errors.shippingFee)}
+          {RenderErrorMsg(errors.shipping_fee)}
           <ProductInp
             type="number"
-            htmlFor="stockNo"
+            htmlFor="stock"
             labelText="재고"
             placeholder="숫자만 입력"
-            {...register("stockNo", {
+            {...register("stock", {
               required: "필수 정보입니다.",
               pattern: regExp.STOCK_REGEX,
             })}
           />
-          {RenderErrorMsg(errors.stockNo)}
+          {RenderErrorMsg(errors.stock)}
         </ProductInpWrapper>
       </div>
       <EditorWrapper>
         <LabelTxt>상품 상세 정보</LabelTxt>
         <Editor
-          {...register("editor", {
+          {...register("product_info", {
             required: "필수 정보입니다.",
           })}
         />
       </EditorWrapper>
-      {RenderErrorMsg(errors.shippingFee)}
+      {RenderErrorMsg(errors.product_info)}
       <SaveBtnWrapper>
         <Button type="button" size="ms" color="white">
           취소

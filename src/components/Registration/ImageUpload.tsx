@@ -4,10 +4,10 @@ import styled from "styled-components";
 import imageCompression from "browser-image-compression";
 import IconImg from "../../assets/images/icon-img.svg";
 import { LabelTxt } from "./RegistrationForm";
-import { FormData } from "./RegistrationForm";
+import { SellerRegister } from "../../types/SellerRegister.type";
 
 interface ImageUploadProps {
-  register: UseFormRegister<FormData>;
+  register: UseFormRegister<SellerRegister>;
 }
 
 function ImageUpload({ register }: ImageUploadProps) {
@@ -66,7 +66,7 @@ function ImageUpload({ register }: ImageUploadProps) {
           type="file"
           id="ProductImg"
           accept="image/*"
-          {...register("productImg", {
+          {...register("image", {
             required: true,
             onChange: handleImageChange,
           })}
