@@ -3,7 +3,7 @@ import { UseFormRegister } from "react-hook-form";
 import styled from "styled-components";
 import imageCompression from "browser-image-compression";
 import IconImg from "../../assets/images/icon-img.svg";
-import { LabelTxt } from "./RegistrationForm";
+import { LabelTxt } from "./UploadProductForm";
 import { SellerRegister } from "../../types/SellerRegister.type";
 
 interface ImageUploadProps {

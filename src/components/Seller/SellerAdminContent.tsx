@@ -1,7 +1,16 @@
 import styled from "styled-components";
 import SellerItem from "./SellerItem";
+import useFetchSellerProduct from "../../hooks/queries/useFetchSellerProduct";
+import { useAppSelector } from "../../store/hooks";
+import { SellerProduct } from "../../types/SellerRegister.type";
 
 function SellerAdminContent() {
+  const token = useAppSelector((state) => state.login.token);
+
+  const { data: sellerProduct } = useFetchSellerProduct(token || "");
+
+  console.log(sellerProduct);
+
   return (
     <ContentWrapper>
       <CategoryUl>
@@ -10,7 +19,9 @@ function SellerAdminContent() {
         <CategoryLi>수정</CategoryLi>
         <CategoryLi>삭제</CategoryLi>
       </CategoryUl>
-      <SellerItem />
+      {sellerProduct.results.map((product: SellerProduct) => {
+        return <SellerItem key={product.product_id} productList={product} />;
+      })}
     </ContentWrapper>
   );
 }

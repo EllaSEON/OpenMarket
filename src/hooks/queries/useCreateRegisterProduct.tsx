@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import sellerRegisterAPI from "../../API/sellerRegisterAPI";
+import sellerProductAPI from "../../API/sellerProductAPI";
 
 function useCreateRegisterProduct() {
   const navigate = useNavigate();
-  return useMutation(sellerRegisterAPI.createRegisterProduct, {
+  return useMutation(sellerProductAPI.createRegisterProduct, {
     onSuccess: () => {
       navigate("/admin");
     },

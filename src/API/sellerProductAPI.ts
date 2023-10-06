@@ -2,7 +2,7 @@ import axios from "axios";
 import { BASE_URL } from "../constant/baseUrl";
 import { SellerRegisterWithToken } from "../types/SellerRegister.type";
 
-const sellerRegisterAPI = {
+const sellerProductAPI = {
   async createRegisterProduct({
     token,
     ...productData
@@ -19,9 +19,17 @@ const sellerRegisterAPI = {
       productData,
       config
     );
-
+    return result.data;
+  },
+  async fetchSellerProduct(token: string) {
+    const config = {
+      headers: {
+        Authorization: `JWT ${token}`,
+      },
+    };
+    const result = await axios.get(`${BASE_URL}/seller`, config);
     return result.data;
   },
 };
 
-export default sellerRegisterAPI;
+export default sellerProductAPI;

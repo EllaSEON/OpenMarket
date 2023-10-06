@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Button from "../common/Button/Button";
 import ProductInp from "../common/ProductInp/ProductInp";
@@ -9,9 +10,11 @@ import useCreateRegisterProduct from "../../hooks/queries/useCreateRegisterProdu
 import { SellerRegister } from "../../types/SellerRegister.type";
 import { useAppSelector } from "../../store/hooks";
 
-function RegistrationForm() {
+function UploadProductForm() {
   const token = useAppSelector((state) => state.login.token) || "";
   const userType = useAppSelector((state) => state.login.userType);
+
+  const navigate = useNavigate();
 
   const {
     register,
@@ -112,6 +115,7 @@ function RegistrationForm() {
       <EditorWrapper>
         <LabelTxt>상품 상세 정보</LabelTxt>
         <Editor
+          placeholder="상품 상세정보를 입력하세요"
           {...register("product_info", {
             required: "필수 정보입니다.",
           })}
@@ -119,7 +123,14 @@ function RegistrationForm() {
       </EditorWrapper>
       {RenderErrorMsg(errors.product_info)}
       <SaveBtnWrapper>
-        <Button type="button" size="ms" color="white">
+        <Button
+          type="button"
+          size="ms"
+          color="white"
+          onClick={() => {
+            navigate("/admin");
+          }}
+        >
           취소
         </Button>
         <Button type="submit" size="ms">
@@ -130,7 +141,7 @@ function RegistrationForm() {
   );
 }
 
-export default RegistrationForm;
+export default UploadProductForm;
 
 const ProductInfoWrapper = styled.div`
   display: flex;

@@ -1,6 +1,12 @@
+export interface SellerProduct extends SellerRegister {
+  created_at: string;
+  updated_at: string;
+  product_id: number;
+  store_name: "string";
+}
+
 export interface SellerRegisterWithToken extends SellerRegister {
   token: string;
-  [key: string]: any; // 인덱스 시그니처 추가
 }
 
 export interface SellerRegister {

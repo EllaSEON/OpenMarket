@@ -1,18 +1,22 @@
 import styled from "styled-components";
-import goods from "../../assets/images/img.png";
 import Button from "../common/Button/Button";
+import { SellerProduct } from "../../types/SellerRegister.type";
 
-function SellerItem() {
+interface SellerProductPros {
+  productList: SellerProduct;
+}
+
+function SellerItem({ productList }: SellerProductPros) {
   return (
     <ItemList>
       <ProductInfoWrapper>
-        <Img src={goods} />
+        <Img src={productList.image} />
         <TextWrapper>
-          <ProductInfoText>딥러닝 개발자 무릎 담요</ProductInfoText>
-          <StockNO>재고 : 370개</StockNO>
+          <ProductInfoText>{productList.product_name}</ProductInfoText>
+          <StockNO>재고 : {productList.stock}개</StockNO>
         </TextWrapper>
       </ProductInfoWrapper>
-      <ProductInfoText>17,500원</ProductInfoText>
+      <ProductInfoText>{productList.price.toLocaleString()}원</ProductInfoText>
       <Button type="submit" size="s">
         수정
       </Button>
@@ -37,7 +41,6 @@ const ItemList = styled.li`
 
 const Img = styled.img`
   margin-right: 3rem;
-  border-radius: 50%;
   width: 7rem;
   height: 7rem;
 `;

@@ -2,10 +2,8 @@ import { useQueries } from "@tanstack/react-query";
 import productAPI from "../../API/productAPI";
 import useFetchCartList from "./useFetchCartList";
 import { CartItemType, CartType } from "../../types/Cart.type";
-import { useAppDispatch } from "../../store/hooks";
 
 const useFetchCartItems = (token: string) => {
-  const dispatch = useAppDispatch();
   const { data: cartList } = useFetchCartList(token);
   // console.log(cartList);
 

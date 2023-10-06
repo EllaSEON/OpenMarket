@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import RegistrationForm from "../../components/Registration/RegistrationForm";
+import UploadProductForm from "../../components/UploadProduct/UploadProductForm";
 
 function SellerRegisterPage() {
   return (
@@ -14,7 +14,7 @@ function SellerRegisterPage() {
             Lorem ipsum dolor sit amet consectetur, adipisicing elit.
           </WarningBox>
         </div>
-        <RegistrationForm />
+        <UploadProductForm />
       </Wrapper>
     </RegisterSection>
   );
