@@ -1,12 +1,28 @@
 import styled from "styled-components";
 import Button from "../common/Button/Button";
 import { SellerProduct } from "../../types/SellerRegister.type";
+import useDeleteSellerProduct from "../../hooks/queries/useDeleteSellerProduct";
+import { useAppSelector } from "../../store/hooks";
 
 interface SellerProductPros {
   productList: SellerProduct;
 }
 
 function SellerItem({ productList }: SellerProductPros) {
+  const token = useAppSelector((state) => state.login.token);
+  const { deleteSellerProductMutation } = useDeleteSellerProduct(
+    productList.product_id
+  );
+
+  const handleDeleteSellerProduct = () => {
+    if (token) {
+      const deletedData = {
+        token: token,
+        productId: productList.product_id,
+      };
+      deleteSellerProductMutation.mutate(deletedData);
+    }
+  };
   return (
     <ItemList>
       <ProductInfoWrapper>
@@ -20,7 +36,7 @@ function SellerItem({ productList }: SellerProductPros) {
       <Button type="submit" size="s">
         수정
       </Button>
-      <Button type="submit" size="s">
+      <Button type="submit" size="s" onClick={handleDeleteSellerProduct}>
         삭제
       </Button>
     </ItemList>

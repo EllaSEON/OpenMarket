@@ -30,6 +30,24 @@ const sellerProductAPI = {
     const result = await axios.get(`${BASE_URL}/seller`, config);
     return result.data;
   },
+  async deleteSellerProduct({
+    token,
+    productId,
+  }: {
+    token: string;
+    productId: number;
+  }) {
+    const config = {
+      headers: {
+        Authorization: `JWT ${token}`,
+      },
+    };
+    const result = await axios.delete(
+      `${BASE_URL}/products/${productId}`,
+      config
+    );
+    return result.data;
+  },
 };
 
 export default sellerProductAPI;

@@ -9,8 +9,6 @@ function SellerAdminContent() {
 
   const { data: sellerProduct } = useFetchSellerProduct(token || "");
 
-  console.log(sellerProduct);
-
   return (
     <ContentWrapper>
       <CategoryUl>
