@@ -1,43 +1,27 @@
 import { Suspense, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { RootState } from "../../store/store";
 import Modal from "../../components/common/Modal/Modal";
 import ProductDetail from "../../components/ProductDetail/ProductDetail";
 import AmountBtn from "../../components/common/AmountBtn/AmountBtn";
 import * as S from "./style";
 import { openModal } from "../../features/modalSlice";
 import useFetchProductDetail from "../../hooks/queries/useFetchProductDetail";
-import cartAPI from "../../API/cartAPI";
-import Loading from "../../components/common/Loading/Loading";
+import useCreateCartProduct from "../../hooks/queries/useCreateCartProduct";
 
 function ProductDetailPage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const token = useAppSelector((state: RootState) => state.login.token);
-  const modal = useAppSelector((state: RootState) => state.modal.isOpen);
-  const userType = useAppSelector((state: RootState) => state.login.userType);
+  const token = useAppSelector((state) => state.login.token);
+  const modal = useAppSelector((state) => state.modal.isOpen);
+  const userType = useAppSelector((state) => state.login.userType);
   const [count, setCount] = useState(1);
   const { productId } = useParams();
   const productIdValue = productId || "defaultProductId";
 
   const { data: productDetailData } = useFetchProductDetail(productIdValue);
 
-  const cartMutation = useMutation(cartAPI.createCartProduct, {
-    onSuccess: () => {
-      // eslint-disable-next-line no-restricted-globals
-      const cartAlert = confirm(
-        "장바구니에 담았습니다. 장바구니로 이동하시겠습니까?"
-      );
-      if (cartAlert === true) {
-        navigate("/cart");
-      }
-    },
-    onError: () => {
-      alert("재고보다 더 많은 상품을 담을 수 없습니다.");
-    },
-  });
+  const cartMutation = useCreateCartProduct();
 
   const handlePostCart = () => {
     if (token) {

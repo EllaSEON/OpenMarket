@@ -1,22 +1,70 @@
+import { useState } from "react";
 import styled from "styled-components";
-import goods from "../../assets/images/img.png";
 import Button from "../common/Button/Button";
+import { SellerProduct } from "../../types/SellerRegister.type";
+import useDeleteSellerProduct from "../../hooks/queries/useDeleteSellerProduct";
+import { useAppSelector } from "../../store/hooks";
+import Modal from "../common/Modal/Modal";
 
-function SellerItem() {
+interface SellerProductPros {
+  productList: SellerProduct;
+}
+
+function SellerItem({ productList }: SellerProductPros) {
+  const token = useAppSelector((state) => state.login.token);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+
+  const { deleteSellerProductMutation } = useDeleteSellerProduct(
+    productList.product_id
+  );
+
+  const handleDeleteSellerProduct = () => {
+    if (token) {
+      const deletedData = {
+        token: token,
+        productId: productList.product_id,
+      };
+      deleteSellerProductMutation.mutate(deletedData);
+    }
+  };
+
+  const needDeleteModal = (
+    <Modal
+      onClickYes={() => {
+        handleDeleteSellerProduct();
+      }}
+      onClickNo={() => {
+        setIsOpenModal(false);
+      }}
+      onClickOutside={() => {
+        setIsOpenModal(false);
+      }}
+    >
+      상품을 삭제하시겠습니까?
+    </Modal>
+  );
+
   return (
     <ItemList>
+      {isOpenModal ? needDeleteModal : null}
       <ProductInfoWrapper>
-        <Img src={goods} />
+        <Img src={productList.image} />
         <TextWrapper>
-          <ProductInfoText>딥러닝 개발자 무릎 담요</ProductInfoText>
-          <StockNO>재고 : 370개</StockNO>
+          <ProductInfoText>{productList.product_name}</ProductInfoText>
+          <StockNO>재고 : {productList.stock}개</StockNO>
         </TextWrapper>
       </ProductInfoWrapper>
-      <ProductInfoText>17,500원</ProductInfoText>
+      <ProductInfoText>{productList.price.toLocaleString()}원</ProductInfoText>
       <Button type="submit" size="s">
         수정
       </Button>
-      <Button type="submit" size="s">
+      <Button
+        type="submit"
+        size="s"
+        onClick={() => {
+          setIsOpenModal(true);
+        }}
+      >
         삭제
       </Button>
     </ItemList>
@@ -37,7 +85,6 @@ const ItemList = styled.li`
 
 const Img = styled.img`
   margin-right: 3rem;
-  border-radius: 50%;
   width: 7rem;
   height: 7rem;
 `;

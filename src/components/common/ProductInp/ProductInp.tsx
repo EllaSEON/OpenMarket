@@ -1,6 +1,8 @@
 import styled from "styled-components";
+import React from "react";
 
-interface ProductInpProps {
+interface ProductInpProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  type: string;
   labelText: string;
   width?: string;
   htmlFor: string;
@@ -12,19 +14,26 @@ interface ProductInpProps {
  * <ProductInp labelTxt='판매가' width='35rem'htmlFor='ProductName'/>
  */
 
-function ProductInp({
-  htmlFor,
-  labelText,
-  width,
-  placeholder,
-}: ProductInpProps) {
-  return (
-    <LabelWrapper>
-      <ProductInpLabel htmlFor={htmlFor}>{labelText}</ProductInpLabel>
-      <ProductCostInp id={htmlFor} width={width} placeholder={placeholder} />
-    </LabelWrapper>
-  );
-}
+const ProductInp = React.forwardRef<HTMLInputElement, ProductInpProps>(
+  (
+    { type, htmlFor, labelText, width, placeholder, ...props }: ProductInpProps,
+    ref
+  ) => {
+    return (
+      <LabelWrapper>
+        <ProductInpLabel htmlFor={htmlFor}>{labelText}</ProductInpLabel>
+        <ProductCostInp
+          ref={ref}
+          type={type}
+          id={htmlFor}
+          width={width}
+          placeholder={placeholder}
+          {...props}
+        />
+      </LabelWrapper>
+    );
+  }
+);
 
 export default ProductInp;
 

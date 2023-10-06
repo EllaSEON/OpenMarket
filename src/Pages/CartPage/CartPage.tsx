@@ -2,7 +2,6 @@ import { Suspense, useEffect, useState } from "react";
 import CartItem from "../../components/cart/CartItem/CartItem";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import * as S from "./style";
-import { RootState } from "../../store/store";
 import TotalPrice from "../../components/cart/TotalPrice/TotalPrice";
 import CheckCircleBtn from "../../components/common/CheckBtn/CheckCircleBtn";
 import { CartItemType } from "../../types/Cart.type";
@@ -12,7 +11,7 @@ import Loading from "../../components/common/Loading/Loading";
 
 function CartPage() {
   const dispatch = useAppDispatch();
-  const token = useAppSelector((state: RootState) => state.login.token) || "";
+  const token = useAppSelector((state) => state.login.token) || "";
   // 장바구니 정보 가져오기
   const { cartItems, initialTotalPrice, initialDeliveryFee } =
     useFetchCartItems(token);

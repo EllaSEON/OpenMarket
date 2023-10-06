@@ -1,5 +1,4 @@
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { RootState } from "../../../store/store";
 import * as S from "./style";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import cartAPI from "../../../API/cartAPI";
@@ -25,7 +24,7 @@ function AmountBtn({
   productPrice,
 }: AmountBtnProps) {
   const dispatch = useAppDispatch();
-  const token = useAppSelector((state: RootState) => state.login.token) || "";
+  const token = useAppSelector((state) => state.login.token) || "";
   const { totalPrice, totalShippingFee } = useAppSelector(
     (state) => state.paymentAmount
   );

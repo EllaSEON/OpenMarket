@@ -1,20 +1,17 @@
 import { useState, useRef, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import ToggleBtn from "../../common/ToggleBtn/ToggleBtn";
+import ToggleBtn from "../ToggleBtn/ToggleBtn";
 import * as S from "./style";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { setCookie } from "../../../utils/Cookies";
 import { updateToken } from "../../../features/loginSlice";
-import { RootState } from "../../../store/store";
 import authAPI from "../../../API/authAPI";
 
 function LoginForm() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const toggleUserType = useAppSelector(
-    (state: RootState) => state.login.userType || ""
-  );
+  const toggleUserType = useAppSelector((state) => state.login.userType || "");
 
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 

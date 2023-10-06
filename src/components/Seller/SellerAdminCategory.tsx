@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 function SellerAdminCategory() {
   const CategoryList = [
-    "판매중인 상품 (3)",
+    "판매중인 상품",
     "주문/배송",
     "문의/리뷰",
     "통계",

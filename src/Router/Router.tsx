@@ -8,8 +8,6 @@ import CartPage from "../Pages/CartPage/CartPage";
 // import MyPage from "../Pages/MyPage/MyPage";
 import SearchResultPage from "../Pages/SearchResultPage/SearchResultPage";
 import ProductDetailPage from "../Pages/ProductDetailPage/ProductDetailPage";
-import { useAppSelector } from "../store/hooks";
-import { RootState } from "../store/store";
 import NotFound from "../Pages/NotFound/NotFound";
 import SellerAdminPage from "../Pages/SellerAdminPage/SellerAdminPage";
 import SellerRegisterPage from "../Pages/SellerRegisterPage/SellerRegisterPage";

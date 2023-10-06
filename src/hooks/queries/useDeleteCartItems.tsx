@@ -31,7 +31,7 @@ export function useDeleteCartItem({
 }: useDeleteCartItemType) {
   const queryClient = useQueryClient();
   const dispatch = useAppDispatch();
-  const token = useAppSelector((state: any) => state.login.token) || "";
+  const token = useAppSelector((state) => state.login.token) || "";
 
   const deleteCartItemMutation = useMutation(cartAPI.deleteCartItem, {
     onSuccess: (data: any) => {

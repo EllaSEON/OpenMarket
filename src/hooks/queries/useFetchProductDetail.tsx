@@ -7,7 +7,7 @@ export const useFetchProductDetail = (productId: string) => {
     () => {
       return productAPI.fetchProductDetail(productId);
     },
-    { suspense: true }
+    { suspense: true, staleTime: 1000 * 20 }
   );
 };
 

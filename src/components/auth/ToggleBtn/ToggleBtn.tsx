@@ -1,14 +1,11 @@
 import { MouseEvent } from "react";
 import { useAppSelector, useAppDispatch } from "../../../store/hooks";
-import { RootState } from "../../../store/store";
 import { changeUserType } from "../../../features/loginSlice";
 import * as S from "./style";
 
 function ToggleBtn() {
   const dispatch = useAppDispatch();
-  const toggleUserType = useAppSelector(
-    (state: RootState) => state.login.userType
-  );
+  const toggleUserType = useAppSelector((state) => state.login.userType);
 
   const handleToggle = (e: MouseEvent<HTMLButtonElement>) => {
     if ((e.target as HTMLButtonElement).name === "BUYER") {

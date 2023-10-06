@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import AmountBtn from "../../common/AmountBtn/AmountBtn";
 import Modal from "../../common/Modal/Modal";
 import { useAppSelector } from "../../../store/hooks";
-import { RootState } from "../../../store/store";
 import * as S from "./style";
 import { ProductDetailType } from "../../../types/Cart.type";
 import CheckCircleBtn from "../../common/CheckBtn/CheckCircleBtn";
@@ -26,7 +25,7 @@ function CartItem({
   const { totalPrice, totalShippingFee } = useAppSelector(
     (state) => state.paymentAmount
   );
-  const token = useAppSelector((state: RootState) => state.login.token) || "";
+  const token = useAppSelector((state) => state.login.token) || "";
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [count, setCount] = useState(quantity);
   // console.log(cartItem);
