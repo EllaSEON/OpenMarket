@@ -1,8 +1,10 @@
+import { useState } from "react";
 import styled from "styled-components";
 import Button from "../common/Button/Button";
 import { SellerProduct } from "../../types/SellerRegister.type";
 import useDeleteSellerProduct from "../../hooks/queries/useDeleteSellerProduct";
 import { useAppSelector } from "../../store/hooks";
+import Modal from "../common/Modal/Modal";
 
 interface SellerProductPros {
   productList: SellerProduct;
@@ -10,6 +12,8 @@ interface SellerProductPros {
 
 function SellerItem({ productList }: SellerProductPros) {
   const token = useAppSelector((state) => state.login.token);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+
   const { deleteSellerProductMutation } = useDeleteSellerProduct(
     productList.product_id
   );
@@ -23,8 +27,26 @@ function SellerItem({ productList }: SellerProductPros) {
       deleteSellerProductMutation.mutate(deletedData);
     }
   };
+
+  const needDeleteModal = (
+    <Modal
+      onClickYes={() => {
+        handleDeleteSellerProduct();
+      }}
+      onClickNo={() => {
+        setIsOpenModal(false);
+      }}
+      onClickOutside={() => {
+        setIsOpenModal(false);
+      }}
+    >
+      상품을 삭제하시겠습니까?
+    </Modal>
+  );
+
   return (
     <ItemList>
+      {isOpenModal ? needDeleteModal : null}
       <ProductInfoWrapper>
         <Img src={productList.image} />
         <TextWrapper>
@@ -36,7 +58,13 @@ function SellerItem({ productList }: SellerProductPros) {
       <Button type="submit" size="s">
         수정
       </Button>
-      <Button type="submit" size="s" onClick={handleDeleteSellerProduct}>
+      <Button
+        type="submit"
+        size="s"
+        onClick={() => {
+          setIsOpenModal(true);
+        }}
+      >
         삭제
       </Button>
     </ItemList>
