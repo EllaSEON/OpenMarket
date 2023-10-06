@@ -17,8 +17,6 @@ function Navbar() {
   const userType = useAppSelector((state: RootState) => state.login.userType);
   const modal = useAppSelector((state: RootState) => state.modal.isOpen);
 
-  // const [keyword, setKeyword] = useState("");
-
   const searchInputRef = useRef<HTMLInputElement | null>(null);
 
   const [dropDown, setDropDown] = useState(false);
@@ -30,10 +28,6 @@ function Navbar() {
       navigate("/login");
     }
   };
-
-  // const handleChangeKeyword = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setKeyword(e.target.value);
-  // };
 
   // 상품 검색
   const handleSearch = async () => {

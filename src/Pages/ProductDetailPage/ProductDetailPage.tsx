@@ -11,6 +11,7 @@ import { openModal } from "../../features/modalSlice";
 import useFetchProductDetail from "../../hooks/queries/useFetchProductDetail";
 import cartAPI from "../../API/cartAPI";
 import Loading from "../../components/common/Loading/Loading";
+import useCreateCartProduct from "../../hooks/queries/useCreateCartProduct";
 
 function ProductDetailPage() {
   const navigate = useNavigate();
@@ -24,20 +25,7 @@ function ProductDetailPage() {
 
   const { data: productDetailData } = useFetchProductDetail(productIdValue);
 
-  const cartMutation = useMutation(cartAPI.createCartProduct, {
-    onSuccess: () => {
-      // eslint-disable-next-line no-restricted-globals
-      const cartAlert = confirm(
-        "장바구니에 담았습니다. 장바구니로 이동하시겠습니까?"
-      );
-      if (cartAlert === true) {
-        navigate("/cart");
-      }
-    },
-    onError: () => {
-      alert("재고보다 더 많은 상품을 담을 수 없습니다.");
-    },
-  });
+  const cartMutation = useCreateCartProduct();
 
   const handlePostCart = () => {
     if (token) {

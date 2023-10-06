@@ -3,7 +3,7 @@ import { BASE_URL } from "../constant/baseUrl";
 import { SellerRegister } from "../types/SellerRegister.type";
 
 const sellerRegisterAPI = {
-  async registerProduct({ token, ...productData }: SellerRegister) {
+  async createRegisterProduct({ token, ...productData }: SellerRegister) {
     const config = {
       headers: {
         Authorization: `JWT ${token}`,
